@@ -1,7 +1,5 @@
 package gui_system;
 
-import java.util.Stack;
-
 import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -13,6 +11,8 @@ public class ModelContext {
 	private enum ContextType { MODULE, STUDENTI };
 	private JTable table;
 	private DefaultTableCellRenderer centerCellRenderer;
+	
+	private String loggedUser;
 	
 	String moduleColumns[] = { "Nume Disciplina", "Activitate", "An Disciplina", "Numar Saptamana", "(Sub)Grupa" };
 	String studentiColumns[] = { "Nume Student", "Prezenta" };
@@ -43,9 +43,9 @@ public class ModelContext {
 	public ModelContext(JTable table) {
 		this.table = table;
 		setupTableModels();
-		currentModel = moduleModel;
-		loadModuleFromDB();
-		loadModuleModel();
+		//currentModel = moduleModel;
+		//loadModuleFromDB();
+		//loadModuleModel();
 	}
 	
 	public void switchToStudenti(Object selectedRowData[]) {
@@ -82,7 +82,9 @@ public class ModelContext {
 	}
 	
 	private void loadModuleFromDB() {
-		// toate modulele din saptamana curenta ale profesorului logat
+		// toate modulele din saptamana curenta ale profesorului logat.
+		// cautare in baza de date pentru toate modulele la care preda userul
+		//   logat, din saptamana curenta.
 		
 		if (moduleModel.getRowCount() > 0) {
 			moduleModel.setRowCount(0);
@@ -95,7 +97,7 @@ public class ModelContext {
 	}
 	
 	private void loadStudentiFromDB(Object selectedRowData[]) {
-		// toti studentii care fac parte din (sub)grupa care participa la un modul
+		// toti studentii care fac parte din (sub)grupa care participa la un modul.
 		// din selectedRowData luam informatia despre (sub)grupe, si in functie de ea afisam studentii
 		
 		for (int i = 0; i < selectedRowData.length; ++i) {
@@ -168,5 +170,9 @@ public class ModelContext {
 			return true;
 		else
 			return false;
+	}
+	
+	public void setLoggedUser(String user) {
+		user = loggedUser;
 	}
 }

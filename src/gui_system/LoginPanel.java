@@ -11,63 +11,74 @@ import java.awt.Insets;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
+import javax.swing.border.EmptyBorder;
+
+import main.MainFrame;
+
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import javax.swing.JPasswordField;
 
 public class LoginPanel extends JPanel {
-	private JTextField textField;
-	private JTextField textField_1;
+	private JTextField txtID;
+	private JPasswordField txtPassword;
+	
+	main.MainFrame parentFrame;
 
-	/**
-	 * Create the panel.
-	 */
 	public LoginPanel() {
-		GridBagLayout gridBagLayout = new GridBagLayout();
-		gridBagLayout.columnWidths = new int[]{0, 0, 0};
-		gridBagLayout.rowHeights = new int[]{0, 0, 0, 0};
-		gridBagLayout.columnWeights = new double[]{0.0, 1.0, Double.MIN_VALUE};
-		gridBagLayout.rowWeights = new double[]{0.0, 0.0, 0.0, Double.MIN_VALUE};
-		setLayout(gridBagLayout);
+		setLayout(null);
+		
+		JPanel panel = new JPanel();
+		panel.setBounds(271, 188, 190, 73);
+		//setBorder(new EmptyBorder(5, 5, 5, 5));
+		add(panel);
+		panel.setLayout(null);
 		
 		JLabel lblID = new JLabel("ID");
-		GridBagConstraints gbc_lblID = new GridBagConstraints();
-		gbc_lblID.insets = new Insets(0, 0, 5, 5);
-		gbc_lblID.gridx = 0;
-		gbc_lblID.gridy = 0;
-		add(lblID, gbc_lblID);
+		lblID.setBounds(9, 3, 11, 14);
+		panel.add(lblID);
 		
-		textField = new JTextField();
-		//textField.setHorizontalAlignment(SwingConstants.CENTER);
-		GridBagConstraints gbc_textField = new GridBagConstraints();
-		gbc_textField.insets = new Insets(0, 0, 5, 0);
-		gbc_textField.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textField.gridx = 1;
-		gbc_textField.gridy = 0;
-		add(textField, gbc_textField);
-		textField.setColumns(10);
+		txtID = new JTextField();
+		txtID.setHorizontalAlignment(SwingConstants.CENTER);
+		txtID.setBounds(35, 0, 155, 20);
+		panel.add(txtID);
+		txtID.setColumns(10);
 		
 		JLabel lblNewLabel_1 = new JLabel("Parola");
-		GridBagConstraints gbc_lblNewLabel_1 = new GridBagConstraints();
-		gbc_lblNewLabel_1.anchor = GridBagConstraints.EAST;
-		gbc_lblNewLabel_1.insets = new Insets(0, 0, 5, 5);
-		gbc_lblNewLabel_1.gridx = 0;
-		gbc_lblNewLabel_1.gridy = 1;
-		add(lblNewLabel_1, gbc_lblNewLabel_1);
+		lblNewLabel_1.setBounds(0, 28, 30, 14);
+		panel.add(lblNewLabel_1);
 		
-		textField_1 = new JTextField();
-		GridBagConstraints gbc_textField_1 = new GridBagConstraints();
-		gbc_textField_1.insets = new Insets(0, 0, 5, 0);
-		gbc_textField_1.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textField_1.gridx = 1;
-		gbc_textField_1.gridy = 1;
-		add(textField_1, gbc_textField_1);
-		textField_1.setColumns(10);
+		txtPassword = new JPasswordField();
+		txtPassword.setHorizontalAlignment(SwingConstants.CENTER);
+		txtPassword.setBounds(35, 25, 155, 20);
+		panel.add(txtPassword);
+		txtPassword.setColumns(10);
 		
 		JButton btnNewButton = new JButton("Logare");
-		GridBagConstraints gbc_btnNewButton = new GridBagConstraints();
-		gbc_btnNewButton.fill = GridBagConstraints.HORIZONTAL;
-		gbc_btnNewButton.gridx = 1;
-		gbc_btnNewButton.gridy = 2;
-		add(btnNewButton, gbc_btnNewButton);
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				// cauta in baza de date utilizatorul introdus
+				// calculeaza hash-ul parolei introduse
+				// verifica daca hash-ul calculat este acelasi cu cel din DB ptr user
+				
+				// hash-ul a fost verificat, we have a match -> show main panel
+				// argumentul reprezinta ID-ul userului conectat
+				parentFrame.showMainPanel(txtID.getText());
+			}
+		});
+		btnNewButton.setBounds(35, 50, 155, 23);
+		panel.add(btnNewButton);
 		
+	}
+	
+	public void setParentFrame(MainFrame frame) {
+		parentFrame = frame;
+	}
+	
+	public void resetState() {
+		txtID.setText("");
+		txtPassword.setText("");
 	}
 
 }
