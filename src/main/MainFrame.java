@@ -1,30 +1,13 @@
 package main;
 import java.awt.EventQueue;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.DefaultTableModel;
-
+import gui_system.AdminPanel;
 import gui_system.LoginPanel;
 import gui_system.MainPanel;
-import gui_system.ModelContext;
-
-import javax.swing.JButton;
-import java.awt.Point;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-
-import javax.swing.JLabel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-import javax.swing.JComboBox;
-import javax.swing.border.TitledBorder;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
@@ -32,11 +15,9 @@ import javax.swing.JSeparator;
 
 public class MainFrame extends JFrame {
 
-	//private JPanel cardsPane;
-	//private gui.LoginPanel loginPanel;
-	//private gui.ManagePanel managePanel;
 	private gui_system.LoginPanel loginPanel;
 	private gui_system.MainPanel mainPanel;
+	private gui_system.AdminPanel adminPanel;
 
 	JMenuBar menuBar;
 	JMenu mnFile;
@@ -84,6 +65,8 @@ public class MainFrame extends JFrame {
 		loginPanel.setParentFrame(this);
 		mainPanel = new MainPanel();
 		mainPanel.setParentFrame(this);
+		adminPanel = new AdminPanel();
+		
 		
 		menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
@@ -118,6 +101,11 @@ public class MainFrame extends JFrame {
 		menuBar.add(mnUnelte);
 		
 		mntmAdministrare = new JMenuItem("Administrare");
+		mntmAdministrare.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				showAdminPanel();
+			}
+		});
 		mntmAdministrare.setMnemonic('A');
 		mnUnelte.add(mntmAdministrare);
 		
@@ -131,6 +119,7 @@ public class MainFrame extends JFrame {
 	public void showLoginPanel() {
 		setTitle("Logare sistem gestiune prezente");
 		mainPanel.setVisible(false);
+		adminPanel.setVisible(false);
 		loginPanel.resetState();
 		setContentPane(loginPanel);
 		loginPanel.setVisible(true);
@@ -139,12 +128,21 @@ public class MainFrame extends JFrame {
 	}
 	
 	public void showMainPanel(String user) {
-		setTitle("Gestiune module pentr user-ul: %USER_HERE%");
+		setTitle("Gestiune module pentru user-ul: %USER_HERE%");
 		loginPanel.setVisible(false);
+		adminPanel.setVisible(false);
 		mainPanel.loadFromDB(user);
 		setContentPane(mainPanel);
 		mainPanel.setVisible(true);
 		mnUnelte.setVisible(true);
 		mntmDelogare.setVisible(true);
+	}
+	
+	public void showAdminPanel() {
+		setTitle("Administrare baza de date");
+		mainPanel.setVisible(false);
+		setContentPane(adminPanel);
+		adminPanel.setVisible(true);
+		//mnUnel
 	}
 }
