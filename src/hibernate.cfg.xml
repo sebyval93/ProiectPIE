@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+                                         "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+ <session-factory>
+  <property name="hibernate.connection.driver_class">oracle.jdbc.driver.OracleDriver</property>
+  <property name="hibernate.connection.password">hr</property>
+  <property name="hibernate.connection.url">jdbc:oracle:thin:@5.13.149.99:1521:XE</property>
+  <property name="hibernate.connection.username">hr</property>
+  <property name="hibernate.default_catalog">HR</property>
+  <property name="hibernate.default_schema">HR</property>
+  <property name="hibernate.dialect">org.hibernate.dialect.Oracle10gDialect</property>
+  <property name="hibernate.current_session_context_class">thread</property>
+  <property name="hibernate.enable_lazy_load_no_trans">true</property>
+  <mapping class="entity.AnUniversitar"/>
+  <mapping class="entity.Disciplina"/>
+  <mapping class="entity.Grupa"/>
+  <mapping class="entity.Modul"/>
+  <mapping class="entity.Prezenta"/>
+  <mapping class="entity.Profesor"/>
+  <mapping class="entity.Saptamana"/>
+  <mapping class="entity.Semestru"/>
+  <mapping class="entity.Student"/>
+  <mapping class="entity.Subgrupa"/>
+  <mapping class="entity.Utilizator"/>
+ </session-factory>
+</hibernate-configuration>
