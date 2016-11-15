@@ -26,54 +26,66 @@ public final class PrezentaService {
 		
 	}
 	
-	public static void addPrezenta(Modul modul, Saptamana saptamana, Student student, String prezent){
+	public static boolean addPrezenta(Modul modul, Saptamana saptamana, Student student, String prezent){
 		Session session = null;
+		boolean done = false;
 		try{
 			session = Singleton.getInstance().getNewSession();
 			session.beginTransaction();
 			Prezenta prezenta = new Prezenta(modul,saptamana,student,prezent);
 			session.save(prezenta);
 			session.getTransaction().commit();
+			done = true;
 		}catch (Exception e) {
             e.printStackTrace();           
         } finally { 
         	session.close();
         }
+		return done;
 	}
 		
-	public static void deletePrezentaByID(int ID){
+	public static boolean deletePrezentaByID(int ID){
+		boolean done = false;
 		Prezenta prezenta = getPrezentaByID(ID);
 		Session session = null;
-		try{
-			session = Singleton.getInstance().getNewSession();
-			session.beginTransaction();
-			session.delete(prezenta);
-			session.getTransaction().commit();
-		}catch (Exception e) {
-            e.printStackTrace();           
-        }finally { 
-        	session.close();
-        } 
+		if(prezenta != null){
+			try{
+				session = Singleton.getInstance().getNewSession();
+				session.beginTransaction();
+				session.delete(prezenta);
+				session.getTransaction().commit();
+				done = true;
+			}catch (Exception e) {
+	            e.printStackTrace();           
+	        }finally { 
+	        	session.close();
+	        } 
+		}
+		return done;
 	}
 	
-	public static void updatePrezentaByID(int ID,Modul modul, Saptamana saptamana, Student student, String prezent){
+	public static boolean updatePrezentaByID(int ID,Modul modul, Saptamana saptamana, Student student, String prezent){
+		boolean done = false;
 		Session session = null;
 		Prezenta prezenta = getPrezentaByID(ID);
-		prezenta.setModul(modul);
-		prezenta.setSaptamana(saptamana);
-		prezenta.setStudent(student);
-		prezenta.setPrezent(prezent);
-		try{
-			session = Singleton.getInstance().getNewSession();
-			session.beginTransaction();
-			session.update(modul);
-			session.getTransaction().commit();
-		}catch (Exception e) {
-            e.printStackTrace();           
-        } finally { 
-        	session.close();
-        }
-		
+		if(prezenta != null){
+			prezenta.setModul(modul);
+			prezenta.setSaptamana(saptamana);
+			prezenta.setStudent(student);
+			prezenta.setPrezent(prezent);
+			try{
+				session = Singleton.getInstance().getNewSession();
+				session.beginTransaction();
+				session.update(modul);
+				session.getTransaction().commit();
+				done = true;
+			}catch (Exception e) {
+	            e.printStackTrace();           
+	        } finally { 
+	        	session.close();
+	        }
+		}
+		return done;
 	}
 	
 	public static List<Prezenta> getAllFromPrezenta(){

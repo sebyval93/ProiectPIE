@@ -24,7 +24,8 @@ public final class AnUniversitarService {
 		return an;
 	}
 	
-	public static void addAn(int number){
+	public static boolean addAn(int number){
+		boolean done = false;
 		Session session = null;
 		try{
 			session = Singleton.getInstance().getNewSession();
@@ -32,43 +33,53 @@ public final class AnUniversitarService {
 			AnUniversitar an = new AnUniversitar(new BigDecimal(number));
 			session.save(an);
 			session.getTransaction().commit();
+			done = true;
 		}catch (Exception e) {
             e.printStackTrace();           
         } finally { 
         	session.close();
         }
+		return done;
 	}
 	
-	public static void deleteAnByID(int ID){
+	public static boolean deleteAnByID(int ID){
+		boolean done = false;
 		AnUniversitar an = getAnByID(ID);
-		Session session = null;
-		try{
-			session = Singleton.getInstance().getNewSession();
-			session.beginTransaction();
-			session.delete(an);
-			session.getTransaction().commit();
-		}catch (Exception e) {
-            e.printStackTrace();           
-        }finally { 
-        	session.close();
-        } 
+		Session session = null;	
+		if(an != null){
+			try{		
+				session = Singleton.getInstance().getNewSession();
+				session.beginTransaction();
+				session.delete(an);
+				session.getTransaction().commit();
+				done = true;
+			}catch (Exception e) {
+	            e.printStackTrace();           
+	        }finally { 
+	        	session.close();
+	        }
+		}
+		return done;
 	}
 	
-	public static void updateAnByID(int ID,int number){
+	public static boolean updateAnByID(int ID,int number){
+		boolean done = false;
 		Session session = null;
 		AnUniversitar an = getAnByID(ID);
 		an.setAn(new BigDecimal(number));
 		try{
+			
 			session = Singleton.getInstance().getNewSession();	
 			session.beginTransaction();
 			session.update(an);
 			session.getTransaction().commit();
+			done = true;
 		}catch (Exception e) {
             e.printStackTrace();           
         } finally { 
         	session.close();
         }
-		
+		return done;
 	}
 	
 	public static List<AnUniversitar> getAllFromAn(){

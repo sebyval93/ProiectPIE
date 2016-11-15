@@ -26,7 +26,8 @@ public class SaptamanaService {
 		
 	}
 		
-	public static void addSaptamana(Semestru semestru, String denumire, Date startdate, Date enddate){
+	public static boolean addSaptamana(Semestru semestru, String denumire, Date startdate, Date enddate){
+		boolean done = false;
 		Session session = null;
 		try{
 			session = Singleton.getInstance().getNewSession();
@@ -34,47 +35,57 @@ public class SaptamanaService {
 			Saptamana saptamana = new Saptamana(semestru,denumire,startdate,enddate);
 			session.save(saptamana);
 			session.getTransaction().commit();
+			done = true;
 		}catch (Exception e) {
             e.printStackTrace();           
         } finally { 
         	session.close();
         }
+		return done;
 	}
 		
-	public static void deleteSaptamanaByID(int ID){
+	public static boolean deleteSaptamanaByID(int ID){
+		boolean done = false;
 		Saptamana saptamana = getSaptamanaByID(ID);
 		Session session = null;
-		try{
-			session = Singleton.getInstance().getNewSession();	
-			session.beginTransaction();
-			session.delete(saptamana);
-			session.getTransaction().commit();
-		}catch (Exception e) {
-            e.printStackTrace();           
-        }finally { 
-        	session.close();
-        } 
+		if(saptamana != null){
+			try{
+				session = Singleton.getInstance().getNewSession();	
+				session.beginTransaction();
+				session.delete(saptamana);
+				session.getTransaction().commit();
+				done = true;
+			}catch (Exception e) {
+	            e.printStackTrace();           
+	        }finally { 
+	        	session.close();
+	        } 
+		}
+		return done;
 	}
 	
-	public static void updateSaptamanaByID(int ID,Semestru semestru, String denumire, Date startdate, Date enddate){
+	public static boolean updateSaptamanaByID(int ID,Semestru semestru, String denumire, Date startdate, Date enddate){
+		boolean done = false;
 		Session session = null;
 		Saptamana saptamana = getSaptamanaByID(ID);
-		
-		saptamana.setSemestru(semestru);
-		saptamana.setDenumire(denumire);
-		saptamana.setStartdate(startdate);
-		saptamana.setEnddate(enddate);
-		try{
-			session = Singleton.getInstance().getNewSession();
-			session.beginTransaction();
-			session.update(saptamana);
-			session.getTransaction().commit();
-		}catch (Exception e) {
-            e.printStackTrace();           
-        } finally { 
-        	session.close();
-        }
-		
+		if(saptamana != null){
+			saptamana.setSemestru(semestru);
+			saptamana.setDenumire(denumire);
+			saptamana.setStartdate(startdate);
+			saptamana.setEnddate(enddate);
+			try{
+				session = Singleton.getInstance().getNewSession();
+				session.beginTransaction();
+				session.update(saptamana);
+				session.getTransaction().commit();
+				done = true;
+			}catch (Exception e) {
+	            e.printStackTrace();           
+	        } finally { 
+	        	session.close();
+	        }
+		}
+		return done;
 	}
 	
 	public static List<Saptamana> getAllFromSaptamana(){
