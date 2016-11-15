@@ -2,9 +2,11 @@ package entity;
 //made by DMIRICA
 
 import java.math.BigDecimal;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -119,4 +121,11 @@ public class Saptamana implements java.io.Serializable {
 		this.prezentas = prezentas;
 	}
 
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		return "week "+this.getId()+"\nFirst day "+this.getStartdate()+" \nLast day "+this.getEnddate();
+	}
+	
+	
 }

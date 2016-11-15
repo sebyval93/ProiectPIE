@@ -91,7 +91,7 @@ public class Grupa implements java.io.Serializable {
 
 	@Override
 	public String toString() {
-		return "Grupa [id=" + id + ", anUniversitar=" + anUniversitar + ", nume=" + nume + "]";
+		return "Grupa [id= " + id + ", anUniversitar= " + anUniversitar + ", nume= " + nume + "]";
 	}
 	
 	
