@@ -27,7 +27,8 @@ public final class ProfesorService {
 		
 	}
 		
-	public static void addProfesor(String nume){
+	public static boolean addProfesor(String nume){
+		boolean done = false;
 		Session session = null;
 		try{
 			session = Singleton.getInstance().getNewSession();
@@ -35,43 +36,54 @@ public final class ProfesorService {
 			Profesor profesor = new Profesor(nume);
 			session.save(profesor);
 			session.getTransaction().commit();
+			done = true;
 		}catch (Exception e) {
             e.printStackTrace();           
         } finally { 
         	session.close();
         }
+		return done;
 	}
 		
-	public static void deleteProfesorByID(int ID){
+	public static boolean deleteProfesorByID(int ID){
+		boolean done = false;
 		Profesor profesor = getProfesorByID(ID);
 		Session session = null;
-		try{
-			session = Singleton.getInstance().getNewSession();
-			session.beginTransaction();
-			session.delete(profesor);
-			session.getTransaction().commit();
-		}catch (Exception e) {
-            e.printStackTrace();           
-        }finally { 
-        	session.close();
-        } 
+		if( profesor != null){
+			try{
+				session = Singleton.getInstance().getNewSession();
+				session.beginTransaction();
+				session.delete(profesor);
+				session.getTransaction().commit();
+				done = true;
+			}catch (Exception e) {
+	            e.printStackTrace();           
+	        }finally { 
+	        	session.close();
+	        } 
+		}
+		return done;
 	}
 	
-	public static void updateModulByID(int ID,String nume){
+	public static boolean updateModulByID(int ID,String nume){
+		boolean done = false;
 		Session session = null;
 		Profesor profesor = getProfesorByID(ID);
-		profesor.setNume(nume);
-		try{
-			session = Singleton.getInstance().getNewSession();	
-			session.beginTransaction();
-			session.update(profesor);
-			session.getTransaction().commit();
-		}catch (Exception e) {
-            e.printStackTrace();           
-        } finally { 
-        	session.close();
-        }
-		
+		if(profesor != null){
+			profesor.setNume(nume);
+			try{
+				session = Singleton.getInstance().getNewSession();	
+				session.beginTransaction();
+				session.update(profesor);
+				session.getTransaction().commit();
+				done = true;
+			}catch (Exception e) {
+	            e.printStackTrace();           
+	        } finally { 
+	        	session.close();
+	        }
+		}
+		return done;
 	}
 	
 	public static List<Profesor> getAllFromProfesor(){

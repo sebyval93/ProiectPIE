@@ -32,8 +32,8 @@ public final class StudentService {
 		
 	}
 	
-	
-	public static void addStudent(Subgrupa subgrupa,String nume){
+	public static boolean addStudent(Subgrupa subgrupa,String nume){
+		boolean done = false;
 		Session session = null;
 		try{
 			session = Singleton.getInstance().getNewSession();
@@ -41,44 +41,55 @@ public final class StudentService {
 			Student student = new Student(subgrupa,nume);
 			session.save(student);
 			session.getTransaction().commit();
+			done = true;
 		}catch (Exception e) {
             e.printStackTrace();           
         } finally { 
         	session.close();
         }
+		return done;
 	}
 	
-	public static void deleteStudentByID(int ID){
+	public static boolean deleteStudentByID(int ID){
+		boolean done = false;
 		Student student = getStudentByID(ID);
 		Session session = null;
-		try{
-			session = Singleton.getInstance().getNewSession();
-			session.beginTransaction();
-			session.delete(student);
-			session.getTransaction().commit();
-		}catch (Exception e) {
-            e.printStackTrace();           
-        }finally { 
-        	session.close();
-        } 
+		if(student != null){
+			try{
+				session = Singleton.getInstance().getNewSession();
+				session.beginTransaction();
+				session.delete(student);
+				session.getTransaction().commit();
+				done = true;
+			}catch (Exception e) {
+	            e.printStackTrace();           
+	        }finally { 
+	        	session.close();
+	        } 
+		}
+		return done;
 	}
 	
-	public static void updateStudentByID(int ID,Subgrupa subgrupa,String nume){
+	public static boolean updateStudentByID(int ID,Subgrupa subgrupa,String nume){
+		boolean done = false;
 		Session session = null;
 		Student student = getStudentByID(ID);
-		student.setSubgrupa(subgrupa);
-		student.setNume(nume);
-		try{
-			session = Singleton.getInstance().getNewSession();
-			session.beginTransaction();
-			session.update(student);
-			session.getTransaction().commit();
-		}catch (Exception e) {
-            e.printStackTrace();           
-        } finally { 
-        	session.close();
-        }
-		
+		if(student != null){
+			student.setSubgrupa(subgrupa);
+			student.setNume(nume);
+			try{
+				session = Singleton.getInstance().getNewSession();
+				session.beginTransaction();
+				session.update(student);
+				session.getTransaction().commit();
+				done = true;
+			}catch (Exception e) {
+	            e.printStackTrace();           
+	        } finally { 
+	        	session.close();
+	        }
+		}
+		return done;
 	}
 	
 	public static List<Student> getAllFromStudent(){
@@ -136,7 +147,5 @@ public final class StudentService {
 		return listOfStudents;
 		
 	}
-	
-	
-	
+		
 }

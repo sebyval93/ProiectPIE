@@ -25,8 +25,9 @@ public final class ModulService {
 		
 	}
 	
-	public static void addModul(Disciplina disciplina, Profesor profesor, String activitate, String participanti,
+	public static boolean addModul(Disciplina disciplina, Profesor profesor, String activitate, String participanti,
 			int interval){
+		boolean done = false;
 		Session session = null;
 		try{
 			session = Singleton.getInstance().getNewSession();
@@ -34,48 +35,58 @@ public final class ModulService {
 			Modul modul = new Modul(disciplina,profesor,activitate,participanti,new BigDecimal(interval));
 			session.save(modul);
 			session.getTransaction().commit();
+			done = true;
 		}catch (Exception e) {
             e.printStackTrace();           
         } finally { 
         	session.close();
         }
+		return done;
 	}
 	
-	public static void deleteModulByID(int ID){
+	public static boolean deleteModulByID(int ID){
+		boolean done = false;
 		Modul modul = getModulByID(ID);
 		Session session = null;
-		try{
-			session = Singleton.getInstance().getNewSession();
-			session.beginTransaction();
-			session.delete(modul);
-			session.getTransaction().commit();
-		}catch (Exception e) {
-            e.printStackTrace();           
-        }finally { 
-        	session.close();
-        } 
+		if(modul != null){
+			try{
+				session = Singleton.getInstance().getNewSession();
+				session.beginTransaction();
+				session.delete(modul);
+				session.getTransaction().commit();
+			}catch (Exception e) {
+	            e.printStackTrace();           
+	        }finally { 
+	        	session.close();
+	        } 
+		}
+		return done;
 	}
 	
-	public static void updateModulByID(int ID,Disciplina disciplina, Profesor profesor, String activitate, String participanti,
+	public static boolean updateModulByID(int ID,Disciplina disciplina, Profesor profesor, String activitate, String participanti,
 			int interval){
+		boolean done = false;
 		Session session = null;
 		Modul modul = getModulByID(ID);
-		modul.setDisciplina(disciplina);
-		modul.setProfesor(profesor);
-		modul.setActivitate(activitate);
-		modul.setParticipanti(participanti);
-		modul.setInterval(new BigDecimal(interval));
-		try{
-			session = Singleton.getInstance().getNewSession();
-			session.beginTransaction();
-			session.update(modul);
-			session.getTransaction().commit();
-		}catch (Exception e) {
-            e.printStackTrace();           
-        } finally { 
-        	session.close();
-        }
-		
+		if (modul != null){
+			modul.setDisciplina(disciplina);
+			modul.setProfesor(profesor);
+			modul.setActivitate(activitate);
+			modul.setParticipanti(participanti);
+			modul.setInterval(new BigDecimal(interval));
+			try{
+				session = Singleton.getInstance().getNewSession();
+				session.beginTransaction();
+				session.update(modul);
+				session.getTransaction().commit();
+				done = true;
+			}catch (Exception e) {
+	            e.printStackTrace();           
+	        } finally { 
+	        	session.close();
+	        }
+		}
+		return done;
 	}
 	
 	public static List<Modul> getAllFromModul(){
