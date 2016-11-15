@@ -25,8 +25,9 @@ public final class DisciplinaService {
 		return disciplina;
 	}
 		
-	public static void addDisciplina(String denumire, int an, int orecurs, int orelab,
+	public static boolean addDisciplina(String denumire, int an, int orecurs, int orelab,
 			int oreseminar, int oreproiect, String numeScurt){
+		boolean done = false;
 		Session session = null;
 		try{
 			session = Singleton.getInstance().getNewSession();
@@ -35,50 +36,61 @@ public final class DisciplinaService {
 					new BigDecimal(orelab),new BigDecimal(oreseminar),new BigDecimal(oreproiect),numeScurt);
 			session.save(disciplina);
 			session.getTransaction().commit();
+			done = true;
 		}catch (Exception e) {
             e.printStackTrace();           
         } finally { 
         	session.close();
         }
+		return done;
 	}
 		
-	public static void deleteDisciplinaByID(int ID){
-		Disciplina disciciplina = getDisciplinaByID(ID);
+	public static boolean deleteDisciplinaByID(int ID){
+		boolean done = false;
+		Disciplina disciplina = getDisciplinaByID(ID);
 		Session session = null;
-		try{
-			session = Singleton.getInstance().getNewSession();
-			session.beginTransaction();
-			session.delete(disciciplina);
-			session.getTransaction().commit();
-		}catch (Exception e) {
-            e.printStackTrace();           
-        }finally { 
-        	session.close();
-        } 
+		if(disciplina != null){
+			try{
+				session = Singleton.getInstance().getNewSession();
+				session.beginTransaction();
+				session.delete(disciplina);
+				session.getTransaction().commit();
+				done = true;
+			}catch (Exception e) {
+	            e.printStackTrace();           
+	        }finally { 
+	        	session.close();
+	        } 
+		}
+		return done;
 	}
 	
-	public static void updateDisciplinaByID(int ID,String denumire, int an, int orecurs, int orelab,
+	public static boolean updateDisciplinaByID(int ID,String denumire, int an, int orecurs, int orelab,
 			int oreseminar, int oreproiect, String numeScurt){
+		boolean done = false;
 		Session session = null;
-		Disciplina disciciplina = getDisciplinaByID(ID);
-		disciciplina.setDenumire(denumire);
-		disciciplina.setAn(new BigDecimal(an));
-		disciciplina.setOrecurs(new BigDecimal(orecurs));
-		disciciplina.setOrelab(new BigDecimal(orelab));
-		disciciplina.setOreseminar(new BigDecimal(oreseminar));
-		disciciplina.setOreproiect(new BigDecimal(oreproiect));
-		disciciplina.setNumeScurt(numeScurt);
-		try{
-			session = Singleton.getInstance().getNewSession();
-			session.beginTransaction();
-			session.update(disciciplina);
-			session.getTransaction().commit();
-		}catch (Exception e) {
-            e.printStackTrace();           
-        } finally { 
-        	session.close();
-        }
-		
+		Disciplina disciplina = getDisciplinaByID(ID);
+		if(disciplina != null){
+			disciplina.setDenumire(denumire);
+			disciplina.setAn(new BigDecimal(an));
+			disciplina.setOrecurs(new BigDecimal(orecurs));
+			disciplina.setOrelab(new BigDecimal(orelab));
+			disciplina.setOreseminar(new BigDecimal(oreseminar));
+			disciplina.setOreproiect(new BigDecimal(oreproiect));
+			disciplina.setNumeScurt(numeScurt);
+			try{
+				session = Singleton.getInstance().getNewSession();
+				session.beginTransaction();
+				session.update(disciplina);
+				session.getTransaction().commit();
+				done = true;
+			}catch (Exception e) {
+	            e.printStackTrace();           
+	        } finally { 
+	        	session.close();
+	        }
+		}
+		return done;		
 	}
 	
 	public static List<Disciplina> getAllFromDisciciplina(){

@@ -25,7 +25,8 @@ public final class SemestruService {
 		
 	}
 		
-	public static void addSemestru(String nume){
+	public static boolean addSemestru(String nume){
+		boolean done = false;
 		Session session = null;
 		try{
 			session = Singleton.getInstance().getNewSession();
@@ -33,43 +34,54 @@ public final class SemestruService {
 			Semestru semestru = new Semestru(nume);
 			session.save(semestru);
 			session.getTransaction().commit();
+			done = true;
 		}catch (Exception e) {
             e.printStackTrace();           
         } finally { 
         	session.close();
         }
+		return done;
 	}
 		
-	public static void deleteSemestruByID(int ID){
+	public static boolean deleteSemestruByID(int ID){
+		boolean done = false;
 		Semestru semestru = getSemestruByID(ID);
 		Session session = null;
-		try{
-			session = Singleton.getInstance().getNewSession();
-			session.beginTransaction();
-			session.delete(semestru);
-			session.getTransaction().commit();
-		}catch (Exception e) {
-            e.printStackTrace();           
-        }finally { 
-        	session.close();
-        } 
+		if(semestru != null){
+			try{
+				session = Singleton.getInstance().getNewSession();
+				session.beginTransaction();
+				session.delete(semestru);
+				session.getTransaction().commit();
+				done = true;
+			}catch (Exception e) {
+	            e.printStackTrace();           
+	        }finally { 
+	        	session.close();
+	        } 
+		}
+		return done;
 	}
 	
-	public static void updateSemestruByID(int ID,String nume){
+	public static boolean updateSemestruByID(int ID,String nume){
+		boolean done = false;
 		Session session = null;
 		Semestru semestru = getSemestruByID(ID);
-		semestru.setNumeSem(nume);
-		try{
-			session = Singleton.getInstance().getNewSession();
-			session.beginTransaction();
-			session.update(semestru);
-			session.getTransaction().commit();
-		}catch (Exception e) {
-            e.printStackTrace();           
-        } finally { 
-        	session.close();
-        }
-		
+		if(semestru != null){
+			semestru.setNumeSem(nume);
+			try{
+				session = Singleton.getInstance().getNewSession();
+				session.beginTransaction();
+				session.update(semestru);
+				session.getTransaction().commit();
+				done = true;
+			}catch (Exception e) {
+	            e.printStackTrace();           
+	        } finally { 
+	        	session.close();
+	        }
+		}
+		return done;
 	}
 	
 	public static List<Semestru> getAllFromSemestru(){

@@ -25,9 +25,9 @@ public final class GrupaService {
         }
 		return grupa;
 	}
-	
-	
-	public static void addGrupa(AnUniversitar an,String nume){
+		
+	public static boolean addGrupa(AnUniversitar an,String nume){
+		boolean done = false;
 		Session session = null;
 		try{
 			session = Singleton.getInstance().getNewSession();
@@ -35,45 +35,55 @@ public final class GrupaService {
 			Grupa grupa = new Grupa(an,nume);
 			session.save(grupa);
 			session.getTransaction().commit();
+			done = true;
 		}catch (Exception e) {
             e.printStackTrace();           
         } finally { 
         	session.close();
         }
+		return done;
 	}
 	
-	
-	public static void deleteGrupaByID(int ID){
+	public static boolean deleteGrupaByID(int ID){
+		boolean done = false;
 		Grupa grupa = getGrupaByID(ID);
 		Session session = null;
-		try{
-			session = Singleton.getInstance().getNewSession();
-			session.beginTransaction();
-			session.delete(grupa);
-			session.getTransaction().commit();
-		}catch (Exception e) {
-            e.printStackTrace();           
-        }finally { 
-        	session.close();
-        } 
+		if(grupa != null){
+			try{
+				session = Singleton.getInstance().getNewSession();
+				session.beginTransaction();
+				session.delete(grupa);
+				session.getTransaction().commit();
+				done = true;
+			}catch (Exception e) {
+	            e.printStackTrace();           
+	        }finally { 
+	        	session.close();
+	        } 
+		}
+		return done;
 	}
 	
-	public static void updateGrupaByID(int ID,AnUniversitar an,String nume){
+	public static boolean updateGrupaByID(int ID,AnUniversitar an,String nume){
+		boolean done = false;
 		Session session = null;
 		Grupa grupa = getGrupaByID(ID);
-		grupa.setAnUniversitar(an);
-		grupa.setNume(nume);
-		try{
-			session = Singleton.getInstance().getNewSession();
-			session.beginTransaction();
-			session.update(grupa);
-			session.getTransaction().commit();
-		}catch (Exception e) {
-            e.printStackTrace();           
-        } finally { 
-        	session.close();
-        }
-		
+		if(grupa != null){
+			grupa.setAnUniversitar(an);
+			grupa.setNume(nume);
+			try{
+				session = Singleton.getInstance().getNewSession();
+				session.beginTransaction();
+				session.update(grupa);
+				session.getTransaction().commit();
+				done = true;
+			}catch (Exception e) {
+	            e.printStackTrace();           
+	        } finally { 
+	        	session.close();
+	        }
+		}
+		return done;
 	}
 	
 	public static List<Grupa> getAllFromGrupa(){
