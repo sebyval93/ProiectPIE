@@ -8,6 +8,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+
+import com.sun.scenario.effect.AbstractShadow.ShadowMode;
+
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
@@ -25,6 +28,7 @@ public class MainFrame extends JFrame {
 	JMenuItem mntmExit;
 	JMenu mnUnelte;
 	JMenuItem mntmAdministrare;
+	JMenuItem mntmGestionareModule;
 
 	/**
 	 * Launch the application.
@@ -109,8 +113,18 @@ public class MainFrame extends JFrame {
 		mntmAdministrare.setMnemonic('A');
 		mnUnelte.add(mntmAdministrare);
 		
+		mntmGestionareModule = new JMenuItem("Gestionare Module");
+		mntmGestionareModule.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//FIX ME!!!
+				showMainPanel("");
+			}
+		});
+		mnUnelte.add(mntmGestionareModule);
+		
 		mnUnelte.setVisible(false);
 		mntmDelogare.setVisible(false);
+		mntmGestionareModule.setVisible(false);
 		
 		
 		setContentPane(loginPanel);
@@ -128,7 +142,7 @@ public class MainFrame extends JFrame {
 	}
 	
 	public void showMainPanel(String user) {
-		setTitle("Gestiune module pentru user-ul: %USER_HERE%");
+		setTitle("Gestiune module pentru profesorul: %NUME_HERE%");
 		loginPanel.setVisible(false);
 		adminPanel.setVisible(false);
 		mainPanel.loadFromDB(user);
@@ -136,10 +150,14 @@ public class MainFrame extends JFrame {
 		mainPanel.setVisible(true);
 		mnUnelte.setVisible(true);
 		mntmDelogare.setVisible(true);
+		mntmGestionareModule.setVisible(false);
+		mntmAdministrare.setVisible(true);
 	}
 	
 	public void showAdminPanel() {
 		setTitle("Administrare baza de date");
+		mntmAdministrare.setVisible(false);
+		mntmGestionareModule.setVisible(true);
 		mainPanel.setVisible(false);
 		setContentPane(adminPanel);
 		adminPanel.setVisible(true);

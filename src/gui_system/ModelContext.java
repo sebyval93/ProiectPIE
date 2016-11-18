@@ -14,7 +14,7 @@ public class ModelContext {
 	
 	private String loggedUser;
 	
-	String moduleColumns[] = { "Nume Disciplina", "Activitate", "An Disciplina", "Numar Saptamana", "(Sub)Grupa" };
+	String moduleColumns[] = { "Nume Disciplina", "Activitate", "An Disciplina", "Numar Saptamana", "Participanti" };
 	String studentiColumns[] = { "Nume Student", "Prezenta" };
 	
 	//                        0        1
@@ -174,5 +174,9 @@ public class ModelContext {
 	
 	public void setLoggedUser(String user) {
 		user = loggedUser;
+	}
+	
+	public String getLoggedUser() {
+		return loggedUser;
 	}
 }
