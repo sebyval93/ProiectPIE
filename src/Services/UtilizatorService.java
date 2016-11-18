@@ -26,7 +26,8 @@ public final class UtilizatorService {
 		
 	}
 	
-	public static void addUtilizator(String username, String password){
+	public static boolean addUtilizator(String username, String password){
+		boolean done = false;
 		Session session = null;
 		try{
 			session = Singleton.getInstance().getNewSession();
@@ -34,43 +35,55 @@ public final class UtilizatorService {
 			Utilizator utilizator = new Utilizator(username,password);
 			session.save(utilizator);
 			session.getTransaction().commit();
+			done = true;
 		}catch (Exception e) {
             e.printStackTrace();           
         } finally { 
         	session.close();
         }
+		return done;
 	}
 	
-	public static void deleteUtilizatorByID(int ID){
+	public static boolean deleteUtilizatorByID(int ID){
+		boolean done = false;
 		Utilizator utilizator = getUtilizatorByID(ID);
 		Session session = null;
-		try{
-			session = Singleton.getInstance().getNewSession();
-			session.beginTransaction();
-			session.delete(utilizator);
-			session.getTransaction().commit();
-		}catch (Exception e) {
-            e.printStackTrace();           
-        }finally { 
-        	session.close();
-        } 
+		if(utilizator != null){
+			try{
+				session = Singleton.getInstance().getNewSession();
+				session.beginTransaction();
+				session.delete(utilizator);
+				session.getTransaction().commit();
+				done = true;
+			}catch (Exception e) {
+	            e.printStackTrace();           
+	        }finally { 
+	        	session.close();
+	        } 
+		}
+		return done;
 	}
 	
-	public static void updateUtilizator(int ID,String username, String password){
+	public static boolean updateUtilizator(int ID,String username, String password){
+		boolean done = false;
 		Session session = null;
 		Utilizator utilizator = getUtilizatorByID(ID);
-		utilizator.setUsername(username);
-		utilizator.setPassword(password); 
-		try{
-			session = Singleton.getInstance().getNewSession();
-			session.beginTransaction();
-			session.update(utilizator);
-			session.getTransaction().commit();
-		}catch (Exception e) {
-            e.printStackTrace();           
-        } finally { 
-        	session.close();
-        }
+		if(utilizator != null){
+			utilizator.setUsername(username);
+			utilizator.setPassword(password); 
+			try{
+				session = Singleton.getInstance().getNewSession();
+				session.beginTransaction();
+				session.update(utilizator);
+				session.getTransaction().commit();
+				done = true;
+			}catch (Exception e) {
+	            e.printStackTrace();           
+	        } finally { 
+	        	session.close();
+	        }
+		}
+		return done;
 		
 	}
 	

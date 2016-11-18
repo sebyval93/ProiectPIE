@@ -74,7 +74,7 @@ public class AnUniversitar implements java.io.Serializable {
 
 	@Override
 	public String toString() {
-		return "AnUniversitar [id=" + id + ", an=" + an + "]";
+		return "AnUniversitar [id= " + id + ", an= " + an + "]";
 	}
 	
 	

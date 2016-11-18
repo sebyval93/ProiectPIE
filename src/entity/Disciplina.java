@@ -147,8 +147,8 @@ public class Disciplina implements java.io.Serializable {
 
 	@Override
 	public String toString() {
-		return "Disciplina [id=" + id + ", denumire=" + denumire + ", an=" + an + ", orecurs=" + orecurs + ", orelab="
-				+ orelab + ", oreseminar=" + oreseminar + ", oreproiect=" + oreproiect + ", numeScurt=" + numeScurt
+		return "Disciplina [id= " + id + ", denumire= " + denumire + ", an= " + an + ", orecurs= " + orecurs + ", orelab= "
+				+ orelab + ", oreseminar= " + oreseminar + ", oreproiect= " + oreproiect + ", numeScurt= " + numeScurt
 				+ "]";
 	}
 	

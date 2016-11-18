@@ -26,7 +26,8 @@ public final class SubgrupaService {
 		return subgrupa;
 	}
 	
-	public static void addSubgrupa(Grupa grupa,String nume){
+	public static boolean addSubgrupa(Grupa grupa,String nume){
+		boolean done = false;
 		Session session = null;
 		try{
 			session = Singleton.getInstance().getNewSession();
@@ -34,43 +35,55 @@ public final class SubgrupaService {
 			Subgrupa subgrupa = new Subgrupa(grupa,nume);
 			session.save(subgrupa);
 			session.getTransaction().commit();
+			done = true;
 		}catch (Exception e) {
             e.printStackTrace();           
         } finally { 
         	session.close();
         }
+		return done;
 	}
 	
-	public static void deleteSubgrupaByID(int ID){
+	public static boolean deleteSubgrupaByID(int ID){
+		boolean done = false;
 		Subgrupa subgrupa = getSubgrupaByID(ID);
 		Session session = null;
-		try{
-			session = Singleton.getInstance().getNewSession();
-			session.beginTransaction();
-			session.delete(subgrupa);
-			session.getTransaction().commit();
-		}catch (Exception e) {
-            e.printStackTrace();           
-        }finally { 
-        	session.close();
-        } 
+		if(subgrupa != null){
+			try{
+				session = Singleton.getInstance().getNewSession();
+				session.beginTransaction();
+				session.delete(subgrupa);
+				session.getTransaction().commit();
+				done = true;
+			}catch (Exception e) {
+	            e.printStackTrace();           
+	        }finally { 
+	        	session.close();
+	        } 
+		}
+		return done;
 	}
 	
-	public static void updateSubgrupaByID(int ID,Grupa grupa,String nume){
+	public static boolean updateSubgrupaByID(int ID,Grupa grupa,String nume){
+		boolean done = false;
 		Session session = null;
 		Subgrupa subgrupa = getSubgrupaByID(ID);
-		subgrupa.setGrupa(grupa);
-		subgrupa.setNume(nume);
-		try{
-			session = Singleton.getInstance().getNewSession();	
-			session.beginTransaction();
-			session.update(subgrupa);
-			session.getTransaction().commit();
-		}catch (Exception e) {
-            e.printStackTrace();           
-        } finally { 
-        	session.close();
-        }
+		if(subgrupa != null){
+			subgrupa.setGrupa(grupa);
+			subgrupa.setNume(nume);
+			try{
+				session = Singleton.getInstance().getNewSession();	
+				session.beginTransaction();
+				session.update(subgrupa);
+				session.getTransaction().commit();
+				done = true;
+			}catch (Exception e) {
+	            e.printStackTrace();           
+	        } finally { 
+	        	session.close();
+	        }
+		}
+		return done;
 		
 	}
 	
