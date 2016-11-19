@@ -68,6 +68,7 @@ public class MainFrame extends JFrame {
 		mntmDelogare.setVisible(false);
 		setMenuVisible(false);
 		pack();
+		setLocationRelativeTo(null);
 	}
 	
 	public void showMainPanel() {

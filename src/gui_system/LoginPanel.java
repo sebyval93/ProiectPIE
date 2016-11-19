@@ -72,13 +72,13 @@ public class LoginPanel extends JPanel {
 							if(user.getPassword().equals(
 									EncryptService.getHashOfString(String.valueOf(PasswordTF.getPassword())))){
 								Singleton.getInstance().currentUser = user;
-								PasswordTF.setText("");;
+								PasswordTF.setText("");
 								IdTF.setText("");
 								parentFrame.showMainPanel();
 							}else{
 								warningLbl.setText("Datele cu corespund!");
 							}
-						} catch (NoSuchAlgorithmException e1) {
+						} catch (Exception e1) {
 							e1.printStackTrace();
 						}
 					}else{

@@ -1,5 +1,6 @@
 package Services;
 
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
@@ -96,7 +97,12 @@ public final class UtilizatorService {
 		Utilizator utilizator = getUtilizatorByID(ID);
 		if(utilizator != null){
 			utilizator.setUsername(username);
-			utilizator.setPassword(EncryptService.getHashOfString(password));
+			try {
+				utilizator.setPassword(EncryptService.getHashOfString(password));
+			} catch (UnsupportedEncodingException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			utilizator.setProfesor(profesor);
 			try{
 				session = Singleton.getInstance().getNewSession();
