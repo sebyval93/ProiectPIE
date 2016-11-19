@@ -62,7 +62,7 @@ public class Disciplina implements java.io.Serializable {
 	}
 
 	@Id
-	@SequenceGenerator(name = "discipseq", sequenceName = "DISCIPLINA_SEQ")
+	@SequenceGenerator(name = "discipseq", sequenceName = "DISCIPLINA_SEQ",allocationSize = 1)
 	@GeneratedValue(generator = "discipseq", strategy = GenerationType.SEQUENCE)
 	@Column(name = "ID", unique = true, nullable = false, precision = 22, scale = 0)
 	public BigDecimal getId() {

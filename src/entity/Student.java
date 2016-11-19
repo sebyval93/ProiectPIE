@@ -48,7 +48,7 @@ public class Student implements java.io.Serializable {
 	}
 
 	@Id
-	@SequenceGenerator(name = "studseq", sequenceName = "STUDENT_SEQ")
+	@SequenceGenerator(name = "studseq", sequenceName = "STUDENT_SEQ",allocationSize = 1)
 	@GeneratedValue(generator = "studseq", strategy = GenerationType.SEQUENCE)
 	@Column(name = "ID", unique = true, nullable = false, precision = 22, scale = 0)
 	public BigDecimal getId() {

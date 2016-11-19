@@ -1,41 +1,49 @@
 package entity;
-//made by DMIRICA
 
 import java.math.BigDecimal;
+import java.security.NoSuchAlgorithmException;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-
+import Utils.*;
+import oracle.net.ano.EncryptionService;
 
 @Entity
 @Table(name = "UTILIZATOR")
 public class Utilizator implements java.io.Serializable {
 
 	private BigDecimal id;
+	private Profesor profesor;
 	private String username;
 	private String password;
 
 	public Utilizator() {
 	}
 
-	public Utilizator(BigDecimal id, String username, String password) {
+	public Utilizator(BigDecimal id, Profesor profesor, String username, String password) {
 		this.id = id;
+		this.profesor = profesor;
 		this.username = username;
 		this.password = password;
 	}
 	
-	public Utilizator(String username, String password) {
+	public Utilizator(String username, String password,Profesor profesor) {
 		this.id = null;
-		this.username = username;
+		this.profesor = profesor;
+		this.username = username;	
 		this.password = password;
 	}
 
 	@Id
-	@SequenceGenerator(name = "utilseq", sequenceName = "UTILIZATOR_SEQ")
+	@SequenceGenerator(name = "utilseq", sequenceName = "UTILIZATOR_SEQ",allocationSize = 1)
 	@GeneratedValue(generator = "utilseq", strategy = GenerationType.SEQUENCE)
 	@Column(name = "ID", unique = true, nullable = false, precision = 22, scale = 0)
 	public BigDecimal getId() {
@@ -44,6 +52,18 @@ public class Utilizator implements java.io.Serializable {
 
 	public void setId(BigDecimal id) {
 		this.id = id;
+	}
+	
+	
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "PROFESOR", nullable = false)
+	public Profesor getProfesor() {
+		return this.profesor;
+	}
+
+	public void setProfesor(Profesor profesor) {
+		this.profesor = profesor;
 	}
 
 	@Column(name = "USERNAME", nullable = false, length = 20)
@@ -55,7 +75,7 @@ public class Utilizator implements java.io.Serializable {
 		this.username = username;
 	}
 
-	@Column(name = "PASSWORD", nullable = false, length = 100)
+	@Column(name = "PASSWORD", nullable = true, length = 100)
 	public String getPassword() {
 		return this.password;
 	}

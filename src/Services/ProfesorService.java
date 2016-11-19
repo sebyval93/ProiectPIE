@@ -6,9 +6,7 @@ import java.util.List;
 import org.hibernate.Session;
 
 import Singleton.Singleton;
-import entity.Disciplina;
-import entity.Modul;
-import entity.Profesor;
+import entity.*;
 
 public final class ProfesorService {
 

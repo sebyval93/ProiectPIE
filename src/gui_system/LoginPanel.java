@@ -1,74 +1,100 @@
 package gui_system;
 
 import javax.swing.JPanel;
-import java.awt.BorderLayout;
-import javax.swing.BoxLayout;
+import java.awt.Dimension;
+
 import javax.swing.JLabel;
-import java.awt.GridLayout;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
-import javax.swing.border.EmptyBorder;
 
+import Services.UtilizatorService;
+import Utils.EncryptService;
+import Utils.Functions;
+import entity.Utilizator;
 import main.MainFrame;
 
 import java.awt.event.ActionListener;
+import java.security.NoSuchAlgorithmException;
 import java.awt.event.ActionEvent;
 import javax.swing.JPasswordField;
-
+import java.awt.Color;
+import Singleton.*;
 public class LoginPanel extends JPanel {
-	private JTextField txtID;
-	private JPasswordField txtPassword;
+	private JTextField IdTF;
+	private JPasswordField PasswordTF;
 	
 	main.MainFrame parentFrame;
 
 	public LoginPanel() {
+		Singleton.getInstance().getCurrentWeek();
 		setLayout(null);
 		
 		JPanel panel = new JPanel();
-		panel.setBounds(271, 188, 190, 73);
-		//setBorder(new EmptyBorder(5, 5, 5, 5));
+		panel.setBounds(77, 89, 190, 73);
 		add(panel);
 		panel.setLayout(null);
 		
-		JLabel lblID = new JLabel("ID");
-		lblID.setBounds(9, 3, 11, 14);
-		panel.add(lblID);
+		JLabel IdLbl = new JLabel("ID");
+		IdLbl.setBounds(9, 3, 11, 14);
+		panel.add(IdLbl);
 		
-		txtID = new JTextField();
-		txtID.setHorizontalAlignment(SwingConstants.CENTER);
-		txtID.setBounds(35, 0, 155, 20);
-		panel.add(txtID);
-		txtID.setColumns(10);
+		IdTF = new JTextField();
+		IdTF.setHorizontalAlignment(SwingConstants.CENTER);
+		IdTF.setBounds(35, 0, 155, 20);
+		panel.add(IdTF);
+		IdTF.setColumns(10);
 		
-		JLabel lblNewLabel_1 = new JLabel("Parola");
-		lblNewLabel_1.setBounds(0, 28, 30, 14);
-		panel.add(lblNewLabel_1);
+		JLabel PasswordLbl = new JLabel("Parola");
+		PasswordLbl.setBounds(0, 28, 30, 14);
+		panel.add(PasswordLbl);
 		
-		txtPassword = new JPasswordField();
-		txtPassword.setHorizontalAlignment(SwingConstants.CENTER);
-		txtPassword.setBounds(35, 25, 155, 20);
-		panel.add(txtPassword);
-		txtPassword.setColumns(10);
+		PasswordTF = new JPasswordField();
+		PasswordTF.setHorizontalAlignment(SwingConstants.CENTER);
+		PasswordTF.setBounds(35, 25, 155, 20);
+		panel.add(PasswordTF);
+		PasswordTF.setColumns(10);
 		
-		JButton btnNewButton = new JButton("Logare");
-		btnNewButton.addActionListener(new ActionListener() {
+		JLabel warningLbl = new JLabel("");
+		warningLbl.setForeground(Color.RED);
+		warningLbl.setBounds(77, 173, 146, 14);
+		
+		add(warningLbl);
+		
+		JButton LoginButton = new JButton("Logare");
+		LoginButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// cauta in baza de date utilizatorul introdus
-				// calculeaza hash-ul parolei introduse
-				// verifica daca hash-ul calculat este acelasi cu cel din DB ptr user
-				
-				// hash-ul a fost verificat, we have a match -> show main panel
-				// argumentul reprezinta ID-ul userului conectat
-				parentFrame.showMainPanel(txtID.getText());
+				if(	!Functions.stringIsNullOrEmpty(IdTF.getText()) &&
+						!Functions.stringIsNullOrEmpty(String.valueOf(PasswordTF.getPassword()))){					
+					Utilizator user = UtilizatorService.getUtilizatorByUsername(IdTF.getText());
+					if(user != null){
+						try {
+							if(user.getPassword().equals(
+									EncryptService.getHashOfString(String.valueOf(PasswordTF.getPassword())))){
+								Singleton.getInstance().currentUser = user;
+								PasswordTF.setText("");;
+								IdTF.setText("");
+								parentFrame.showMainPanel();
+							}else{
+								warningLbl.setText("Datele cu corespund!");
+							}
+						} catch (NoSuchAlgorithmException e1) {
+							e1.printStackTrace();
+						}
+					}else{
+						warningLbl.setText("Acest username nu exista!");	
+					}
+									
+				}else{										
+					warningLbl.setText("Completeaza toate campurile!");					
+				}
+
 			}
 		});
-		btnNewButton.setBounds(35, 50, 155, 23);
-		panel.add(btnNewButton);
+		LoginButton.setBounds(35, 50, 155, 23);
+		panel.add(LoginButton);
+		setPreferredSize(new Dimension(350, 250));
+		
 		
 	}
 	
@@ -76,9 +102,9 @@ public class LoginPanel extends JPanel {
 		parentFrame = frame;
 	}
 	
+	
 	public void resetState() {
-		txtID.setText("");
-		txtPassword.setText("");
+		IdTF.setText("");
+		PasswordTF.setText("");
 	}
-
 }

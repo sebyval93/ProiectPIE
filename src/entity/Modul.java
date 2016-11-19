@@ -63,7 +63,7 @@ public class Modul implements java.io.Serializable {
 	}
 
 	@Id
-	@SequenceGenerator(name = "modseq", sequenceName = "MODUL_SEQ")
+	@SequenceGenerator(name = "modseq", sequenceName = "MODUL_SEQ",allocationSize = 1)
 	@GeneratedValue(generator = "modseq", strategy = GenerationType.SEQUENCE)
 	@Column(name = "ID", unique = true, nullable = false, precision = 22, scale = 0)
 	public BigDecimal getId() {

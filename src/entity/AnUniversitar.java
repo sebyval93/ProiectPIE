@@ -43,7 +43,7 @@ public class AnUniversitar implements java.io.Serializable {
 	}
 
 	@Id
-	@SequenceGenerator(name = "anseq", sequenceName = "AN_SEQ")
+	@SequenceGenerator(name = "anseq", sequenceName = "AN_SEQ",allocationSize = 1)
 	@GeneratedValue(generator = "anseq", strategy = GenerationType.SEQUENCE)
 	@Column(name = "ID", unique = true, nullable = false, precision = 22, scale = 0)
 	public BigDecimal getId() {
