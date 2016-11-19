@@ -42,7 +42,7 @@ public class Profesor implements java.io.Serializable {
 	}
 
 	@Id
-	@SequenceGenerator(name = "profseq", sequenceName = "PROFESOR_SEQ")
+	@SequenceGenerator(name = "profseq", sequenceName = "PROFESOR_SEQ",allocationSize = 1)
 	@GeneratedValue(generator = "profseq", strategy = GenerationType.SEQUENCE)
 	@Column(name = "ID", unique = true, nullable = false, precision = 22, scale = 0)
 	public BigDecimal getId() {

@@ -9,12 +9,11 @@ import java.awt.event.ActionEvent;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
-import com.sun.scenario.effect.AbstractShadow.ShadowMode;
-
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JSeparator;
+import Singleton.*;
 
 public class MainFrame extends JFrame {
 
@@ -49,8 +48,57 @@ public class MainFrame extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public MainFrame() {
-		
+	public MainFrame() {		
+		initFrame();		
+		showLoginPanel();
+	}
+	
+	public void setMenuVisible(boolean bool){
+		this.menuBar.setVisible(bool);
+	}
+	
+	public void showLoginPanel() {
+		setTitle("Logare sistem gestiune prezente");
+		mainPanel.setVisible(false);
+		adminPanel.setVisible(false);
+		loginPanel.resetState();
+		setContentPane(loginPanel);
+		loginPanel.setVisible(true);
+		mnUnelte.setVisible(false);
+		mntmDelogare.setVisible(false);
+		setMenuVisible(false);
+		pack();
+	}
+	
+	public void showMainPanel() {
+		setMenuVisible(true);
+		setTitle("Gestiune module pentru profesorul: "+Singleton.getInstance().currentUser.getUsername());
+		loginPanel.setVisible(false);
+		adminPanel.setVisible(false);
+		mainPanel.loadFromDB();
+		setContentPane(mainPanel);
+		mainPanel.setVisible(true);
+		mnUnelte.setVisible(true);
+		mntmDelogare.setVisible(true);
+		mntmGestionareModule.setVisible(false);
+		mntmAdministrare.setVisible(true);
+		pack();
+		setLocationRelativeTo(null);
+	}
+	
+	public void showAdminPanel() {
+		setTitle("Administrare baza de date");
+		mntmAdministrare.setVisible(false);
+		mntmGestionareModule.setVisible(true);
+		mainPanel.setVisible(false);
+		setContentPane(adminPanel);
+		adminPanel.setVisible(true);
+		pack();
+		setLocationRelativeTo(null);
+		//mnUnel
+	}
+	
+	public void initFrame(){
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (ClassNotFoundException | InstantiationException
@@ -60,7 +108,7 @@ public class MainFrame extends JFrame {
 		
 		setTitle("Logare sistem gestiune prezente");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 753, 498);
+		//setBounds(100, 100, 750, 500);
 		
 		setResizable(false);
 		setLocationRelativeTo(null);
@@ -117,7 +165,7 @@ public class MainFrame extends JFrame {
 		mntmGestionareModule.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				//FIX ME!!!
-				showMainPanel("");
+				showMainPanel();
 			}
 		});
 		mnUnelte.add(mntmGestionareModule);
@@ -126,41 +174,5 @@ public class MainFrame extends JFrame {
 		mntmDelogare.setVisible(false);
 		mntmGestionareModule.setVisible(false);
 		
-		
-		setContentPane(loginPanel);
-	}
-	
-	public void showLoginPanel() {
-		setTitle("Logare sistem gestiune prezente");
-		mainPanel.setVisible(false);
-		adminPanel.setVisible(false);
-		loginPanel.resetState();
-		setContentPane(loginPanel);
-		loginPanel.setVisible(true);
-		mnUnelte.setVisible(false);
-		mntmDelogare.setVisible(false);
-	}
-	
-	public void showMainPanel(String user) {
-		setTitle("Gestiune module pentru profesorul: %NUME_HERE%");
-		loginPanel.setVisible(false);
-		adminPanel.setVisible(false);
-		mainPanel.loadFromDB(user);
-		setContentPane(mainPanel);
-		mainPanel.setVisible(true);
-		mnUnelte.setVisible(true);
-		mntmDelogare.setVisible(true);
-		mntmGestionareModule.setVisible(false);
-		mntmAdministrare.setVisible(true);
-	}
-	
-	public void showAdminPanel() {
-		setTitle("Administrare baza de date");
-		mntmAdministrare.setVisible(false);
-		mntmGestionareModule.setVisible(true);
-		mainPanel.setVisible(false);
-		setContentPane(adminPanel);
-		adminPanel.setVisible(true);
-		//mnUnel
 	}
 }

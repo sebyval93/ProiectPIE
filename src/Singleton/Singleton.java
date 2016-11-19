@@ -3,16 +3,20 @@ package Singleton;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
+
+import Services.SaptamanaService;
 import entity.*;
 
 public class Singleton {
 
 	private static Singleton singleton = null;
 	public SessionFactory sessionFactory;
-	public Utilizator user = null;
+	public Utilizator currentUser = null;
+	public Saptamana currentWeek = null;
 	
 	private Singleton(){
 		initSingleton();
+		getCurrentSession();
 	}
 	
 	public static Singleton getInstance() {
@@ -24,8 +28,12 @@ public class Singleton {
 	
 	public void initSingleton(){
 		buildSessionFactory();
+		
 	}
 	
+	public void getCurrentWeek(){
+		currentWeek = SaptamanaService.getCurrentWeek();
+	}
 	
 	//Build the sessionFactory
 	public void buildSessionFactory(){

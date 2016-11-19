@@ -1,5 +1,6 @@
 package gui_system;
 
+import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -72,6 +73,7 @@ public class MainPanel extends JPanel {
 		});
 		btnBack.setBounds(10, 416, 730, 23);
 		add(btnBack);
+		this.setPreferredSize(new Dimension(750, 450));
 
 	}
 	
@@ -79,8 +81,7 @@ public class MainPanel extends JPanel {
 		parentFrame = frame;
 	}
 	
-	public void loadFromDB(String user) {
-		context.setLoggedUser(user);
+	public void loadFromDB() {
 		context.switchToModule();
 	}
 

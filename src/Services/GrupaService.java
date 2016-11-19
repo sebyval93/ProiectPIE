@@ -33,7 +33,7 @@ public final class GrupaService {
 			session = Singleton.getInstance().getNewSession();
 			session.beginTransaction();
 			Grupa grupa = new Grupa(an,nume);
-			session.save(grupa);
+			session.update(grupa);
 			session.getTransaction().commit();
 			done = true;
 		}catch (Exception e) {

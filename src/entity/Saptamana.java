@@ -2,7 +2,6 @@ package entity;
 //made by DMIRICA
 
 import java.math.BigDecimal;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -48,7 +47,6 @@ public class Saptamana implements java.io.Serializable {
 		this.denumire = denumire;
 		this.startdate = startdate;
 		this.enddate = enddate;
-		this.prezentas = prezentas;
 	}
 
 	public Saptamana(BigDecimal id, Semestru semestru, String denumire, Date startdate, Date enddate,
@@ -62,7 +60,7 @@ public class Saptamana implements java.io.Serializable {
 	}
 
 	@Id
-	@SequenceGenerator(name = "saptseq", sequenceName = "SAPTAMANA_SEQ")
+	@SequenceGenerator(name = "saptseq", sequenceName = "SAPTAMANA_SEQ",allocationSize = 1)
 	@GeneratedValue(generator = "saptseq", strategy = GenerationType.SEQUENCE)
 	@Column(name = "ID", unique = true, nullable = false, precision = 22, scale = 0)
 	public BigDecimal getId() {
@@ -123,7 +121,6 @@ public class Saptamana implements java.io.Serializable {
 
 	@Override
 	public String toString() {
-		// TODO Auto-generated method stub
 		return "week "+this.getId()+"\nFirst day "+this.getStartdate()+" \nLast day "+this.getEnddate();
 	}
 	

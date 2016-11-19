@@ -50,7 +50,7 @@ public class Grupa implements java.io.Serializable {
 	}
 
 	@Id
-	@SequenceGenerator(name = "grupaseq", sequenceName = "GRUPA_SEQ")
+	@SequenceGenerator(name = "grupaseq", sequenceName = "GRUPA_SEQ",allocationSize = 1)
 	@GeneratedValue(generator = "grupaseq", strategy = GenerationType.SEQUENCE)
 	@Column(name = "ID", unique = true, nullable = false, precision = 22, scale = 0)
 	public BigDecimal getId() {

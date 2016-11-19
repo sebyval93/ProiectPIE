@@ -45,7 +45,7 @@ public class Semestru implements java.io.Serializable {
 	@Id
 
 	@Column(name = "ID", unique = true, nullable = false, precision = 22, scale = 0)
-	@SequenceGenerator(name = "semseq", sequenceName = "SEMESTRU_SEQ")
+	@SequenceGenerator(name = "semseq", sequenceName = "SEMESTRU_SEQ",allocationSize = 1)
 	@GeneratedValue(generator = "semseq", strategy = GenerationType.SEQUENCE)
 	public BigDecimal getId() {
 		return this.id;

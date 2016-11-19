@@ -53,7 +53,7 @@ public class Prezenta implements java.io.Serializable {
 	}
 
 	@Id
-	@SequenceGenerator(name = "prezseq", sequenceName = "PREZENTA_SEQ")
+	@SequenceGenerator(name = "prezseq", sequenceName = "PREZENTA_SEQ",allocationSize = 1)
 	@GeneratedValue(generator = "prezseq", strategy = GenerationType.SEQUENCE)
 	@Column(name = "ID", unique = true, nullable = false, precision = 22, scale = 0)
 	public BigDecimal getId() {

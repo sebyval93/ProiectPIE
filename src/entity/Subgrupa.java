@@ -50,7 +50,7 @@ public class Subgrupa implements java.io.Serializable {
 	}
 
 	@Id
-	@SequenceGenerator(name = "subgrseq", sequenceName = "SUBGRUPA_SEQ")
+	@SequenceGenerator(name = "subgrseq", sequenceName = "SUBGRUPA_SEQ",allocationSize = 1)
 	@GeneratedValue(generator = "subgrseq", strategy = GenerationType.SEQUENCE)	
 	@Column(name = "ID", unique = true, nullable = false, precision = 22, scale = 0)
 	public BigDecimal getId() {
