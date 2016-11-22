@@ -5,16 +5,17 @@ import javax.swing.JLabel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
+import javax.swing.text.AbstractDocument;
+
 import Utils.Functions;
+import javax.swing.SwingConstants;
 
 public class DisciplinaCtrlPanel extends JPanel {
-	private JTextField txtDenumire;
-	private JTextField txtNumeScurt;
-	private JTextField txtAn;
-	private JTextField txtOreCurs;
-	private JTextField txtOreLaborator;
-	private JTextField txtOreSeminar;
-	private JTextField txtOreProiect;
+	private JTextField txtDenumire, txtNumeScurt, 
+		txtAn, txtOreCurs, txtOreLaborator, txtOreSeminar, 
+		txtOreProiect;
+	
+	private IntFilter oreFilter, anFilter;
 
 	/**
 	 * Create the panel.
@@ -23,6 +24,12 @@ public class DisciplinaCtrlPanel extends JPanel {
 		setLayout(null);
 		
 		setSize(584, 119);
+		
+		oreFilter = new IntFilter();
+		anFilter = new IntFilter();
+		
+		oreFilter.setMaxLength(3);
+		anFilter.setMaxLength(1);
 		
 		JLabel lblDenumire = new JLabel("Denumire:");
 		lblDenumire.setBounds(32, 34, 49, 14);
@@ -47,6 +54,7 @@ public class DisciplinaCtrlPanel extends JPanel {
 		add(lblAn);
 		
 		txtAn = new JTextField();
+		txtAn.setHorizontalAlignment(SwingConstants.CENTER);
 		txtAn.setBounds(290, 31, 30, 20);
 		add(txtAn);
 		txtAn.setColumns(10);
@@ -56,6 +64,7 @@ public class DisciplinaCtrlPanel extends JPanel {
 		add(lblOreCurs);
 		
 		txtOreCurs = new JTextField();
+		txtOreCurs.setHorizontalAlignment(SwingConstants.CENTER);
 		txtOreCurs.setBounds(402, 31, 30, 20);
 		add(txtOreCurs);
 		txtOreCurs.setColumns(10);
@@ -65,6 +74,7 @@ public class DisciplinaCtrlPanel extends JPanel {
 		add(lblOreLaborator);
 		
 		txtOreLaborator = new JTextField();
+		txtOreLaborator.setHorizontalAlignment(SwingConstants.CENTER);
 		txtOreLaborator.setColumns(10);
 		txtOreLaborator.setBounds(290, 67, 30, 20);
 		add(txtOreLaborator);
@@ -74,6 +84,7 @@ public class DisciplinaCtrlPanel extends JPanel {
 		add(lblOreSeminar);
 		
 		txtOreSeminar = new JTextField();
+		txtOreSeminar.setHorizontalAlignment(SwingConstants.CENTER);
 		txtOreSeminar.setColumns(10);
 		txtOreSeminar.setBounds(402, 67, 30, 20);
 		add(txtOreSeminar);
@@ -83,9 +94,22 @@ public class DisciplinaCtrlPanel extends JPanel {
 		add(lblOreProiect);
 		
 		txtOreProiect = new JTextField();
+		txtOreProiect.setHorizontalAlignment(SwingConstants.CENTER);
 		txtOreProiect.setColumns(10);
 		txtOreProiect.setBounds(512, 49, 30, 20);
 		add(txtOreProiect);
+		
+		AbstractDocument anDoc = (AbstractDocument) txtAn.getDocument();
+		anDoc.setDocumentFilter(anFilter);
+		
+		AbstractDocument oreCursDoc = (AbstractDocument) txtOreCurs.getDocument();
+		oreCursDoc.setDocumentFilter(oreFilter);
+		AbstractDocument oreSeminarDoc = (AbstractDocument) txtOreSeminar.getDocument();
+		oreSeminarDoc.setDocumentFilter(oreFilter);
+		AbstractDocument oreLaboratorDoc = (AbstractDocument) txtOreLaborator.getDocument();
+		oreLaboratorDoc.setDocumentFilter(oreFilter);
+		AbstractDocument oreProiectDoc = (AbstractDocument) txtOreProiect.getDocument();
+		oreProiectDoc.setDocumentFilter(oreFilter);
 
 	}
 	
@@ -115,6 +139,16 @@ public class DisciplinaCtrlPanel extends JPanel {
 		};
 		
 		return result;
+	}
+	
+	public void resetFields() {
+		txtDenumire.setText("");
+		txtAn.setText("");
+		txtOreCurs.setText("");
+		txtOreLaborator.setText("");
+		txtOreSeminar.setText("");
+		txtOreProiect.setText("");
+		txtNumeScurt.setText("");
 	}
 	
 

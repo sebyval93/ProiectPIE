@@ -76,22 +76,27 @@ public class AdminPanel extends JPanel {
 					DefaultTableModel model = (DefaultTableModel) t.getModel();
 					Point p = me.getPoint();
 					int row = t.rowAtPoint(p);
-					String selectedValue = (String) model.getValueAt(row, 0);
-					if (selectedValue == "Student") {
-						context.switchToStudent();
-						showStudentCtrlPanel();
-					}
-					else if (selectedValue == "Profesor") {
-						context.switchToProfesorModel();
-						showProfesorCtrlPanel();
-					}
-					else if (selectedValue == "Disciplina") {
-						context.switchToDisciplinaModel();
-						showDisciplinaCtrlPanel();
-					}
-					else if (selectedValue == "Situatie didactica") {
-						context.switchToModulModel();
-						showSitDidacticaCtrlPanel();
+					try {
+						String selectedValue = (String) model.getValueAt(row, 0);
+						if (selectedValue == "Student") {
+							context.switchToStudent();
+							showStudentCtrlPanel();
+						}
+						else if (selectedValue == "Profesor") {
+							context.switchToProfesorModel();
+							showProfesorCtrlPanel();
+						}
+						else if (selectedValue == "Disciplina") {
+							context.switchToDisciplinaModel();
+							showDisciplinaCtrlPanel();
+						}
+						else if (selectedValue == "Situatie didactica") {
+							context.switchToModulModel();
+							showSitDidacticaCtrlPanel();
+						}
+					} 
+					catch(Exception e) {
+						//mysterious out of bounds error
 					}
 				}
 			}
@@ -155,19 +160,30 @@ public class AdminPanel extends JPanel {
 	}
 	
 	public void showStudentCtrlPanel() {
+		resetAllFields();
 		cardLayout.show(ctrlPanel, "studenti");
 	}
 	
 	public void showDisciplinaCtrlPanel() {
+		resetAllFields();
 		cardLayout.show(ctrlPanel, "disciplina");
 	}
 	
 	public void showProfesorCtrlPanel() {
+		resetAllFields();
 		cardLayout.show(ctrlPanel, "profesor");
 	}
 	
 	public void showSitDidacticaCtrlPanel() {
+		resetAllFields();
 		cardLayout.show(ctrlPanel, "situatie");
+	}
+	
+	public void resetAllFields() {
+		studentiCtrlPanel.resetFields();
+		disciplinaCtrlPanel.resetFields();
+		profesorCtrlPanel.resetFields();
+		sitDidacticaCtrlPanel.resetFields();
 	}
 	
 }

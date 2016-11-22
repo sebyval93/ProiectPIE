@@ -43,4 +43,8 @@ public class ProfesorCtrlPanel extends JPanel {
 		
 		return result;
 	}
+	
+	public void resetFields() {
+		txtNumeProfesor.setText("");
+	}
 }

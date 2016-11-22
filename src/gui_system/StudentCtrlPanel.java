@@ -79,4 +79,10 @@ public class StudentCtrlPanel extends JPanel {
 		
 		return result;
 	}
+	
+	public void resetFields() {
+		txtNumeStudent.setText("");
+		cbGrupa.setSelectedIndex(-1);
+		cbSubgrupa.setSelectedIndex(-1);
+	}
 }
