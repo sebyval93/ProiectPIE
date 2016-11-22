@@ -4,8 +4,10 @@ import javax.swing.JPanel;
 import java.awt.Dimension;
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.SwingConstants;
 
 import Services.UtilizatorService;
@@ -64,29 +66,35 @@ public class LoginPanel extends JPanel {
 		JButton LoginButton = new JButton("Logare");
 		LoginButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(	!Functions.stringIsNullOrEmpty(IdTF.getText()) &&
-						!Functions.stringIsNullOrEmpty(String.valueOf(PasswordTF.getPassword()))){					
+				if(	!Functions.stringIsNullOrEmpty(IdTF.getText())){					
 					Utilizator user = UtilizatorService.getUtilizatorByUsername(IdTF.getText());
 					if(user != null){
 						try {
-							if(user.getPassword().equals(
-									EncryptService.getHashOfString(String.valueOf(PasswordTF.getPassword())))){
-								Singleton.getInstance().currentUser = user;
-								PasswordTF.setText("");
-								IdTF.setText("");
-								parentFrame.showMainPanel();
+							if(user.getPassword() == null){
+								System.out.println("yeah");
+								NewPasswordModal modalPanel = new NewPasswordModal(user);
+								modalPanel.setParentFrame(parentFrame);
 							}else{
-								warningLbl.setText("Datele cu corespund!");
+								
+								if(user.getPassword().equals(
+										EncryptService.getHashOfString(String.valueOf(PasswordTF.getPassword())))){
+									System.out.println("nooh");
+									Singleton.getInstance().currentUser = user;
+									PasswordTF.setText("");
+									IdTF.setText("");
+									parentFrame.showMainPanel();
+								}else{
+									warningLbl.setText("Datele nu corespund!");
+								}
 							}
 						} catch (Exception e1) {
 							e1.printStackTrace();
 						}
 					}else{
-						warningLbl.setText("Acest username nu exista!");	
+						warningLbl.setText("Nu exista acest cont!");	
 					}
-									
 				}else{										
-					warningLbl.setText("Completeaza toate campurile!");					
+					warningLbl.setText("Introduceti un nume de cont!");					
 				}
 			}
 		});
@@ -105,5 +113,37 @@ public class LoginPanel extends JPanel {
 	public void resetState() {
 		IdTF.setText("");
 		PasswordTF.setText("");
+	}
+	
+	public void createPasswordForNewUser(Utilizator x){
+		//if(x.getPassword() == null){
+			
+		//}
+		
+		JPasswordField Password = new JPasswordField();
+		JPasswordField PasswordAgain = new JPasswordField();
+		JLabel warningLabel = new JLabel();
+		warningLabel.setForeground(Color.red);
+		final JComponent[] inputs = new JComponent[] {
+		        new JLabel("Parola"),
+		        Password,
+		        new JLabel("Rescrieti parola"),
+		        PasswordAgain,
+		        warningLabel
+		       
+		};
+		int result = JOptionPane.showConfirmDialog(null, inputs, "Seteaza o parola contului", JOptionPane.PLAIN_MESSAGE);
+		if (result == JOptionPane.OK_OPTION) {
+			if(String.valueOf(PasswordAgain.getPassword()).equals(String.valueOf(PasswordAgain.getPassword()))){
+				System.out.println("You entered " +
+			    		String.valueOf(Password.getPassword()) + ", " +
+			    		String.valueOf(PasswordAgain.getPassword()));
+			}else{
+				warningLabel.setText("Parolele nu corespund");
+			}
+		    
+		} else {
+		    System.out.println("User canceled / closed the dialog, result = " + result);
+		}
 	}
 }

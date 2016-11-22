@@ -120,11 +120,28 @@ public final class UtilizatorService {
 		
 	}
 	
-	public static boolean generateAccounts(){
+	public static void generateAccounts(){
+		deleteAllFromUtilizator();
+		Functions.resetSequence("utilizator_seq");
 		List<Profesor> profesori = ProfesorService.getAllFromProfesor();
-		boolean done = false;
 		for(Profesor p : profesori){
-			done = generateAccount(p);
+			generateAccount(p);
+		}
+	}
+	
+	public static boolean deleteAllFromUtilizator(){
+		Session session = null;
+		boolean done = false;
+		try{
+			session = Singleton.getInstance().getNewSession();
+			session.beginTransaction();
+			session.createQuery("delete from User_Role").executeUpdate();
+			session.getTransaction().commit();
+			done = true;
+		}catch(Exception e){
+			  e.printStackTrace();   
+		}finally{
+			session.close();
 		}
 		return done;
 	}
@@ -142,7 +159,6 @@ public final class UtilizatorService {
 		}
 		return done;
 	}
-	
 	
 	public static List<Utilizator> getAllFromUtilizator(){
 		List<Utilizator> list = null;
