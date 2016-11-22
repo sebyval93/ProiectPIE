@@ -46,6 +46,8 @@ public class AdminContext {
 		for (int i = 0; i < selectionData.length; ++i) {
 			tableSelectionModel.addRow(selectionData[i]);
 		}
+		
+		selTable.setRowHeight(271 / 4);
 	}
 	
 	public void switchToStudent() {

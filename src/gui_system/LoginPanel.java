@@ -46,6 +46,13 @@ public class LoginPanel extends JPanel {
 		panel.add(IdLbl);
 		
 		IdTF = new JTextField();
+		IdTF.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_ENTER)
+					doLogin();
+			}
+		});
 		IdTF.setHorizontalAlignment(SwingConstants.CENTER);
 		IdTF.setBounds(35, 0, 155, 20);
 		panel.add(IdTF);
