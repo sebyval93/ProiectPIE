@@ -23,7 +23,7 @@ public class DisciplinaCtrlPanel extends JPanel {
 	public DisciplinaCtrlPanel() {
 		setLayout(null);
 		
-		setSize(584, 119);
+		setSize(734, 119);
 		
 		oreFilter = new IntFilter();
 		anFilter = new IntFilter();
@@ -31,97 +31,102 @@ public class DisciplinaCtrlPanel extends JPanel {
 		oreFilter.setMaxLength(3);
 		anFilter.setMaxLength(1);
 		
+		JPanel panel = new JPanel();
+		panel.setBounds(44, 31, 646, 56);
+		add(panel);
+		panel.setLayout(null);
+		
 		JLabel lblDenumire = new JLabel("Denumire:");
-		lblDenumire.setBounds(32, 34, 49, 14);
-		add(lblDenumire);
+		lblDenumire.setBounds(0, 3, 49, 14);
+		panel.add(lblDenumire);
 		
 		txtDenumire = new JTextField();
-		txtDenumire.setBounds(101, 31, 102, 20);
-		add(txtDenumire);
+		txtDenumire.setBounds(69, 0, 238, 20);
+		panel.add(txtDenumire);
 		txtDenumire.setColumns(10);
 		
 		JLabel lblNumeScurt = new JLabel("Nume scurt:");
-		lblNumeScurt.setBounds(32, 70, 58, 14);
-		add(lblNumeScurt);
+		lblNumeScurt.setBounds(0, 39, 58, 14);
+		panel.add(lblNumeScurt);
 		
 		txtNumeScurt = new JTextField();
-		txtNumeScurt.setBounds(101, 67, 102, 20);
-		add(txtNumeScurt);
+		txtNumeScurt.setBounds(69, 36, 238, 20);
+		panel.add(txtNumeScurt);
 		txtNumeScurt.setColumns(10);
 		
 		JLabel lblAn = new JLabel("An:");
-		lblAn.setBounds(213, 34, 17, 14);
-		add(lblAn);
+		lblAn.setBounds(317, 3, 17, 14);
+		panel.add(lblAn);
 		
 		txtAn = new JTextField();
+		txtAn.setBounds(394, 0, 30, 20);
+		panel.add(txtAn);
 		txtAn.setHorizontalAlignment(SwingConstants.CENTER);
-		txtAn.setBounds(290, 31, 30, 20);
-		add(txtAn);
 		txtAn.setColumns(10);
 		
 		JLabel lblOreCurs = new JLabel("Ore curs:");
-		lblOreCurs.setBounds(330, 34, 46, 14);
-		add(lblOreCurs);
+		lblOreCurs.setBounds(434, 3, 46, 14);
+		panel.add(lblOreCurs);
 		
 		txtOreCurs = new JTextField();
+		txtOreCurs.setBounds(506, 0, 30, 20);
+		panel.add(txtOreCurs);
 		txtOreCurs.setHorizontalAlignment(SwingConstants.CENTER);
-		txtOreCurs.setBounds(402, 31, 30, 20);
-		add(txtOreCurs);
 		txtOreCurs.setColumns(10);
 		
 		JLabel lblOreLaborator = new JLabel("Ore laborator:");
-		lblOreLaborator.setBounds(213, 70, 69, 14);
-		add(lblOreLaborator);
+		lblOreLaborator.setBounds(317, 39, 69, 14);
+		panel.add(lblOreLaborator);
 		
 		txtOreLaborator = new JTextField();
+		txtOreLaborator.setBounds(394, 36, 30, 20);
+		panel.add(txtOreLaborator);
 		txtOreLaborator.setHorizontalAlignment(SwingConstants.CENTER);
 		txtOreLaborator.setColumns(10);
-		txtOreLaborator.setBounds(290, 67, 30, 20);
-		add(txtOreLaborator);
 		
 		JLabel lblOreSeminar = new JLabel("Ore seminar:");
-		lblOreSeminar.setBounds(330, 70, 62, 14);
-		add(lblOreSeminar);
+		lblOreSeminar.setBounds(434, 39, 62, 14);
+		panel.add(lblOreSeminar);
 		
 		txtOreSeminar = new JTextField();
+		txtOreSeminar.setBounds(506, 36, 30, 20);
+		panel.add(txtOreSeminar);
 		txtOreSeminar.setHorizontalAlignment(SwingConstants.CENTER);
 		txtOreSeminar.setColumns(10);
-		txtOreSeminar.setBounds(402, 67, 30, 20);
-		add(txtOreSeminar);
 		
 		JLabel lblOreProiect = new JLabel("Ore proiect:");
-		lblOreProiect.setBounds(444, 52, 58, 14);
-		add(lblOreProiect);
+		lblOreProiect.setBounds(548, 21, 58, 14);
+		panel.add(lblOreProiect);
 		
 		txtOreProiect = new JTextField();
+		txtOreProiect.setBounds(616, 18, 30, 20);
+		panel.add(txtOreProiect);
 		txtOreProiect.setHorizontalAlignment(SwingConstants.CENTER);
 		txtOreProiect.setColumns(10);
-		txtOreProiect.setBounds(512, 49, 30, 20);
-		add(txtOreProiect);
+		AbstractDocument oreProiectDoc = (AbstractDocument) txtOreProiect.getDocument();
+		AbstractDocument oreSeminarDoc = (AbstractDocument) txtOreSeminar.getDocument();
+		AbstractDocument oreLaboratorDoc = (AbstractDocument) txtOreLaborator.getDocument();
+		
+		AbstractDocument oreCursDoc = (AbstractDocument) txtOreCurs.getDocument();
 		
 		AbstractDocument anDoc = (AbstractDocument) txtAn.getDocument();
 		anDoc.setDocumentFilter(anFilter);
-		
-		AbstractDocument oreCursDoc = (AbstractDocument) txtOreCurs.getDocument();
 		oreCursDoc.setDocumentFilter(oreFilter);
-		AbstractDocument oreSeminarDoc = (AbstractDocument) txtOreSeminar.getDocument();
 		oreSeminarDoc.setDocumentFilter(oreFilter);
-		AbstractDocument oreLaboratorDoc = (AbstractDocument) txtOreLaborator.getDocument();
 		oreLaboratorDoc.setDocumentFilter(oreFilter);
-		AbstractDocument oreProiectDoc = (AbstractDocument) txtOreProiect.getDocument();
 		oreProiectDoc.setDocumentFilter(oreFilter);
 
 	}
 	
-	public void setFields(String denumire, int an, int oreCurs, int oreLaborator, 
-			int oreSeminar, int oreProiect, String numeScurt) {
+	public void setFields(String denumire, String an, String oreCurs, String oreLaborator, 
+			String oreSeminar, String oreProiect, String numeScurt) {
 		txtDenumire.setText(denumire);
 		txtAn.setText(String.valueOf(an));
 		txtOreCurs.setText(String.valueOf(oreCurs));
 		txtOreLaborator.setText(String.valueOf(oreLaborator));
 		txtOreSeminar.setText(String.valueOf(oreSeminar));
 		txtOreProiect.setText(String.valueOf(oreProiect));
-		txtNumeScurt.setText(String.valueOf(numeScurt));
+		txtNumeScurt.setText(numeScurt);
 		
 	}
 	

@@ -37,6 +37,8 @@ public class AdminPanel extends JPanel {
 	private JPanel ctrlPanel;
 	private CardLayout cardLayout;
 	private JPanel coverPanel;
+	private JButton btnCautare, btnAdaugare,
+		btnModificare, btnStergere;
 
 	public AdminPanel() {
 		setLayout(null);
@@ -82,11 +84,11 @@ public class AdminPanel extends JPanel {
 		cardLayout = new CardLayout();
 		
 		coverPanel = new JPanel();
-		coverPanel.setBounds(156, 320, 584, 119);
+		coverPanel.setBounds(156, 320, 734, 119);
 		//add(coverPanel);
 		
 		ctrlPanel = new JPanel();
-		ctrlPanel.setBounds(156, 320, 584, 119);
+		ctrlPanel.setBounds(156, 320, 734, 119);
 		add(ctrlPanel);
 		ctrlPanel.setLayout(cardLayout);
 		
@@ -95,6 +97,57 @@ public class AdminPanel extends JPanel {
 		//private String selectionData[][] = { { "Student" }, { "Profesor" }, { "Disciplina" }, { "An" }, { "Grupa" }, 
 		//		{ "Subgrupa" }, { "Modul" }, { "Prezenta" }, { "Saptamana" }, { "Semestru" } };
 		
+		btnCautare = new JButton("Cautare");
+		btnCautare.setBounds(32, 326, 89, 23);
+		add(btnCautare);
+		
+		btnAdaugare = new JButton("Adaugare");
+		btnAdaugare.setBounds(32, 353, 89, 23);
+		add(btnAdaugare);
+		this.setPreferredSize(new Dimension(900, 450));
+		
+		btnModificare = new JButton("Modificare");
+		btnModificare.setEnabled(false);
+		btnModificare.setBounds(32, 380, 89, 23);
+		add(btnModificare);
+		
+		btnStergere = new JButton("Stergere");
+		btnStergere.setEnabled(false);
+		btnStergere.setBounds(32, 407, 89, 23);
+		add(btnStergere);
+		
+		mainTable.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent me) {
+				if (me.getButton() == MouseEvent.BUTTON1) {
+					JTable t =(JTable) me.getSource();
+					DefaultTableModel model = (DefaultTableModel) t.getModel();
+					Point p = me.getPoint();
+					int row = t.rowAtPoint(p);
+					if (context.getCurrentModelName().equals("studentModel")) {
+						studentiCtrlPanel.setFields((String)model.getValueAt(row, 0), (String)model.getValueAt(row, 1), 
+								(String)model.getValueAt(row, 2));
+						enableEditButtons(true);
+					}
+					else if (context.getCurrentModelName().equals("profesorModel")) {
+						profesorCtrlPanel.setFields((String)model.getValueAt(row, 0));
+						enableEditButtons(true);
+					}
+					else if (context.getCurrentModelName().equals("disciplinaModel")) {
+						disciplinaCtrlPanel.setFields((String)model.getValueAt(row, 0), model.getValueAt(row, 1).toString(), 
+								model.getValueAt(row, 2).toString(), model.getValueAt(row, 3).toString(), model.getValueAt(row, 4).toString(), 
+								model.getValueAt(row, 5).toString(), (String)model.getValueAt(row, 6));
+						enableEditButtons(true);
+					}
+					else if (context.getCurrentModelName().equals("modulModel")) {
+						//TODO
+						
+						enableEditButtons(true);
+					}
+				}
+			}
+		});
+		
 		selTable.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent me) {
 				if (me.getButton() == MouseEvent.BUTTON1) {
@@ -102,6 +155,7 @@ public class AdminPanel extends JPanel {
 					DefaultTableModel model = (DefaultTableModel) t.getModel();
 					Point p = me.getPoint();
 					int row = t.rowAtPoint(p);
+					enableEditButtons(false);
 					try {
 						String selectedValue = (String) model.getValueAt(row, 0);
 						if (selectedValue == "Student") {
@@ -115,6 +169,9 @@ public class AdminPanel extends JPanel {
 						else if (selectedValue == "Disciplina") {
 							context.switchToDisciplinaModel();
 							showDisciplinaCtrlPanel();
+							
+							setDisciplinaTableWidth();
+							
 						}
 						else if (selectedValue == "Situatie didactica") {
 							context.switchToModulModel();
@@ -129,35 +186,16 @@ public class AdminPanel extends JPanel {
 		});
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 11, 136, 298);
+		scrollPane.setBounds(10, 11, 136, 295);
 		add(scrollPane);
 		
 		scrollPane.setViewportView(selTable);
 		
 		JScrollPane scrollPane_1 = new JScrollPane();
-		scrollPane_1.setBounds(156, 11, 584, 298);
+		scrollPane_1.setBounds(156, 11, 734, 295);
 		add(scrollPane_1);
 		
 		scrollPane_1.setViewportView(mainTable);
-		
-		JButton btnCautare = new JButton("Cautare");
-		btnCautare.setBounds(32, 320, 89, 23);
-		add(btnCautare);
-		
-		JButton btnAdaugare = new JButton("Adaugare");
-		btnAdaugare.setBounds(32, 347, 89, 23);
-		add(btnAdaugare);
-		this.setPreferredSize(new Dimension(750,450));
-		
-		JButton btnModificare = new JButton("Modificare");
-		btnModificare.setEnabled(false);
-		btnModificare.setBounds(32, 374, 89, 23);
-		add(btnModificare);
-		
-		JButton btnStergere = new JButton("Stergere");
-		btnStergere.setEnabled(false);
-		btnStergere.setBounds(32, 401, 89, 23);
-		add(btnStergere);
 		
 	}
 	
@@ -210,6 +248,23 @@ public class AdminPanel extends JPanel {
 		disciplinaCtrlPanel.resetFields();
 		profesorCtrlPanel.resetFields();
 		sitDidacticaCtrlPanel.resetFields();
+	}
+	
+	private void setDisciplinaTableWidth() {
+		mainTable.getColumnModel().getColumn(1).setMinWidth(40);
+		mainTable.getColumnModel().getColumn(1).setMaxWidth(40);
+		
+		for (int i = 2; i < 6; ++i) {
+			mainTable.getColumnModel().getColumn(i).setMinWidth(75);
+			mainTable.getColumnModel().getColumn(i).setMaxWidth(75);
+		}
+		mainTable.getColumnModel().getColumn(6).setMinWidth(65);
+		mainTable.getColumnModel().getColumn(6).setMaxWidth(65);
+	}
+	
+	private void enableEditButtons(boolean enable) {
+		btnModificare.setEnabled(enable);
+		btnStergere.setEnabled(enable);
 	}
 	
 }

@@ -177,42 +177,6 @@ public class AdminContext {
 			disciplinaModel.addColumn(disciplinaColumns[i]);
 		}
 		
-		anModel = new DefaultTableModel(){
-
-		    @Override
-		    public boolean isCellEditable(int row, int column) {
-		       //all cells false
-		       return false;
-		    }
-		};
-		for (int i = 0; i < anColumns.length; ++i) {
-			anModel.addColumn(anColumns[i]);
-		}
-		
-		grupaModel = new DefaultTableModel(){
-
-		    @Override
-		    public boolean isCellEditable(int row, int column) {
-		       //all cells false
-		       return false;
-		    }
-		};
-		for (int i = 0; i < grupaColumns.length; ++i) {
-			grupaModel.addColumn(grupaColumns[i]);
-		}
-		
-		subgrupaModel = new DefaultTableModel(){
-
-		    @Override
-		    public boolean isCellEditable(int row, int column) {
-		       //all cells false
-		       return false;
-		    }
-		};
-		for (int i = 0; i < subgrupaColumns.length; ++i) {
-			subgrupaModel.addColumn(subgrupaColumns[i]);
-		}
-		
 		modulModel = new DefaultTableModel(){
 
 		    @Override
@@ -225,41 +189,6 @@ public class AdminContext {
 			modulModel.addColumn(modulColumns[i]);
 		}
 		
-		prezentaModel = new DefaultTableModel(){
-
-		    @Override
-		    public boolean isCellEditable(int row, int column) {
-		       //all cells false
-		       return false;
-		    }
-		};
-		for (int i = 0; i < prezentaColumns.length; ++i) {
-			prezentaModel.addColumn(prezentaColumns[i]);
-		}
-		
-		saptamanaModel = new DefaultTableModel(){
-
-		    @Override
-		    public boolean isCellEditable(int row, int column) {
-		       //all cells false
-		       return false;
-		    }
-		};
-		for (int i = 0; i < saptamanaColumns.length; ++i) {
-			saptamanaModel.addColumn(saptamanaColumns[i]);
-		}
-		
-		semestruModel = new DefaultTableModel(){
-
-		    @Override
-		    public boolean isCellEditable(int row, int column) {
-		       //all cells false
-		       return false;
-		    }
-		};
-		for (int i = 0; i < semestruColumns.length; ++i) {
-			semestruModel.addColumn(semestruColumns[i]);
-		}
 	}
 	
 	public void loadAllFromStudent(){

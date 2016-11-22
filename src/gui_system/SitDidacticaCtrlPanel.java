@@ -22,60 +22,65 @@ public class SitDidacticaCtrlPanel extends JPanel {
 	public SitDidacticaCtrlPanel() {
 		setLayout(null);
 		
-		setSize(584, 119);
+		setSize(734, 119);
+		
+		JPanel panel = new JPanel();
+		panel.setBounds(109, 31, 516, 57);
+		add(panel);
+		panel.setLayout(null);
 		
 		JLabel lblNumeStudent = new JLabel("Disciplina:");
-		lblNumeStudent.setBounds(30, 34, 47, 14);
-		add(lblNumeStudent);
+		lblNumeStudent.setBounds(0, 3, 47, 14);
+		panel.add(lblNumeStudent);
 		
 		cbDisciplina = new JComboBox<String>();
+		cbDisciplina.setBounds(85, 0, 94, 20);
+		panel.add(cbDisciplina);
 		cbDisciplina.setSelectedIndex(-1);
-		cbDisciplina.setBounds(115, 31, 94, 20);
-		add(cbDisciplina);
 		
 		JLabel lblActivitate = new JLabel("Activitate:");
-		lblActivitate.setBounds(219, 34, 50, 14);
-		add(lblActivitate);
+		lblActivitate.setBounds(189, 3, 50, 14);
+		panel.add(lblActivitate);
 		
 		cbActivitate = new JComboBox<String>();
+		cbActivitate.setBounds(249, 0, 94, 20);
+		panel.add(cbActivitate);
 		cbActivitate.setSelectedIndex(-1);
-		cbActivitate.setBounds(279, 31, 94, 20);
-		add(cbActivitate);
 		
 		JLabel lblNumeProfesor = new JLabel("Nume profesor:");
-		lblNumeProfesor.setBounds(30, 70, 75, 14);
-		add(lblNumeProfesor);
+		lblNumeProfesor.setBounds(0, 39, 75, 14);
+		panel.add(lblNumeProfesor);
 		
 		cbProfesor = new JComboBox<String>();
-		cbProfesor.setBounds(115, 67, 94, 20);
-		add(cbProfesor);
+		cbProfesor.setBounds(85, 36, 94, 20);
+		panel.add(cbProfesor);
 		
 		JLabel lblInterval = new JLabel("Interval:");
-		lblInterval.setBounds(219, 70, 42, 14);
-		add(lblInterval);
+		lblInterval.setBounds(189, 39, 42, 14);
+		panel.add(lblInterval);
 		
 		cbInterval = new JComboBox<String>();
-		cbInterval.setBounds(279, 67, 94, 20);
-		add(cbInterval);
+		cbInterval.setBounds(249, 36, 94, 20);
+		panel.add(cbInterval);
 		
 		JLabel lblParticipanti = new JLabel("Participanti:");
-		lblParticipanti.setBounds(385, 34, 57, 14);
-		add(lblParticipanti);
+		lblParticipanti.setBounds(355, 3, 57, 14);
+		panel.add(lblParticipanti);
 		
 		cbParticipanti = new JComboBox<String>();
-		cbParticipanti.setBounds(452, 31, 94, 20);
-		add(cbParticipanti);
+		cbParticipanti.setBounds(422, 0, 94, 20);
+		panel.add(cbParticipanti);
 		
 		JRadioButton radioGrupa = new JRadioButton("Grupa");
+		radioGrupa.setBounds(361, 34, 71, 23);
+		panel.add(radioGrupa);
 		radioGrupa.setSelected(true);
 		buttonGroup.add(radioGrupa);
-		radioGrupa.setBounds(391, 65, 71, 23);
-		add(radioGrupa);
 		
 		JRadioButton radioSubgrupa = new JRadioButton("Subgrupa");
+		radioSubgrupa.setBounds(432, 34, 71, 23);
+		panel.add(radioSubgrupa);
 		buttonGroup.add(radioSubgrupa);
-		radioSubgrupa.setBounds(462, 65, 71, 23);
-		add(radioSubgrupa);
 
 		loadCombos();
 		

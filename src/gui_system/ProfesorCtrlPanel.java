@@ -15,15 +15,20 @@ public class ProfesorCtrlPanel extends JPanel {
 	public ProfesorCtrlPanel() {
 		setLayout(null);
 		
-		setSize(584, 119);
+		setSize(734, 119);
+		
+		JPanel panel = new JPanel();
+		panel.setBounds(228, 49, 277, 20);
+		add(panel);
+		panel.setLayout(null);
 		
 		JLabel lblNumeStudent = new JLabel("Nume profesor:");
-		lblNumeStudent.setBounds(194, 52, 75, 14);
-		add(lblNumeStudent);
+		lblNumeStudent.setBounds(0, 3, 75, 14);
+		panel.add(lblNumeStudent);
 		
 		txtNumeProfesor = new JTextField();
-		txtNumeProfesor.setBounds(279, 49, 102, 20);
-		add(txtNumeProfesor);
+		txtNumeProfesor.setBounds(85, 0, 192, 20);
+		panel.add(txtNumeProfesor);
 		txtNumeProfesor.setColumns(10);
 
 	}
