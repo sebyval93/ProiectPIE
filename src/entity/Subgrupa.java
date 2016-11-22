@@ -91,7 +91,7 @@ public class Subgrupa implements java.io.Serializable {
 
 	@Override
 	public String toString() {
-		return "Subgrupa [id=" + id + ", grupa=" + grupa + ", nume=" + nume + "]";
+		return nume;
 	}
 	
 	

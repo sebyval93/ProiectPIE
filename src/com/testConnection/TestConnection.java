@@ -19,10 +19,7 @@ public class TestConnection {
 
 	public static void main(String[] args){
 				
-		//Utilizator a = UtilizatorService.getUtilizatorByID(3);
-		//new NewPasswordModal(a);
-		//System.out.println(a.getPassword());
-		UtilizatorService.generateAccounts();
+		
 		
 	}
 	

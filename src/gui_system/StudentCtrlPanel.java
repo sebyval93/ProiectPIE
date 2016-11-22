@@ -2,14 +2,30 @@ package gui_system;
 
 import javax.swing.JPanel;
 import javax.swing.JLabel;
+import javax.swing.JList;
+
+import java.awt.Component;
+import java.util.List;
+import java.util.Vector;
+
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
+import javax.swing.event.ListDataListener;
+
+import Services.GrupaService;
+import Services.SubgrupaService;
+import entity.Grupa;
+import entity.Subgrupa;
 
 public class StudentCtrlPanel extends JPanel {
 	private JTextField txtNumeStudent;
-	private JComboBox<String> cbGrupa;
-	private JComboBox<String> cbSubgrupa;
+	private JComboBox cbGrupa;
+	private JComboBox cbSubgrupa;
+	List<Grupa> allFromGrupa;
+	List<Subgrupa> allFromSubgrupa;
 
 	/**
 	 * Create the panel.
@@ -27,12 +43,14 @@ public class StudentCtrlPanel extends JPanel {
 		txtNumeStudent.setBounds(107, 49, 102, 20);
 		add(txtNumeStudent);
 		txtNumeStudent.setColumns(10);
-		
+		allFromGrupa = GrupaService.getAllFromGrupa();
+		allFromSubgrupa = SubgrupaService.getAllFromSubgrupa();
 		JLabel lblGrupa = new JLabel("Grupa:");
 		lblGrupa.setBounds(219, 52, 33, 14);
 		add(lblGrupa);
 		
-		cbGrupa = new JComboBox<String>();
+		
+		cbGrupa = new JComboBox<>(allFromGrupa.toArray());
 		cbGrupa.setBounds(262, 49, 102, 20);
 		add(cbGrupa);
 		
@@ -40,7 +58,7 @@ public class StudentCtrlPanel extends JPanel {
 		lblSubgrupa.setBounds(374, 52, 55, 14);
 		add(lblSubgrupa);
 		
-		cbSubgrupa = new JComboBox<String>();
+		cbSubgrupa = new JComboBox<>(allFromSubgrupa.toArray());
 		cbSubgrupa.setBounds(439, 49, 102, 20);
 		add(cbSubgrupa);
 		
@@ -49,6 +67,7 @@ public class StudentCtrlPanel extends JPanel {
 	}
 	
 	public void loadCombos() {
+		//loadAllFromGrupa();
 		//init combo boxes with info from db.
 		//all of them.
 		
@@ -69,6 +88,7 @@ public class StudentCtrlPanel extends JPanel {
 		
 	}
 	
+
 	public Object[] getFields(boolean allowNull) {
 		if(!allowNull) {
 			if (txtNumeStudent.getText().length() == 0 || cbGrupa.getSelectedIndex() == -1 || cbSubgrupa.getSelectedIndex() == -1)

@@ -1,9 +1,26 @@
 package gui_system;
 
+import java.awt.Color;
+import java.awt.Component;
+import java.util.List;
+
+import javax.swing.DefaultListSelectionModel;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.border.Border;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
+
+import entity.*;
+import Services.DisciplinaService;
+import Services.GrupaService;
+import Services.ProfesorService;
+import Services.StudentService;
 
 public class AdminContext {
 	
@@ -29,12 +46,11 @@ public class AdminContext {
 	
 	public AdminContext(JTable selTable, JTable mainTable) {
 		this.selTable = selTable;
-		this.mainTable = mainTable;
-		
+		this.mainTable = mainTable;		
 		setupTableModels();
 		loadSelectionModel();
 	}
-	
+
 	private void loadSelectionModel() {
 		selTable.setModel(tableSelectionModel);
 		
@@ -54,21 +70,25 @@ public class AdminContext {
 		mainTable.setModel(studentModel);
 		currentModel = studentModel;
 		centerMainTableCells();
+		loadAllFromStudent();
 		
 	}
+	
 	
 	public void switchToProfesorModel() {
 		mainTable.setModel(profesorModel);
 		currentModel = profesorModel;
 		centerMainTableCells();
-		
+		loadAllFromProfesor();
 	}
+	
+	
 	
 	public void switchToDisciplinaModel() {
 		mainTable.setModel(disciplinaModel);
 		currentModel = disciplinaModel;
 		centerMainTableCells();
-		
+		loadAllFromDisciplina();
 	}
 	
 	public void switchToModulModel() {
@@ -96,7 +116,7 @@ public class AdminContext {
 	}
 	
 	private void centerMainTableCells() {
-		for (int i = 0; i < mainTable.getColumnCount() - 1; ++i) {
+		for (int i = 0; i < mainTable.getColumnCount(); i++) {
 			mainTable.getColumnModel().getColumn(i).setCellRenderer(centerCellRenderer);
 		}
 		((JLabel) mainTable.getTableHeader().getDefaultRenderer()).setHorizontalAlignment(JLabel.CENTER);
@@ -108,60 +128,165 @@ public class AdminContext {
 		centerCellRenderer = new DefaultTableCellRenderer();
 		centerCellRenderer.setHorizontalAlignment( JLabel.CENTER );
 		
-		tableSelectionModel = new DefaultTableModel();
+		tableSelectionModel = new DefaultTableModel(){
+
+		    @Override
+		    public boolean isCellEditable(int row, int column) {
+		       //all cells false
+		       return false;
+		    }
+		};
 		for (int i = 0; i < selectionColumns.length; ++i) {
 			tableSelectionModel.addColumn(selectionColumns[i]);
 		}
 		
-		studentModel = new DefaultTableModel();
+		studentModel = new DefaultTableModel()
+		{
+
+		    @Override
+		    public boolean isCellEditable(int row, int column) {
+		       //all cells false
+		       return false;
+		    }
+		};
 		for (int i = 0; i < studentColumns.length; ++i) {
 			studentModel.addColumn(studentColumns[i]);
 		}
 		
-		profesorModel = new DefaultTableModel();
+		profesorModel = new DefaultTableModel(){
+
+		    @Override
+		    public boolean isCellEditable(int row, int column) {
+		       //all cells false
+		       return false;
+		    }
+		};
 		for (int i = 0; i < profesorColumns.length; ++i) {
 			profesorModel.addColumn(profesorColumns[i]);
 		}
 		
-		disciplinaModel = new DefaultTableModel();
+		disciplinaModel = new DefaultTableModel(){
+
+		    @Override
+		    public boolean isCellEditable(int row, int column) {
+		       //all cells false
+		       return false;
+		    }
+		};
 		for (int i = 0; i < disciplinaColumns.length; ++i) {
 			disciplinaModel.addColumn(disciplinaColumns[i]);
 		}
 		
-		anModel = new DefaultTableModel();
+		anModel = new DefaultTableModel(){
+
+		    @Override
+		    public boolean isCellEditable(int row, int column) {
+		       //all cells false
+		       return false;
+		    }
+		};
 		for (int i = 0; i < anColumns.length; ++i) {
 			anModel.addColumn(anColumns[i]);
 		}
 		
-		grupaModel = new DefaultTableModel();
+		grupaModel = new DefaultTableModel(){
+
+		    @Override
+		    public boolean isCellEditable(int row, int column) {
+		       //all cells false
+		       return false;
+		    }
+		};
 		for (int i = 0; i < grupaColumns.length; ++i) {
 			grupaModel.addColumn(grupaColumns[i]);
 		}
 		
-		subgrupaModel = new DefaultTableModel();
+		subgrupaModel = new DefaultTableModel(){
+
+		    @Override
+		    public boolean isCellEditable(int row, int column) {
+		       //all cells false
+		       return false;
+		    }
+		};
 		for (int i = 0; i < subgrupaColumns.length; ++i) {
 			subgrupaModel.addColumn(subgrupaColumns[i]);
 		}
 		
-		modulModel = new DefaultTableModel();
+		modulModel = new DefaultTableModel(){
+
+		    @Override
+		    public boolean isCellEditable(int row, int column) {
+		       //all cells false
+		       return false;
+		    }
+		};
 		for (int i = 0; i < modulColumns.length; ++i) {
 			modulModel.addColumn(modulColumns[i]);
 		}
 		
-		prezentaModel = new DefaultTableModel();
+		prezentaModel = new DefaultTableModel(){
+
+		    @Override
+		    public boolean isCellEditable(int row, int column) {
+		       //all cells false
+		       return false;
+		    }
+		};
 		for (int i = 0; i < prezentaColumns.length; ++i) {
 			prezentaModel.addColumn(prezentaColumns[i]);
 		}
 		
-		saptamanaModel = new DefaultTableModel();
+		saptamanaModel = new DefaultTableModel(){
+
+		    @Override
+		    public boolean isCellEditable(int row, int column) {
+		       //all cells false
+		       return false;
+		    }
+		};
 		for (int i = 0; i < saptamanaColumns.length; ++i) {
 			saptamanaModel.addColumn(saptamanaColumns[i]);
 		}
 		
-		semestruModel = new DefaultTableModel();
+		semestruModel = new DefaultTableModel(){
+
+		    @Override
+		    public boolean isCellEditable(int row, int column) {
+		       //all cells false
+		       return false;
+		    }
+		};
 		for (int i = 0; i < semestruColumns.length; ++i) {
 			semestruModel.addColumn(semestruColumns[i]);
 		}
 	}
+	
+	public void loadAllFromStudent(){
+		List<Student> list = StudentService.getAllFromStudent();
+		DefaultTableModel model = getCurrentModel();
+        list.stream().forEach((aux) -> {
+            model.addRow(new Object[]{aux.getNume(),aux.getSubgrupa().getGrupa().getNume(),aux.getSubgrupa().getNume()});
+        });
+		
+	}
+	
+	public void loadAllFromDisciplina(){
+		List<Disciplina> list = DisciplinaService.getAllFromDisciciplina();
+		DefaultTableModel model = getCurrentModel();
+        list.stream().forEach((aux) -> {
+            model.addRow(new Object[]{aux.getDenumire(),aux.getAn(),aux.getOrecurs(),aux.getOrelab(),
+            		aux.getOreseminar(),aux.getOreproiect(),aux.getNumeScurt()});
+        });
+	}
+	
+	public void loadAllFromProfesor(){
+		List<Profesor> list = ProfesorService.getAllFromProfesor();
+		DefaultTableModel model = getCurrentModel();
+        list.stream().forEach((aux) -> {
+            model.addRow(new Object[]{aux.getNume()});
+        });
+	}
+	
 
 }

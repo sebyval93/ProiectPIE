@@ -6,7 +6,9 @@ import java.awt.Dimension;
 import java.awt.Point;
 
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
 
 import main.MainFrame;
 
@@ -14,7 +16,14 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.border.Border;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.MatteBorder;
+
 import java.awt.CardLayout;
+import java.awt.Color;
+import java.awt.Component;
 
 public class AdminPanel extends JPanel {
 	
@@ -44,7 +53,24 @@ public class AdminPanel extends JPanel {
 		
 
 		
-		mainTable = new JTable();
+		mainTable = new JTable(){
+			private Border outside = new MatteBorder(1, 0, 1, 0, Color.RED);
+			private Border inside = new EmptyBorder(0, 1, 0, 1);
+			private Border highlight = new CompoundBorder(outside, inside);
+
+			public Component prepareRenderer(TableCellRenderer renderer, int row, int column)
+			{
+				Component c = super.prepareRenderer(renderer, row, column);
+				JComponent jc = (JComponent)c;
+
+				// Add a border to the selected row
+
+				if (isRowSelected(row))
+					jc.setBorder( highlight );
+
+				return c;
+			}
+		};
 		mainTable.getTableHeader().setReorderingAllowed(false);
 		mainTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 		mainTable.setRowHeight(30);
