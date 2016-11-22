@@ -2,28 +2,26 @@ package gui_system;
 
 import javax.swing.JPanel;
 import java.awt.Dimension;
-
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.SwingConstants;
-
 import Services.UtilizatorService;
 import Utils.EncryptService;
 import Utils.Functions;
 import entity.Utilizator;
 import main.MainFrame;
-
 import java.awt.event.ActionListener;
-import java.security.NoSuchAlgorithmException;
 import java.awt.event.ActionEvent;
 import javax.swing.JPasswordField;
 import java.awt.Color;
 import Singleton.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+
+
 public class LoginPanel extends JPanel {
 	private JTextField IdTF;
 	private JPasswordField PasswordTF;
@@ -99,14 +97,11 @@ public class LoginPanel extends JPanel {
 			if(user != null){
 				try {
 					if(user.getPassword() == null){
-						System.out.println("yeah");
 						NewPasswordModal modalPanel = new NewPasswordModal(user);
 						modalPanel.setParentFrame(parentFrame);
-					}else{
-						
+					}else{						
 						if(user.getPassword().equals(
 								EncryptService.getHashOfString(String.valueOf(PasswordTF.getPassword())))){
-							System.out.println("nooh");
 							Singleton.getInstance().currentUser = user;
 							PasswordTF.setText("");
 							IdTF.setText("");
