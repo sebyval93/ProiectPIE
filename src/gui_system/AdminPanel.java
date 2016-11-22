@@ -57,7 +57,7 @@ public class AdminPanel extends JPanel {
 		
 		coverPanel = new JPanel();
 		coverPanel.setBounds(156, 320, 584, 119);
-		add(coverPanel);
+		//add(coverPanel);
 		
 		ctrlPanel = new JPanel();
 		ctrlPanel.setBounds(156, 320, 584, 119);
