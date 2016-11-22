@@ -22,12 +22,10 @@ public class MainFrame extends JFrame {
 	private gui_system.AdminPanel adminPanel;
 
 	JMenuBar menuBar;
-	JMenu mnFile;
-	JMenuItem mntmDelogare;
-	JMenuItem mntmExit;
-	JMenu mnUnelte;
-	JMenuItem mntmAdministrare;
-	JMenuItem mntmGestionareModule;
+	JMenu mnFile, mnUnelte, mnGenerareRaport;
+	JMenuItem mntmDelogare, mntmExit, 
+	mntmAdministrare, mntmGestionareModule, mntmImport,
+	mntmRaportStudenti, mntmRaportGrupe, mntmTest;
 
 	/**
 	 * Launch the application.
@@ -66,6 +64,8 @@ public class MainFrame extends JFrame {
 		loginPanel.setVisible(true);
 		mnUnelte.setVisible(false);
 		mntmDelogare.setVisible(false);
+		mnGenerareRaport.setVisible(false);
+		mntmImport.setVisible(false);
 		setMenuVisible(false);
 		pack();
 		setLocationRelativeTo(null);
@@ -83,6 +83,8 @@ public class MainFrame extends JFrame {
 		mntmDelogare.setVisible(true);
 		mntmGestionareModule.setVisible(false);
 		mntmAdministrare.setVisible(true);
+		mnGenerareRaport.setVisible(false);
+		mntmImport.setVisible(false);
 		pack();
 		setLocationRelativeTo(null);
 	}
@@ -91,6 +93,8 @@ public class MainFrame extends JFrame {
 		setTitle("Administrare baza de date");
 		mntmAdministrare.setVisible(false);
 		mntmGestionareModule.setVisible(true);
+		mnGenerareRaport.setVisible(true);
+		mntmImport.setVisible(true);
 		mainPanel.setVisible(false);
 		setContentPane(adminPanel);
 		adminPanel.setVisible(true);
@@ -105,7 +109,7 @@ public class MainFrame extends JFrame {
 				| IllegalAccessException | UnsupportedLookAndFeelException e1) {
 			e1.printStackTrace();
 		}
-		setLayout(null);
+		getContentPane().setLayout(null);
 		
 		setTitle("Logare sistem gestiune prezente");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -139,6 +143,10 @@ public class MainFrame extends JFrame {
 		mntmDelogare.setMnemonic('D');
 		mnFile.add(mntmDelogare);
 		
+		mntmImport = new JMenuItem("Import...");
+		mntmImport.setMnemonic('I');
+		mnFile.add(mntmImport);
+		
 		JSeparator separator = new JSeparator();
 		mnFile.add(separator);
 		
@@ -171,6 +179,19 @@ public class MainFrame extends JFrame {
 				showMainPanel();
 			}
 		});
+		
+		mnGenerareRaport = new JMenu("Generare Raport");
+		mnGenerareRaport.setMnemonic('R');
+		mnUnelte.add(mnGenerareRaport);
+		
+		mntmRaportStudenti = new JMenuItem("Studenti");
+		mnGenerareRaport.add(mntmRaportStudenti);
+		
+		mntmRaportGrupe = new JMenuItem("Grupe");
+		mnGenerareRaport.add(mntmRaportGrupe);
+		
+		mntmTest = new JMenuItem("Test");
+		mnGenerareRaport.add(mntmTest);
 		mnUnelte.add(mntmGestionareModule);
 		
 		mnUnelte.setVisible(false);

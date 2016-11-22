@@ -94,6 +94,7 @@ public class SitDidacticaCtrlPanel extends JPanel {
 		cbInterval.setSelectedItem(interval);
 		cbParticipanti.setSelectedItem(participanti);
 		
+		
 	}
 	
 	public Object[] getFields(boolean allowNull) {
@@ -109,5 +110,13 @@ public class SitDidacticaCtrlPanel extends JPanel {
 		};
 		
 		return result;
+	}
+	
+	public void resetFields() {
+		cbDisciplina.setSelectedIndex(-1);
+		cbActivitate.setSelectedIndex(-1);
+		cbProfesor.setSelectedIndex(-1);
+		cbInterval.setSelectedIndex(-1);
+		cbParticipanti.setSelectedIndex(-1);
 	}
 }
