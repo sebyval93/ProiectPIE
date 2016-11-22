@@ -88,7 +88,6 @@ public class LoginPanel extends JPanel {
 				}else{										
 					warningLbl.setText("Completeaza toate campurile!");					
 				}
-
 			}
 		});
 		LoginButton.setBounds(35, 50, 155, 23);

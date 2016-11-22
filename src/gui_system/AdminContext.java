@@ -11,11 +11,10 @@ public class AdminContext {
 	private DefaultTableCellRenderer centerCellRenderer;
 	private DefaultTableModel tableSelectionModel, studentModel, profesorModel,
 		disciplinaModel, anModel, grupaModel, subgrupaModel, modulModel, prezentaModel, 
-		saptamanaModel, semestruModel;
+		saptamanaModel, semestruModel, currentModel;
 	
 	private String selectionColumns[] = { "Tabele" };
-	private String selectionData[][] = { { "Student" }, { "Profesor" }, { "Disciplina" }, { "An" }, { "Grupa" }, 
-			{ "Subgrupa" }, { "Modul" }, { "Prezenta" }, { "Saptamana" }, { "Semestru" } };
+	private String selectionData[][] = { { "Student" }, { "Profesor" }, { "Disciplina" }, { "Situatie didactica" } };
 	
 	private String studentColumns[] = { "Nume", "Grupa", "Subgrupa" };
 	private String profesorColumns[] = { "Nume" };
@@ -51,62 +50,47 @@ public class AdminContext {
 	
 	public void switchToStudent() {
 		mainTable.setModel(studentModel);
+		currentModel = studentModel;
 		centerMainTableCells();
 		
 	}
 	
 	public void switchToProfesorModel() {
 		mainTable.setModel(profesorModel);
+		currentModel = profesorModel;
 		centerMainTableCells();
 		
 	}
 	
 	public void switchToDisciplinaModel() {
 		mainTable.setModel(disciplinaModel);
-		centerMainTableCells();
-		
-	}
-	
-	public void switchToAnModel() {
-		mainTable.setModel(anModel);
-		centerMainTableCells();
-		
-	}
-	
-	public void switchToGrupaModel() {
-		mainTable.setModel(grupaModel);
-		centerMainTableCells();
-		
-	}
-	
-	public void switchToSubgrupaModel() {
-		mainTable.setModel(subgrupaModel);
+		currentModel = disciplinaModel;
 		centerMainTableCells();
 		
 	}
 	
 	public void switchToModulModel() {
 		mainTable.setModel(modulModel);
+		currentModel = modulModel;
 		centerMainTableCells();
 		
 	}
 	
-	public void switchToPrezentaModel() {
-		mainTable.setModel(prezentaModel);
-		centerMainTableCells();
-		
+	public DefaultTableModel getCurrentModel() {
+		return currentModel;
 	}
 	
-	public void switchToSaptamanaModel() {
-		mainTable.setModel(saptamanaModel);
-		centerMainTableCells();
-		
-	}
-	
-	public void switchToSemestruModel() {
-		mainTable.setModel(semestruModel);
-		centerMainTableCells();
-		
+	public String getCurrentModelName() {
+		if (currentModel.equals(studentModel))
+			return "studentModel";
+		else if (currentModel.equals(profesorModel))
+			return "profesorModel";
+		else if (currentModel.equals(disciplinaModel))
+			return "disciplinaModel";
+		else if (currentModel.equals(modulModel))
+			return "modulModel";
+		else
+			return null;
 	}
 	
 	private void centerMainTableCells() {

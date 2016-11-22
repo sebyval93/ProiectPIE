@@ -3,10 +3,8 @@ package gui_system;
 import javax.swing.JPanel;
 import java.awt.Dimension;
 
-import javax.swing.JLabel;
 import java.awt.Point;
 
-import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.table.DefaultTableModel;
 
@@ -16,18 +14,23 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JComboBox;
+import java.awt.CardLayout;
 
 public class AdminPanel extends JPanel {
 	
 	main.MainFrame parentFrame;
 	private JTable selTable, mainTable;
 	private AdminContext context;
-	private JTextField txtNumeStudent;
+	private StudentCtrlPanel studentiCtrlPanel;
+	private DisciplinaCtrlPanel disciplinaCtrlPanel;
+	private ProfesorCtrlPanel profesorCtrlPanel;
+	private SitDidacticaCtrlPanel sitDidacticaCtrlPanel;
+	private JPanel ctrlPanel;
+	private CardLayout cardLayout;
+	private JPanel coverPanel;
 
 	public AdminPanel() {
 		setLayout(null);
-		
 		
 		selTable = new JTable() {
 			public boolean isCellEditable(int row, int column) {
@@ -50,6 +53,19 @@ public class AdminPanel extends JPanel {
 		
 		context = new AdminContext(selTable, mainTable);
 		
+		cardLayout = new CardLayout();
+		
+		coverPanel = new JPanel();
+		coverPanel.setBounds(156, 320, 584, 119);
+		add(coverPanel);
+		
+		ctrlPanel = new JPanel();
+		ctrlPanel.setBounds(156, 320, 584, 119);
+		add(ctrlPanel);
+		ctrlPanel.setLayout(cardLayout);
+		
+		addCtrlPanels();
+		
 		//private String selectionData[][] = { { "Student" }, { "Profesor" }, { "Disciplina" }, { "An" }, { "Grupa" }, 
 		//		{ "Subgrupa" }, { "Modul" }, { "Prezenta" }, { "Saptamana" }, { "Semestru" } };
 		
@@ -61,83 +77,97 @@ public class AdminPanel extends JPanel {
 					Point p = me.getPoint();
 					int row = t.rowAtPoint(p);
 					String selectedValue = (String) model.getValueAt(row, 0);
-					if (selectedValue == "Student")
+					if (selectedValue == "Student") {
 						context.switchToStudent();
-					else if (selectedValue == "Profesor")
+						showStudentCtrlPanel();
+					}
+					else if (selectedValue == "Profesor") {
 						context.switchToProfesorModel();
-					else if (selectedValue == "Disciplina")
+						showProfesorCtrlPanel();
+					}
+					else if (selectedValue == "Disciplina") {
 						context.switchToDisciplinaModel();
-					else if (selectedValue == "An")
-						context.switchToAnModel();
-					else if (selectedValue == "Grupa")
-						context.switchToGrupaModel();
-					else if (selectedValue == "Subgrupa")
-						context.switchToSubgrupaModel();
-					else if (selectedValue == "Modul")
+						showDisciplinaCtrlPanel();
+					}
+					else if (selectedValue == "Situatie didactica") {
 						context.switchToModulModel();
-					else if (selectedValue == "Prezenta")
-						context.switchToPrezentaModel();
-					else if (selectedValue == "Saptamana")
-						context.switchToSaptamanaModel();
-					else if (selectedValue == "Semestru")
-						context.switchToSemestruModel();
+						showSitDidacticaCtrlPanel();
+					}
 				}
 			}
 		});
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 11, 156, 427);
+		scrollPane.setBounds(10, 11, 136, 298);
 		add(scrollPane);
 		
 		scrollPane.setViewportView(selTable);
 		
 		JScrollPane scrollPane_1 = new JScrollPane();
-		scrollPane_1.setBounds(176, 11, 564, 320);
+		scrollPane_1.setBounds(156, 11, 584, 298);
 		add(scrollPane_1);
 		
 		scrollPane_1.setViewportView(mainTable);
 		
-		JPanel panelStudent = new JPanel();
-		panelStudent.setBounds(263, 366, 314, 52);
-		add(panelStudent);
-		panelStudent.setLayout(null);
-		
-		JLabel lblNumeStudent = new JLabel("Nume student:");
-		lblNumeStudent.setBounds(64, 3, 71, 14);
-		panelStudent.add(lblNumeStudent);
-		
-		txtNumeStudent = new JTextField();
-		txtNumeStudent.setBounds(145, 0, 102, 20);
-		panelStudent.add(txtNumeStudent);
-		txtNumeStudent.setColumns(10);
-		
-		JLabel lblGrupa = new JLabel("Grupa:");
-		lblGrupa.setBounds(0, 35, 38, 14);
-		panelStudent.add(lblGrupa);
-		
-		JComboBox cbGrupa = new JComboBox();
-		cbGrupa.setBounds(40, 32, 102, 20);
-		panelStudent.add(cbGrupa);
-		
-		JLabel lblSubgrupa = new JLabel("Subgrupa:");
-		lblSubgrupa.setBounds(152, 35, 50, 14);
-		panelStudent.add(lblSubgrupa);
-		
-		JComboBox cbSubgrupa = new JComboBox();
-		cbSubgrupa.setBounds(212, 32, 102, 20);
-		panelStudent.add(cbSubgrupa);
-		
 		JButton btnCautare = new JButton("Cautare");
-		btnCautare.setBounds(651, 363, 89, 23);
+		btnCautare.setBounds(32, 320, 89, 23);
 		add(btnCautare);
 		
 		JButton btnAdaugare = new JButton("Adaugare");
-		btnAdaugare.setBounds(651, 395, 89, 23);
+		btnAdaugare.setBounds(32, 347, 89, 23);
 		add(btnAdaugare);
 		this.setPreferredSize(new Dimension(750,450));
+		
+		JButton btnModificare = new JButton("Modificare");
+		btnModificare.setEnabled(false);
+		btnModificare.setBounds(32, 374, 89, 23);
+		add(btnModificare);
+		
+		JButton btnStergere = new JButton("Stergere");
+		btnStergere.setEnabled(false);
+		btnStergere.setBounds(32, 401, 89, 23);
+		add(btnStergere);
+		
+	}
+	
+	public void addCtrlPanels() {
+		ctrlPanel.add(coverPanel, "");
+		
+		studentiCtrlPanel = new StudentCtrlPanel();
+		studentiCtrlPanel.setBounds(156, 320, 584, 119);
+		ctrlPanel.add(studentiCtrlPanel, "studenti");
+		
+		disciplinaCtrlPanel = new DisciplinaCtrlPanel();
+		disciplinaCtrlPanel.setBounds(156, 320, 584, 119);
+		ctrlPanel.add(disciplinaCtrlPanel, "disciplina");
+		
+		profesorCtrlPanel = new ProfesorCtrlPanel();
+		profesorCtrlPanel.setBounds(156, 320, 584, 119);
+		ctrlPanel.add(profesorCtrlPanel, "profesor");
+		
+		sitDidacticaCtrlPanel = new SitDidacticaCtrlPanel();
+		sitDidacticaCtrlPanel.setBounds(156, 320, 584, 119);
+		ctrlPanel.add(sitDidacticaCtrlPanel, "situatie");
 	}
 	
 	public void setParentFrame(MainFrame frame) {
 		parentFrame = frame;
 	}
+	
+	public void showStudentCtrlPanel() {
+		cardLayout.show(ctrlPanel, "studenti");
+	}
+	
+	public void showDisciplinaCtrlPanel() {
+		cardLayout.show(ctrlPanel, "disciplina");
+	}
+	
+	public void showProfesorCtrlPanel() {
+		cardLayout.show(ctrlPanel, "profesor");
+	}
+	
+	public void showSitDidacticaCtrlPanel() {
+		cardLayout.show(ctrlPanel, "situatie");
+	}
+	
 }
