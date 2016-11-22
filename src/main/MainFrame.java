@@ -137,6 +137,7 @@ public class MainFrame extends JFrame {
 		mntmDelogare.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				showLoginPanel();
+				Singleton.getInstance().currentUser = null;
 			}
 		});
 		mntmDelogare.setMnemonic('D');
