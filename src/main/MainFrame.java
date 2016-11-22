@@ -96,7 +96,6 @@ public class MainFrame extends JFrame {
 		adminPanel.setVisible(true);
 		pack();
 		setLocationRelativeTo(null);
-		//mnUnel
 	}
 	
 	public void initFrame(){
@@ -106,6 +105,7 @@ public class MainFrame extends JFrame {
 				| IllegalAccessException | UnsupportedLookAndFeelException e1) {
 			e1.printStackTrace();
 		}
+		setLayout(null);
 		
 		setTitle("Logare sistem gestiune prezente");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -119,6 +119,7 @@ public class MainFrame extends JFrame {
 		mainPanel = new MainPanel();
 		mainPanel.setParentFrame(this);
 		adminPanel = new AdminPanel();
+		adminPanel.setParentFrame(this);
 		
 		
 		menuBar = new JMenuBar();
