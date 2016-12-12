@@ -302,8 +302,10 @@ public class AdminPanel extends JPanel {
 			break;
 		case "modulModel":
 			Object fields[] = sitDidacticaCtrlPanel.getFields(false);
-			if (fields == null)
+			if (fields == null){
+				System.out.println("Could not add modul to database. Found invalid field.");
 				break;
+			}
 			else {
 				Disciplina disciplina = sitDidacticaCtrlPanel.getSelectedDisciplina();
 				Profesor profesor = sitDidacticaCtrlPanel.getSelectedProfesor();

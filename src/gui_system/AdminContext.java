@@ -69,7 +69,9 @@ public class AdminContext {
 	}
 	
 	public void switchToStudent() {
-		mainTable.setModel(studentModel);
+		studentModel.setRowCount(0);
+		if (!mainTable.getModel().equals(studentModel))
+			mainTable.setModel(studentModel);
 		currentModel = studentModel;
 		centerMainTableCells();
 		loadAllFromStudent();
@@ -78,7 +80,9 @@ public class AdminContext {
 	
 	
 	public void switchToProfesorModel() {
-		mainTable.setModel(profesorModel);
+		profesorModel.setRowCount(0);
+		if (!mainTable.getModel().equals(profesorModel))
+			mainTable.setModel(profesorModel);
 		currentModel = profesorModel;
 		centerMainTableCells();
 		loadAllFromProfesor();
@@ -87,14 +91,18 @@ public class AdminContext {
 	
 	
 	public void switchToDisciplinaModel() {
-		mainTable.setModel(disciplinaModel);
+		disciplinaModel.setRowCount(0);
+		if (!mainTable.getModel().equals(disciplinaModel))
+			mainTable.setModel(disciplinaModel);
 		currentModel = disciplinaModel;
 		centerMainTableCells();
 		loadAllFromDisciplina();
 	}
 	
 	public void switchToModulModel() {
-		mainTable.setModel(modulModel);
+		modulModel.setRowCount(0);
+		if (!mainTable.getModel().equals(modulModel))
+			mainTable.setModel(modulModel);
 		currentModel = modulModel;
 		centerMainTableCells();
 		loadAllFromModul();

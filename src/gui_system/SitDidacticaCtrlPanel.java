@@ -291,4 +291,13 @@ public class SitDidacticaCtrlPanel extends JPanel {
 			return -1;
 		}
 	}
+	
+	public boolean allFieldsSelected() {
+		if (cbDisciplina.getSelectedIndex() == -1 || cbActivitate.getSelectedIndex() == -1
+				|| cbProfesor.getSelectedIndex() == -1 || cbInterval.getSelectedIndex() == -1
+				|| cbParticipanti.getSelectedIndex() == -1)
+			return false;
+		else
+			return true;
+	}
 }
