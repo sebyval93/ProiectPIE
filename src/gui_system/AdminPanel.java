@@ -10,6 +10,9 @@ import javax.swing.JComponent;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 
+import Services.ModulService;
+import entity.Disciplina;
+import entity.Profesor;
 import main.MainFrame;
 
 import java.awt.event.MouseAdapter;
@@ -24,6 +27,8 @@ import javax.swing.border.MatteBorder;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class AdminPanel extends JPanel {
 	
@@ -98,20 +103,40 @@ public class AdminPanel extends JPanel {
 		//		{ "Subgrupa" }, { "Modul" }, { "Prezenta" }, { "Saptamana" }, { "Semestru" } };
 		
 		btnCautare = new JButton("Cautare");
+		btnCautare.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+					actiuneCautare();
+			}
+		});
 		btnCautare.setBounds(32, 326, 89, 23);
 		add(btnCautare);
 		
 		btnAdaugare = new JButton("Adaugare");
+		btnAdaugare.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				actiuneAdaugare();
+			}
+		});
 		btnAdaugare.setBounds(32, 353, 89, 23);
 		add(btnAdaugare);
 		this.setPreferredSize(new Dimension(900, 450));
 		
 		btnModificare = new JButton("Modificare");
+		btnModificare.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				actiuneModificare();
+			}
+		});
 		btnModificare.setEnabled(false);
 		btnModificare.setBounds(32, 380, 89, 23);
 		add(btnModificare);
 		
 		btnStergere = new JButton("Stergere");
+		btnStergere.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				actiuneStergere();
+			}
+		});
 		btnStergere.setEnabled(false);
 		btnStergere.setBounds(32, 407, 89, 23);
 		add(btnStergere);
@@ -265,6 +290,73 @@ public class AdminPanel extends JPanel {
 	private void enableEditButtons(boolean enable) {
 		btnModificare.setEnabled(enable);
 		btnStergere.setEnabled(enable);
+	}
+	
+	private void actiuneAdaugare() {
+		switch(context.getCurrentModelName()) {
+		case "studentModel":
+			break;
+		case "profesorModel":
+			break;
+		case "disciplinaModel":
+			break;
+		case "modulModel":
+			Object fields[] = sitDidacticaCtrlPanel.getFields(false);
+			if (fields == null)
+				break;
+			else {
+				Disciplina disciplina = sitDidacticaCtrlPanel.getSelectedDisciplina();
+				Profesor profesor = sitDidacticaCtrlPanel.getSelectedProfesor();
+				String activitate = sitDidacticaCtrlPanel.getSelectedActivitate();
+				String participanti = sitDidacticaCtrlPanel.getSelectedParticipanti();
+				int interval = sitDidacticaCtrlPanel.getSelectedInterval();
+				
+				if (disciplina != null || profesor != null || activitate != null || participanti != null || interval != -1)
+					ModulService.addModul(disciplina, profesor, activitate, participanti, interval);
+				else
+					System.out.println("Could not add modul to database. Found invalid field.");
+			}
+			break;
+		}
+	}
+	
+	private void actiuneCautare() {
+		switch(context.getCurrentModelName()) {
+		case "studentModel":
+			break;
+		case "profesorModel":
+			break;
+		case "disciplinaModel":
+			break;
+		case "modulModel":
+			break;
+		}
+	}
+	
+	private void actiuneModificare() {
+		switch(context.getCurrentModelName()) {
+		case "studentModel":
+			break;
+		case "profesorModel":
+			break;
+		case "disciplinaModel":
+			break;
+		case "modulModel":
+			break;
+		}
+	}
+	
+	private void actiuneStergere() {
+		switch(context.getCurrentModelName()) {
+		case "studentModel":
+			break;
+		case "profesorModel":
+			break;
+		case "disciplinaModel":
+			break;
+		case "modulModel":
+			break;
+		}
 	}
 	
 }

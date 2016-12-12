@@ -5,14 +5,59 @@ import javax.swing.JLabel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
+
+import Services.DisciplinaService;
+import Services.GrupaService;
+import Services.ProfesorService;
+import Services.SubgrupaService;
+import entity.Disciplina;
+import entity.Grupa;
+import entity.Profesor;
+import entity.Subgrupa;
+
 import javax.swing.JRadioButton;
+
+import java.util.Arrays;
+import java.util.List;
+
 import javax.swing.ButtonGroup;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 
 public class SitDidacticaCtrlPanel extends JPanel {
 	
 	private JComboBox<String> cbDisciplina, cbActivitate,
 		cbProfesor, cbInterval, cbParticipanti;
+	
+	private JRadioButton radioGrupa, radioSubgrupa;
+	
+	/*
+	 * 0 curs        0 impar
+	 * 1 seminar     1 par
+	 * 2 laborator   2 saptamanal
+	 * 3 proiect
+	 */
+	
+	private enum Activitate {
+		CURS,
+		SEMINAR,
+		LABORATOR,
+		PROIECT
+	}
+	
+	private enum Interval {
+		IMPAR,
+		PAR,
+		SAPTAMANAL
+	}
+	
+	private List<Grupa> allFromGrupa;
+	private List<Subgrupa> allFromSubgrupa;
+	private List<Disciplina> allFromDisciplina;
+	private List<Profesor> allFromProfesor;
+	private List<String> activitati;
+	private List<String> interval;
 	
 	private final ButtonGroup buttonGroup = new ButtonGroup();
 
@@ -71,16 +116,29 @@ public class SitDidacticaCtrlPanel extends JPanel {
 		cbParticipanti.setBounds(422, 0, 94, 20);
 		panel.add(cbParticipanti);
 		
-		JRadioButton radioGrupa = new JRadioButton("Grupa");
+		radioGrupa = new JRadioButton("Grupa");
+		radioGrupa.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				loadGrupa();
+			}
+		});
 		radioGrupa.setBounds(361, 34, 71, 23);
 		panel.add(radioGrupa);
 		radioGrupa.setSelected(true);
 		buttonGroup.add(radioGrupa);
 		
-		JRadioButton radioSubgrupa = new JRadioButton("Subgrupa");
+		radioSubgrupa = new JRadioButton("Subgrupa");
+		radioSubgrupa.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				loadSubgrupa();
+			}
+		});
 		radioSubgrupa.setBounds(432, 34, 71, 23);
 		panel.add(radioSubgrupa);
 		buttonGroup.add(radioSubgrupa);
+		
+		activitati = Arrays.asList("Curs", "Seminar", "Laborator", "Proiect");
+		interval = Arrays.asList("Impar", "Par", "Saptamanal");
 
 		loadCombos();
 		
@@ -89,6 +147,60 @@ public class SitDidacticaCtrlPanel extends JPanel {
 	public void loadCombos() {
 		//init combo boxes with info from db.
 		//all of them.
+		
+		allFromGrupa = GrupaService.getAllFromGrupa();
+		allFromSubgrupa = SubgrupaService.getAllFromSubgrupa();
+		allFromDisciplina = DisciplinaService.getAllFromDisciciplina();
+		allFromProfesor = ProfesorService.getAllFromProfesor();
+		
+		allFromProfesor.remove("admin");
+		
+		cbDisciplina.removeAllItems();
+		for (Object disciplina : allFromDisciplina.toArray())
+			cbDisciplina.addItem(((Disciplina) disciplina).getDenumire().toString());
+		
+		cbProfesor.removeAllItems();
+		for (Object profesor : allFromProfesor.toArray())
+			cbProfesor.addItem(((Profesor) profesor).getNume().toString());
+		
+		cbActivitate.removeAllItems();
+		for (Object activitate : activitati.toArray())
+			cbActivitate.addItem(activitate.toString());
+		
+		cbInterval.removeAllItems();
+		for (Object interval : interval.toArray())
+			cbInterval.addItem(interval.toString());
+		
+		if (radioGrupa.isSelected()) {
+			cbParticipanti.removeAllItems();
+			for (Object grupa : allFromGrupa.toArray())
+				cbParticipanti.addItem(grupa.toString());
+		}
+		else if (radioSubgrupa.isSelected()) {
+			cbParticipanti.removeAllItems();
+			for (Object subgrupa : allFromSubgrupa.toArray())
+				cbParticipanti.addItem(subgrupa.toString());
+		}
+		
+		cbParticipanti.setSelectedIndex(-1);
+	}
+	
+	public void loadGrupa() {
+		if (allFromGrupa != null) {
+			cbParticipanti.removeAllItems();
+			for (Object grupa : allFromGrupa.toArray())
+				cbParticipanti.addItem(grupa.toString());
+			cbParticipanti.setSelectedIndex(-1);
+		}
+	}
+	
+	public void loadSubgrupa() {
+		if (allFromSubgrupa != null) {
+			cbParticipanti.removeAllItems();
+			for (Object subgrupa : allFromSubgrupa.toArray())
+				cbParticipanti.addItem(subgrupa.toString());
+			cbParticipanti.setSelectedIndex(-1);
+		}
 	}
 	
 	public void setFields(String disciplina, String activitate, String numeProfesor,
@@ -123,5 +235,60 @@ public class SitDidacticaCtrlPanel extends JPanel {
 		cbProfesor.setSelectedIndex(-1);
 		cbInterval.setSelectedIndex(-1);
 		cbParticipanti.setSelectedIndex(-1);
+	}
+	
+	public Disciplina getSelectedDisciplina() {
+		for (Disciplina disciplina : allFromDisciplina) {
+			if (disciplina.getDenumire().toString().equals(cbDisciplina.getSelectedItem().toString())) {
+				return disciplina;
+			}
+		}
+		
+		return null;
+	}
+	
+	public Profesor getSelectedProfesor() {
+		for (Profesor profesor : allFromProfesor) {
+			if (profesor.getNume().toString().equals(cbProfesor.getSelectedItem().toString())) {
+				return profesor;
+			}
+		}
+		
+		return null;
+	}
+	
+	public String getSelectedActivitate() {
+		if (cbActivitate.getSelectedIndex() == -1)
+			return null;
+		else 
+			return (String) cbActivitate.getSelectedItem();
+	}
+	
+	public String getSelectedParticipanti() {
+		if (cbParticipanti.getSelectedIndex() == -1)
+			return null;
+		else 
+			return (String) cbParticipanti.getSelectedItem();
+	}
+	
+	public int getSelectedInterval() {
+		if (cbInterval.getSelectedIndex() == -1)
+			return -1;
+		else {
+			switch ((String)cbInterval.getSelectedItem()) {
+			case "Impar":
+			case "IMPAR":
+				return Interval.IMPAR.ordinal();
+			case "Par":
+			case "PAR":
+				return Interval.PAR.ordinal();
+			case "Saptamanal":
+			case "SAPTAMANAL":
+				return Interval.SAPTAMANAL.ordinal();
+			}
+			
+			//invalid value
+			return -1;
+		}
 	}
 }

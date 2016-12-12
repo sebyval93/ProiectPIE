@@ -108,6 +108,22 @@ public final class DisciplinaService {
 		return list;
 	}
 	
+	public static List<String> getAllDenumire() {
+		List<String> list = null;
+		Session session = null;
+		
+		try{
+			session = Singleton.getInstance().getNewSession();
+			list = session.createQuery("select denumire from Disciplina").getResultList();
+			session.close();
+		}catch (Exception e) {
+            e.printStackTrace();        
+        }finally{
+        	session.close();
+        }
+		return list;
+	}
+	
 	public static Disciplina getDisciplinaByNumeScurt(String numeScurt){
 		Session session = null;
 		Disciplina disciplina = null;

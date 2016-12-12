@@ -99,4 +99,19 @@ public final class ProfesorService {
 		return list;
 	}
 	
+	public static List<String> getAllNume(){
+		List<String> list = null;
+		Session session = null;
+		try{
+			session = Singleton.getInstance().getNewSession();
+			list = session.createQuery("select nume from Profesor").getResultList();
+			session.close();
+		}catch (Exception e) {
+            e.printStackTrace();        
+        }finally{
+        	session.close();
+        }
+		return list;
+	}
+	
 }

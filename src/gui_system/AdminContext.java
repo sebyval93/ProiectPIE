@@ -2,6 +2,7 @@ package gui_system;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.math.BigDecimal;
 import java.util.List;
 
 import javax.swing.DefaultListSelectionModel;
@@ -19,6 +20,7 @@ import javax.swing.table.TableCellRenderer;
 import entity.*;
 import Services.DisciplinaService;
 import Services.GrupaService;
+import Services.ModulService;
 import Services.ProfesorService;
 import Services.StudentService;
 
@@ -95,7 +97,7 @@ public class AdminContext {
 		mainTable.setModel(modulModel);
 		currentModel = modulModel;
 		centerMainTableCells();
-		
+		loadAllFromModul();
 	}
 	
 	public DefaultTableModel getCurrentModel() {
@@ -217,5 +219,24 @@ public class AdminContext {
         });
 	}
 	
+	public void loadAllFromModul(){
+		List<Modul> list = ModulService.getAllFromModul();
+		DefaultTableModel model = getCurrentModel();
+        list.stream().forEach((aux) -> {
+        	BigDecimal value = aux.getInterval();
+        	String interval = null;
+        	if (value.intValue() == 0)
+        		interval = "Impar";
+        	else if (value.intValue() == 1)
+        		interval = "Par";
+        	else if (value.intValue() == 2)
+        		interval = "Saptamanal";
+        	else 
+        		interval = "Interval invalid";
+        	
+            model.addRow(new Object[]{aux.getDisciplina().getDenumire(), aux.getActivitate(), aux.getProfesor().getNume(),
+            		interval, aux.getParticipanti()});
+        });
+	}
 
 }
