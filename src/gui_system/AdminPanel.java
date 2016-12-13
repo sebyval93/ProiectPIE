@@ -165,7 +165,8 @@ public class AdminPanel extends JPanel {
 						enableEditButtons(true);
 					}
 					else if (context.getCurrentModelName().equals("modulModel")) {
-						//TODO
+						sitDidacticaCtrlPanel.setFields((String)model.getValueAt(row, 0), (String)model.getValueAt(row, 1), 
+								(String)model.getValueAt(row, 2), (String)model.getValueAt(row, 3), (String)model.getValueAt(row, 4));
 						
 						enableEditButtons(true);
 					}

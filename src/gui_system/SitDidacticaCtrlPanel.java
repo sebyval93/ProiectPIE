@@ -70,7 +70,7 @@ public class SitDidacticaCtrlPanel extends JPanel {
 		setSize(734, 119);
 		
 		JPanel panel = new JPanel();
-		panel.setBounds(109, 31, 516, 57);
+		panel.setBounds(10, 31, 700, 57);
 		add(panel);
 		panel.setLayout(null);
 		
@@ -79,16 +79,16 @@ public class SitDidacticaCtrlPanel extends JPanel {
 		panel.add(lblNumeStudent);
 		
 		cbDisciplina = new JComboBox<String>();
-		cbDisciplina.setBounds(85, 0, 94, 20);
+		cbDisciplina.setBounds(85, 0, 280, 20);
 		panel.add(cbDisciplina);
 		cbDisciplina.setSelectedIndex(-1);
 		
 		JLabel lblActivitate = new JLabel("Activitate:");
-		lblActivitate.setBounds(189, 3, 50, 14);
+		lblActivitate.setBounds(375, 3, 50, 14);
 		panel.add(lblActivitate);
 		
 		cbActivitate = new JComboBox<String>();
-		cbActivitate.setBounds(249, 0, 94, 20);
+		cbActivitate.setBounds(435, 0, 94, 20);
 		panel.add(cbActivitate);
 		cbActivitate.setSelectedIndex(-1);
 		
@@ -97,23 +97,23 @@ public class SitDidacticaCtrlPanel extends JPanel {
 		panel.add(lblNumeProfesor);
 		
 		cbProfesor = new JComboBox<String>();
-		cbProfesor.setBounds(85, 36, 94, 20);
+		cbProfesor.setBounds(85, 36, 280, 20);
 		panel.add(cbProfesor);
 		
 		JLabel lblInterval = new JLabel("Interval:");
-		lblInterval.setBounds(189, 39, 42, 14);
+		lblInterval.setBounds(383, 39, 42, 14);
 		panel.add(lblInterval);
 		
 		cbInterval = new JComboBox<String>();
-		cbInterval.setBounds(249, 36, 94, 20);
+		cbInterval.setBounds(435, 36, 94, 20);
 		panel.add(cbInterval);
 		
 		JLabel lblParticipanti = new JLabel("Participanti:");
-		lblParticipanti.setBounds(355, 3, 57, 14);
+		lblParticipanti.setBounds(539, 3, 57, 14);
 		panel.add(lblParticipanti);
 		
 		cbParticipanti = new JComboBox<String>();
-		cbParticipanti.setBounds(422, 0, 94, 20);
+		cbParticipanti.setBounds(606, 0, 94, 20);
 		panel.add(cbParticipanti);
 		
 		radioGrupa = new JRadioButton("Grupa");
@@ -122,7 +122,7 @@ public class SitDidacticaCtrlPanel extends JPanel {
 				loadGrupa();
 			}
 		});
-		radioGrupa.setBounds(361, 34, 71, 23);
+		radioGrupa.setBounds(556, 35, 71, 23);
 		panel.add(radioGrupa);
 		radioGrupa.setSelected(true);
 		buttonGroup.add(radioGrupa);
@@ -133,7 +133,7 @@ public class SitDidacticaCtrlPanel extends JPanel {
 				loadSubgrupa();
 			}
 		});
-		radioSubgrupa.setBounds(432, 34, 71, 23);
+		radioSubgrupa.setBounds(629, 35, 71, 23);
 		panel.add(radioSubgrupa);
 		buttonGroup.add(radioSubgrupa);
 		
