@@ -1,9 +1,16 @@
 package gui_system;
 
+import java.util.List;
+
 import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+
+import Services.ModulService;
+import Singleton.Singleton;
+import entity.Modul;
+import entity.Profesor;
 
 public class ModelContext {
 	
@@ -84,6 +91,9 @@ public class ModelContext {
 		// cautare in baza de date pentru toate modulele la care preda userul
 		//   logat, din saptamana curenta.
 		
+		loadModuleForUser();
+		
+		/*
 		if (moduleModel.getRowCount() > 0) {
 			moduleModel.setRowCount(0);
 		}
@@ -92,6 +102,7 @@ public class ModelContext {
 		for (int i = 0; i < moduleData.length; ++i) {
 			moduleModel.addRow(moduleData[i]);
 		}
+		*/
 	}
 	
 	private void loadStudentiFromDB(Object selectedRowData[]) {
@@ -168,6 +179,20 @@ public class ModelContext {
 			return true;
 		else
 			return false;
+	}
+	
+	public void loadModuleForUser() {
+		Profesor currentProfesor = Singleton.getInstance().currentUser.getProfesor();
+		String sapt = Singleton.getInstance().currentWeek.getDenumire();
+		int nrSapt = Integer.parseInt(sapt.substring(10));
+		List<Modul> allModuleForProfesor = ModulService.getAllModulByProfesor(currentProfesor);
+		
+		moduleModel.setRowCount(0);
+		
+		allModuleForProfesor.stream().forEach((aux) -> {
+            moduleModel.addRow(new Object[]{aux.getDisciplina().getDenumire(),aux.getActivitate(),aux.getDisciplina().getAn(),
+            		nrSapt,aux.getParticipanti()});
+        });
 	}
 	
 }

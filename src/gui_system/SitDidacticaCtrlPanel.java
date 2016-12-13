@@ -70,7 +70,7 @@ public class SitDidacticaCtrlPanel extends JPanel {
 		setSize(734, 119);
 		
 		JPanel panel = new JPanel();
-		panel.setBounds(10, 31, 700, 57);
+		panel.setBounds(17, 31, 700, 57);
 		add(panel);
 		panel.setLayout(null);
 		

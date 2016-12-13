@@ -89,6 +89,21 @@ public final class ModulService {
 		return done;
 	}
 	
+	public static List<Modul> getAllModulByProfesor(Profesor profesor) {
+		List<Modul> list = null;
+		Session session = null;
+		try{
+			session = Singleton.getInstance().getNewSession();
+			list = session.createQuery(("from Modul where ID_PROFESOR = " + profesor.getId())).getResultList();
+			session.close();
+		}catch (Exception e) {
+            e.printStackTrace();        
+        }finally{
+        	session.close();
+        }
+		return list;
+	}
+	
 	public static List<Modul> getAllFromModul(){
 		List<Modul> list = null;
 		Session session = null;
