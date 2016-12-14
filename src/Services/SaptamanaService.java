@@ -10,6 +10,7 @@ import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 
 import Singleton.Singleton;
+import Utils.Functions;
 import entity.*;
 
 public class SaptamanaService {
@@ -110,6 +111,7 @@ public class SaptamanaService {
 		Session session = null;
 		Saptamana saptamana = null;
 		Date currentDate = Calendar.getInstance().getTime();
+		System.out.println(currentDate);
 		try{
 			session = Singleton.getInstance().getNewSession();
 			DetachedCriteria dc = DetachedCriteria.forClass(Saptamana.class).add(Restrictions.le("startdate" , currentDate))
@@ -123,201 +125,244 @@ public class SaptamanaService {
 		return saptamana;
 	}
 	
-	public static void updateSaptamaniForNewYear(Date date){
+	public static boolean updateSaptamaniForNewYear(Date date){
 		Session session = null;
+		boolean done = false;
 		List<Saptamana> saptamani = null;
+		
+		
 		try{
 			session = Singleton.getInstance().getNewSession();
 			session.beginTransaction();
 			saptamani = getAllFromSaptamana();
 			Calendar calendar = Calendar.getInstance();
-			calendar.set(date.getYear(),date.getMonth(),date.getDay(),0,0,0);
+			calendar.setTime(date);
+			Calendar easterDate = Functions.getEasterDate(calendar.get(Calendar.YEAR)+1);		
 			for(Saptamana x : saptamani){
-				helperUpdateSaptamaniMethod(session,x,calendar);
+				helperUpdateSaptamaniMethod(session,x,calendar,easterDate);
 			}
 			session.getTransaction().commit();
-			System.out.println("updatedsaptamani");
+			done = true;
 		}catch (Exception e) {
             e.printStackTrace();        
         }finally{
         	session.close();
         }
+		return done;
 	}
 	
-	private static void helperUpdateSaptamaniMethod(Session session,Saptamana saptamana,Calendar calendar){
+	
+	
+	private static void helperUpdateSaptamaniMethod(Session session,Saptamana saptamana,Calendar calendar,Calendar easterDate){
+		
+		Calendar helper = Calendar.getInstance();
+		helper.setTime(calendar.getTime());
+		helper.add(Calendar.DATE, 7);
+		
+		Calendar helper2 = Calendar.getInstance();
+		helper2.setTime(calendar.getTime());
 		
 		switch(saptamana.getId().intValueExact()){
-		case 1:
-			saptamana.setStartdate(calendar.getTime());
-			calendar.add(Calendar.DATE, 7);
-			saptamana.setEnddate(calendar.getTime());
-			session.update(saptamana);
-			break;
-		case 2:
-			saptamana.setStartdate(calendar.getTime());
-			calendar.add(Calendar.DATE, 7);
-			saptamana.setEnddate(calendar.getTime());
-			session.update(saptamana);
-			break;
-		case 3:
-			saptamana.setStartdate(calendar.getTime());
-			calendar.add(Calendar.DATE, 7);
-			saptamana.setEnddate(calendar.getTime());
-			session.update(saptamana);
-			break;
-		case 4:
-			saptamana.setStartdate(calendar.getTime());
-			calendar.add(Calendar.DATE, 7);
-			saptamana.setEnddate(calendar.getTime());
-			session.update(saptamana);
-			break;
-		case 5:
-			saptamana.setStartdate(calendar.getTime());
-			calendar.add(Calendar.DATE, 7);
-			saptamana.setEnddate(calendar.getTime());
-			session.update(saptamana);
-			break;
-		case 6:
-			saptamana.setStartdate(calendar.getTime());
-			calendar.add(Calendar.DATE, 7);
-			saptamana.setEnddate(calendar.getTime());
-			session.update(saptamana);
-			break;
-		case 7:
-			saptamana.setStartdate(calendar.getTime());
-			calendar.add(Calendar.DATE, 7);
-			saptamana.setEnddate(calendar.getTime());
-			session.update(saptamana);
-			break;
-		case 8:
-			saptamana.setStartdate(calendar.getTime());
-			calendar.add(Calendar.DATE, 7);
-			saptamana.setEnddate(calendar.getTime());
-			session.update(saptamana);
-			break;
-		case 9:
-			saptamana.setStartdate(calendar.getTime());
-			calendar.add(Calendar.DATE, 7);
-			saptamana.setEnddate(calendar.getTime());
-			session.update(saptamana);
-			break;
-		case 10:
-			saptamana.setStartdate(calendar.getTime());
-			calendar.add(Calendar.DATE, 7);
-			saptamana.setEnddate(calendar.getTime());
-			session.update(saptamana);
-			break;
-		case 11:
-			saptamana.setStartdate(calendar.getTime());
-			calendar.add(Calendar.DATE, 7);
-			saptamana.setEnddate(calendar.getTime());
-			session.update(saptamana);
-			break;
-		case 12:
-			saptamana.setStartdate(calendar.getTime());
-			calendar.add(Calendar.DATE, 7);
-			saptamana.setEnddate(calendar.getTime());
-			session.update(saptamana);
-			calendar.add(Calendar.DATE, 14);
-			break;
-		case 13:
-			saptamana.setStartdate(calendar.getTime());
-			calendar.add(Calendar.DATE, 7);
-			saptamana.setEnddate(calendar.getTime());
-			session.update(saptamana);
-			break;
-		case 14:
-			saptamana.setStartdate(calendar.getTime());
-			calendar.add(Calendar.DATE, 7);
-			saptamana.setEnddate(calendar.getTime());
-			session.update(saptamana);
-			calendar.add(Calendar.DATE, 28);
-			break;
-		case 15:
-			saptamana.setStartdate(calendar.getTime());
-			calendar.add(Calendar.DATE, 7);
-			saptamana.setEnddate(calendar.getTime());
-			session.update(saptamana);
-			break;
-		case 16:
-			saptamana.setStartdate(calendar.getTime());
-			calendar.add(Calendar.DATE, 7);
-			saptamana.setEnddate(calendar.getTime());
-			session.update(saptamana);
-			break;
-		case 17:
-			saptamana.setStartdate(calendar.getTime());
-			calendar.add(Calendar.DATE, 7);
-			saptamana.setEnddate(calendar.getTime());
-			session.update(saptamana);
-			break;
-		case 18:
-			saptamana.setStartdate(calendar.getTime());
-			calendar.add(Calendar.DATE, 7);
-			saptamana.setEnddate(calendar.getTime());
-			session.update(saptamana);
-			break;
-		case 19:
-			saptamana.setStartdate(calendar.getTime());
-			calendar.add(Calendar.DATE, 7);
-			saptamana.setEnddate(calendar.getTime());
-			session.update(saptamana);
-			break;
-		case 20:
-			saptamana.setStartdate(calendar.getTime());
-			calendar.add(Calendar.DATE, 7);
-			saptamana.setEnddate(calendar.getTime());
-			session.update(saptamana);
-			break;
-		case 21:
-			saptamana.setStartdate(calendar.getTime());
-			calendar.add(Calendar.DATE, 7);
-			saptamana.setEnddate(calendar.getTime());
-			session.update(saptamana);
-			break;
-		case 22:
-			saptamana.setStartdate(calendar.getTime());
-			calendar.add(Calendar.DATE, 7);
-			saptamana.setEnddate(calendar.getTime());
-			session.update(saptamana);
-			calendar.add(Calendar.DATE, 7);
-			break;
-		case 23:
-			saptamana.setStartdate(calendar.getTime());
-			calendar.add(Calendar.DATE, 7);
-			saptamana.setEnddate(calendar.getTime());
-			session.update(saptamana);
-			break;
-		case 24:
-			saptamana.setStartdate(calendar.getTime());
-			calendar.add(Calendar.DATE, 7);
-			saptamana.setEnddate(calendar.getTime());
-			session.update(saptamana);
-			break;
-		case 25:
-			saptamana.setStartdate(calendar.getTime());
-			calendar.add(Calendar.DATE, 7);
-			saptamana.setEnddate(calendar.getTime());
-			session.update(saptamana);
-			break;
-		case 26:
-			saptamana.setStartdate(calendar.getTime());
-			calendar.add(Calendar.DATE, 7);
-			saptamana.setEnddate(calendar.getTime());
-			session.update(saptamana);
-			break;
-		case 27:
-			saptamana.setStartdate(calendar.getTime());
-			calendar.add(Calendar.DATE, 7);
-			saptamana.setEnddate(calendar.getTime());
-			session.update(saptamana);
-			break;
-		case 28:
-			saptamana.setStartdate(calendar.getTime());
-			calendar.add(Calendar.DATE, 7);
-			saptamana.setEnddate(calendar.getTime());
-			session.update(saptamana);
-			break;
+			case 1:
+				saptamana.setStartdate(calendar.getTime());
+				calendar.add(Calendar.DATE, 7);
+				saptamana.setEnddate(calendar.getTime());
+				session.update(saptamana);
+				break;
+			case 2:
+				saptamana.setStartdate(calendar.getTime());
+				calendar.add(Calendar.DATE, 7);
+				saptamana.setEnddate(calendar.getTime());
+				session.update(saptamana);
+				break;
+			case 3:
+				saptamana.setStartdate(calendar.getTime());
+				calendar.add(Calendar.DATE, 7);
+				saptamana.setEnddate(calendar.getTime());
+				session.update(saptamana);
+				break;
+			case 4:
+				saptamana.setStartdate(calendar.getTime());
+				calendar.add(Calendar.DATE, 7);
+				saptamana.setEnddate(calendar.getTime());
+				session.update(saptamana);
+				break;
+			case 5:
+				saptamana.setStartdate(calendar.getTime());
+				calendar.add(Calendar.DATE, 7);
+				saptamana.setEnddate(calendar.getTime());
+				session.update(saptamana);
+				break;
+			case 6:
+				saptamana.setStartdate(calendar.getTime());
+				calendar.add(Calendar.DATE, 7);
+				saptamana.setEnddate(calendar.getTime());
+				session.update(saptamana);
+				break;
+			case 7:
+				saptamana.setStartdate(calendar.getTime());
+				calendar.add(Calendar.DATE, 7);
+				saptamana.setEnddate(calendar.getTime());
+				session.update(saptamana);
+				break;
+			case 8:
+				saptamana.setStartdate(calendar.getTime());
+				calendar.add(Calendar.DATE, 7);
+				saptamana.setEnddate(calendar.getTime());
+				session.update(saptamana);
+				break;
+			case 9:
+				saptamana.setStartdate(calendar.getTime());
+				calendar.add(Calendar.DATE, 7);
+				saptamana.setEnddate(calendar.getTime());
+				session.update(saptamana);
+				break;
+			case 10:
+				saptamana.setStartdate(calendar.getTime());
+				calendar.add(Calendar.DATE, 7);
+				saptamana.setEnddate(calendar.getTime());
+				session.update(saptamana);
+				break;
+			case 11:
+				saptamana.setStartdate(calendar.getTime());
+				calendar.add(Calendar.DATE, 7);
+				saptamana.setEnddate(calendar.getTime());
+				session.update(saptamana);
+				break;
+			case 12:
+				saptamana.setStartdate(calendar.getTime());
+				calendar.add(Calendar.DATE, 7);
+				saptamana.setEnddate(calendar.getTime());
+				session.update(saptamana);
+				calendar.add(Calendar.DATE, 14);
+				break;
+			case 13:
+				saptamana.setStartdate(calendar.getTime());
+				calendar.add(Calendar.DATE, 7);
+				saptamana.setEnddate(calendar.getTime());
+				session.update(saptamana);
+				break;
+			case 14:
+				saptamana.setStartdate(calendar.getTime());
+				calendar.add(Calendar.DATE, 7);
+				saptamana.setEnddate(calendar.getTime());
+				session.update(saptamana);
+				calendar.add(Calendar.DATE, 28);
+				break;
+			case 15:
+				saptamana.setStartdate(calendar.getTime());
+				calendar.add(Calendar.DATE, 7);
+				saptamana.setEnddate(calendar.getTime());
+				session.update(saptamana);
+				break;
+			case 16:
+				saptamana.setStartdate(calendar.getTime());
+				calendar.add(Calendar.DATE, 7);
+				saptamana.setEnddate(calendar.getTime());
+				session.update(saptamana);
+				break;
+			case 17:
+				saptamana.setStartdate(calendar.getTime());
+				calendar.add(Calendar.DATE, 7);
+				saptamana.setEnddate(calendar.getTime());
+				session.update(saptamana);
+				break;
+			case 18:
+				saptamana.setStartdate(calendar.getTime());
+				calendar.add(Calendar.DATE, 7);
+				saptamana.setEnddate(calendar.getTime());
+				session.update(saptamana);
+				if(Functions.isDateBetween(easterDate.getTime(),helper2.getTime(),helper.getTime())){
+					calendar.add(Calendar.DATE, 7);
+				}
+				break;
+			case 19:
+				saptamana.setStartdate(calendar.getTime());
+				calendar.add(Calendar.DATE, 7);
+				saptamana.setEnddate(calendar.getTime());
+				session.update(saptamana);
+				if(Functions.isDateBetween(easterDate.getTime(),helper2.getTime(),helper.getTime())){
+					calendar.add(Calendar.DATE, 7);
+				}
+				break;
+			case 20:
+				saptamana.setStartdate(calendar.getTime());
+				calendar.add(Calendar.DATE, 7);
+				saptamana.setEnddate(calendar.getTime());
+				session.update(saptamana);
+				if(Functions.isDateBetween(easterDate.getTime(),helper2.getTime(),helper.getTime())){
+					calendar.add(Calendar.DATE, 7);
+				}
+				break;
+			case 21:
+				saptamana.setStartdate(calendar.getTime());
+				calendar.add(Calendar.DATE, 7);
+				saptamana.setEnddate(calendar.getTime());
+				session.update(saptamana);
+				if(Functions.isDateBetween(easterDate.getTime(),helper2.getTime(),helper.getTime())){
+					calendar.add(Calendar.DATE, 7);
+				}
+				break;
+			case 22:
+				saptamana.setStartdate(calendar.getTime());
+				calendar.add(Calendar.DATE, 7);
+				saptamana.setEnddate(calendar.getTime());
+				session.update(saptamana);
+				if(Functions.isDateBetween(easterDate.getTime(),helper2.getTime(),helper.getTime())){
+					calendar.add(Calendar.DATE, 7);
+				}
+				break;
+			case 23:
+				saptamana.setStartdate(calendar.getTime());
+				calendar.add(Calendar.DATE, 7);
+				saptamana.setEnddate(calendar.getTime());
+				session.update(saptamana);
+				if(Functions.isDateBetween(easterDate.getTime(),helper2.getTime(),helper.getTime())){
+					calendar.add(Calendar.DATE, 7);
+				}
+				break;
+			case 24:
+				saptamana.setStartdate(calendar.getTime());
+				calendar.add(Calendar.DATE, 7);
+				saptamana.setEnddate(calendar.getTime());
+				session.update(saptamana);
+				if(Functions.isDateBetween(easterDate.getTime(),helper2.getTime(),helper.getTime())){
+					calendar.add(Calendar.DATE, 7);
+				}
+				break;
+			case 25:
+				saptamana.setStartdate(calendar.getTime());
+				calendar.add(Calendar.DATE, 7);
+				saptamana.setEnddate(calendar.getTime());
+				session.update(saptamana);
+				if(Functions.isDateBetween(easterDate.getTime(),helper2.getTime(),helper.getTime())){
+					calendar.add(Calendar.DATE, 7);
+				}
+				break;
+			case 26:
+				saptamana.setStartdate(calendar.getTime());
+				calendar.add(Calendar.DATE, 7);
+				saptamana.setEnddate(calendar.getTime());
+				session.update(saptamana);
+				if(Functions.isDateBetween(easterDate.getTime(),helper2.getTime(),helper.getTime())){
+					calendar.add(Calendar.DATE, 7);
+				}
+				break;
+			case 27:
+				saptamana.setStartdate(calendar.getTime());
+				calendar.add(Calendar.DATE, 7);
+				saptamana.setEnddate(calendar.getTime());
+				session.update(saptamana);
+				if(Functions.isDateBetween(easterDate.getTime(),helper2.getTime(),helper.getTime())){
+					calendar.add(Calendar.DATE, 7);
+				}
+				break;
+			case 28:
+				saptamana.setStartdate(calendar.getTime());
+				calendar.add(Calendar.DATE, 7);
+				saptamana.setEnddate(calendar.getTime());
+				session.update(saptamana);
+				break;
 
 		}
 	}
