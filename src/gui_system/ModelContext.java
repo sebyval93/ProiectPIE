@@ -94,11 +94,9 @@ public class ModelContext {
 			studentiModel.setRowCount(0);
 		}
 		
-		//test data
 		List<Student> studenti = MainPanel.getStudentiFromParticipant((String) selectedRowData[4]);
         studenti.stream().forEach((aux) -> {
-        	if (!aux.getNume().equals("admin"))
-        		studentiModel.addRow(new Object[]{aux.getNume(), false});
+        	studentiModel.addRow(new Object[]{aux.getNume(), false});
         });
 		
 	}
