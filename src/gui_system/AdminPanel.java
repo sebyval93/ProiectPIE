@@ -152,7 +152,8 @@ public class AdminPanel extends JPanel {
 					Point p = me.getPoint();
 					int row = t.rowAtPoint(p);
 					if (context.getCurrentModelName().equals("studentModel")) {
-						studentiCtrlPanel.setFields((String)model.getValueAt(t.convertRowIndexToModel(row), 0), (String)model.getValueAt(t.convertRowIndexToModel(row), 1), 
+						studentiCtrlPanel.setFields((String)model.getValueAt(t.convertRowIndexToModel(row), 0),
+								(String)model.getValueAt(t.convertRowIndexToModel(row), 1), 
 								(String)model.getValueAt(t.convertRowIndexToModel(row), 2));
 						enableEditButtons(true);
 					}
@@ -171,7 +172,7 @@ public class AdminPanel extends JPanel {
 						enableEditButtons(true);
 					}
 					else if (context.getCurrentModelName().equals("modulModel")) {
-						sitDidacticaCtrlPanel.setFields((String)model.getValueAt(row, 0), 
+						sitDidacticaCtrlPanel.setFields((String)model.getValueAt(t.convertRowIndexToModel(row), 0), 
 								(String)model.getValueAt(t.convertRowIndexToModel(row), 1), 
 								(String)model.getValueAt(t.convertRowIndexToModel(row), 2), 
 								(String)model.getValueAt(t.convertRowIndexToModel(row), 3), 
