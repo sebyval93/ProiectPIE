@@ -4,6 +4,9 @@ import javax.swing.JFrame;
 import gui_system.AdminPanel;
 import gui_system.LoginPanel;
 import gui_system.MainPanel;
+import gui_system.ModalFrame;
+import gui_system.ResetWeeksPanel;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.UIManager;
@@ -14,6 +17,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JSeparator;
 import Singleton.*;
+import javax.swing.SwingConstants;
 
 public class MainFrame extends JFrame {
 
@@ -24,8 +28,11 @@ public class MainFrame extends JFrame {
 	JMenuBar menuBar;
 	JMenu mnFile, mnUnelte, mnGenerareRaport;
 	JMenuItem mntmDelogare, mntmExit, 
-	mntmAdministrare, mntmGestionareModule, mntmImport,
+	mntmAdministrare, mntmGestionareModule,
 	mntmRaportStudenti, mntmRaportGrupe, mntmTest;
+	private JMenu renewDateMnt;
+	private JMenuItem mntmImport_1;
+	private JMenuItem mntmDataInceperii;
 
 	/**
 	 * Launch the application.
@@ -65,7 +72,6 @@ public class MainFrame extends JFrame {
 		mnUnelte.setVisible(false);
 		mntmDelogare.setVisible(false);
 		mnGenerareRaport.setVisible(false);
-		mntmImport.setVisible(false);
 		setMenuVisible(false);
 		pack();
 		setLocationRelativeTo(null);
@@ -76,6 +82,7 @@ public class MainFrame extends JFrame {
 		setTitle("Gestiune module pentru profesorul: "+Singleton.getInstance().currentUser.getUsername());
 		loginPanel.setVisible(false);
 		adminPanel.setVisible(false);
+		renewDateMnt.setVisible(false);
 		mainPanel.loadFromDB();
 		setContentPane(mainPanel);
 		mainPanel.setVisible(true);
@@ -84,7 +91,6 @@ public class MainFrame extends JFrame {
 		mntmGestionareModule.setVisible(false);
 		mntmAdministrare.setVisible(true);
 		mnGenerareRaport.setVisible(false);
-		mntmImport.setVisible(false);
 		pack();
 		setLocationRelativeTo(null);
 	}
@@ -94,7 +100,7 @@ public class MainFrame extends JFrame {
 		mntmAdministrare.setVisible(false);
 		mntmGestionareModule.setVisible(true);
 		mnGenerareRaport.setVisible(true);
-		mntmImport.setVisible(true);
+		renewDateMnt.setVisible(true);
 		mainPanel.setVisible(false);
 		setContentPane(adminPanel);
 		adminPanel.setVisible(true);
@@ -143,10 +149,6 @@ public class MainFrame extends JFrame {
 		mntmDelogare.setMnemonic('D');
 		mnFile.add(mntmDelogare);
 		
-		mntmImport = new JMenuItem("Import...");
-		mntmImport.setMnemonic('I');
-		mnFile.add(mntmImport);
-		
 		JSeparator separator = new JSeparator();
 		mnFile.add(separator);
 		
@@ -194,9 +196,30 @@ public class MainFrame extends JFrame {
 		mnGenerareRaport.add(mntmTest);
 		mnUnelte.add(mntmGestionareModule);
 		
+		renewDateMnt = new JMenu("Re\u00EEnnoire date");
+		mnUnelte.add(renewDateMnt);
+		
+		mntmImport_1 = new JMenuItem("Import");
+		mntmImport_1.setHorizontalAlignment(SwingConstants.LEFT);
+		renewDateMnt.add(mntmImport_1);
+		
+		mntmDataInceperii = new JMenuItem("Data \u00EEnceperii anului");
+		mntmDataInceperii.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				setNewYearStart();
+			}
+		});
+		mntmDataInceperii.setHorizontalAlignment(SwingConstants.CENTER);
+		renewDateMnt.add(mntmDataInceperii);
+		
 		mnUnelte.setVisible(false);
 		mntmDelogare.setVisible(false);
 		mntmGestionareModule.setVisible(false);
 		
 	}
+	
+	public void setNewYearStart(){
+		new ModalFrame(this,new ResetWeeksPanel());
+	}
+
 }

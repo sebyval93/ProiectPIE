@@ -41,6 +41,7 @@ public class DisciplinaCtrlPanel extends JPanel {
 		panel.add(lblDenumire);
 		
 		txtDenumire = new JTextField();
+		txtDenumire.setHorizontalAlignment(SwingConstants.CENTER);
 		txtDenumire.setBounds(69, 0, 238, 20);
 		panel.add(txtDenumire);
 		txtDenumire.setColumns(10);
@@ -50,6 +51,7 @@ public class DisciplinaCtrlPanel extends JPanel {
 		panel.add(lblNumeScurt);
 		
 		txtNumeScurt = new JTextField();
+		txtNumeScurt.setHorizontalAlignment(SwingConstants.CENTER);
 		txtNumeScurt.setBounds(69, 36, 238, 20);
 		panel.add(txtNumeScurt);
 		txtNumeScurt.setColumns(10);
@@ -95,11 +97,11 @@ public class DisciplinaCtrlPanel extends JPanel {
 		txtOreSeminar.setColumns(10);
 		
 		JLabel lblOreProiect = new JLabel("Ore proiect:");
-		lblOreProiect.setBounds(548, 21, 58, 14);
+		lblOreProiect.setBounds(546, 3, 58, 14);
 		panel.add(lblOreProiect);
 		
 		txtOreProiect = new JTextField();
-		txtOreProiect.setBounds(616, 18, 30, 20);
+		txtOreProiect.setBounds(614, 0, 30, 20);
 		panel.add(txtOreProiect);
 		txtOreProiect.setHorizontalAlignment(SwingConstants.CENTER);
 		txtOreProiect.setColumns(10);
