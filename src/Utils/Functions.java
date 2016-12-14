@@ -2,6 +2,7 @@ package Utils;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 import org.hibernate.Session;
 
@@ -50,6 +51,34 @@ public class Functions {
 			session.close();
 		}
 		return done;
+	}
+	
+	public static Calendar getEasterDate(int year){
+		int a,b,c,d,e;
+		Calendar cal = Calendar.getInstance();
+		a = year%4;
+		b = year%7;
+		c = year%19;
+		d = (19*c + 15)%30;
+		e = (2 * a + 4 * b - d + 34)%7;
+		int LunaPaste,ziuaPaste;
+		LunaPaste = (d + e + 114) / 31;
+		ziuaPaste = ((d + e + 114) % 31) + 1;
+		cal.set(year, LunaPaste - 1, ziuaPaste);
+		cal.add(Calendar.DATE, 13);
+		return cal;
+	}
+	
+	public static boolean isDateBetween(Date date, Date dateStart, Date dateEnd) {
+	    if (date != null && dateStart != null && dateEnd != null) {
+	        if (date.after(dateStart) && date.before(dateEnd)) {
+	            return true;
+	        }
+	        else {
+	            return false;
+	        }
+	    }
+	    return false;
 	}
 	
 }
