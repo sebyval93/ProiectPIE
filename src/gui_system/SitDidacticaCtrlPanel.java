@@ -209,9 +209,22 @@ public class SitDidacticaCtrlPanel extends JPanel {
 		cbActivitate.setSelectedItem(activitate);
 		cbProfesor.setSelectedItem(numeProfesor);
 		cbInterval.setSelectedItem(interval);
+		
+		boolean found = false;
+		for (Grupa grupa : allFromGrupa) {
+			
+			if (grupa.getNume().equals(participanti)) {
+				found = true;
+			}
+		}
+		
+		if (found) {
+			radioGrupa.doClick();
+		}
+		else
+			radioSubgrupa.doClick();
+		
 		cbParticipanti.setSelectedItem(participanti);
-		
-		
 	}
 	
 	public Object[] getFields(boolean allowNull) {

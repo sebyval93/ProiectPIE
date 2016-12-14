@@ -223,7 +223,8 @@ public class AdminContext {
 		List<Profesor> list = ProfesorService.getAllFromProfesor();
 		DefaultTableModel model = getCurrentModel();
         list.stream().forEach((aux) -> {
-            model.addRow(new Object[]{aux.getNume()});
+        	if (!aux.getNume().equals("admin"))
+        		model.addRow(new Object[]{aux.getNume()});
         });
 	}
 	

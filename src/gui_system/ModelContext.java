@@ -29,21 +29,7 @@ public class ModelContext {
 	//                         0      1       2
 	//private enum Saptamana { IMPARA, PARA, INTEGRAL };
 	//                         0       1         2         3
-	private enum Activitate { CURS, SEMINAR, LABORATOR, PROIECT };
-	
-	//--test data -BEGIN
-	private Object moduleData[][] = { 
-			{ "Baze de Date", Activitate.CURS, 2, 3, "22c21" },
-			{ "Baze de Date", Activitate.CURS, 2, 3, "22c22" },
-			{ "Baze de Date", Activitate.CURS, 2, 3, "22c23" },
-			{ "Baze de Date", Activitate.LABORATOR, 2, 3, "22c22a" },
-			{ "Baze de Date", Activitate.LABORATOR, 2, 3, "22c21b" },
-			{ "Proiectarea Bazelor de Date", Activitate.SEMINAR, 3, 3, "22c31"},
-			{ "Proiect Informatic in Echipa", Activitate.PROIECT, 4,3, "22c41"},
-			{ "Proiect Informatic in Echipa", Activitate.PROIECT, 4,3, "22c42"}
-	};
-	//--test data -END
-	
+	private enum Activitate { CURS, SEMINAR, LABORATOR, PROIECT };	
 	
 	public ModelContext(JTable table) {
 		this.table = table;
@@ -92,17 +78,6 @@ public class ModelContext {
 		//   logat, din saptamana curenta.
 		
 		loadModuleForUser();
-		
-		/*
-		if (moduleModel.getRowCount() > 0) {
-			moduleModel.setRowCount(0);
-		}
-		
-		//test data
-		for (int i = 0; i < moduleData.length; ++i) {
-			moduleModel.addRow(moduleData[i]);
-		}
-		*/
 	}
 	
 	private void loadStudentiFromDB(Object selectedRowData[]) {

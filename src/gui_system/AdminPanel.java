@@ -58,7 +58,7 @@ public class AdminPanel extends JPanel {
 		selTable.setRowHeight(40);
 		selTable.setCellSelectionEnabled(false);
 		
-
+		
 		
 		mainTable = new JTable(){
 			private Border outside = new MatteBorder(1, 0, 1, 0, Color.RED);
@@ -82,6 +82,7 @@ public class AdminPanel extends JPanel {
 		mainTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 		mainTable.setRowHeight(30);
 		mainTable.setCellSelectionEnabled(false);
+		mainTable.setAutoCreateRowSorter(true);
 		
 		
 		context = new AdminContext(selTable, mainTable);
@@ -146,27 +147,35 @@ public class AdminPanel extends JPanel {
 			public void mousePressed(MouseEvent me) {
 				if (me.getButton() == MouseEvent.BUTTON1) {
 					JTable t =(JTable) me.getSource();
+					
 					DefaultTableModel model = (DefaultTableModel) t.getModel();
 					Point p = me.getPoint();
 					int row = t.rowAtPoint(p);
 					if (context.getCurrentModelName().equals("studentModel")) {
-						studentiCtrlPanel.setFields((String)model.getValueAt(row, 0), (String)model.getValueAt(row, 1), 
-								(String)model.getValueAt(row, 2));
+						studentiCtrlPanel.setFields((String)model.getValueAt(t.convertRowIndexToModel(row), 0), (String)model.getValueAt(t.convertRowIndexToModel(row), 1), 
+								(String)model.getValueAt(t.convertRowIndexToModel(row), 2));
 						enableEditButtons(true);
 					}
 					else if (context.getCurrentModelName().equals("profesorModel")) {
-						profesorCtrlPanel.setFields((String)model.getValueAt(row, 0));
+						profesorCtrlPanel.setFields((String)model.getValueAt(t.convertRowIndexToModel(row), 0));
 						enableEditButtons(true);
 					}
 					else if (context.getCurrentModelName().equals("disciplinaModel")) {
-						disciplinaCtrlPanel.setFields((String)model.getValueAt(row, 0), model.getValueAt(row, 1).toString(), 
-								model.getValueAt(row, 2).toString(), model.getValueAt(row, 3).toString(), model.getValueAt(row, 4).toString(), 
-								model.getValueAt(row, 5).toString(), (String)model.getValueAt(row, 6));
+						disciplinaCtrlPanel.setFields((String)model.getValueAt(t.convertRowIndexToModel(row), 0), 
+								model.getValueAt(t.convertRowIndexToModel(row), 1).toString(), 
+								model.getValueAt(t.convertRowIndexToModel(row), 2).toString(), 
+								model.getValueAt(t.convertRowIndexToModel(row), 3).toString(), 
+								model.getValueAt(t.convertRowIndexToModel(row), 4).toString(), 
+								model.getValueAt(t.convertRowIndexToModel(row), 5).toString(), 
+								(String)model.getValueAt(t.convertRowIndexToModel(row), 6));
 						enableEditButtons(true);
 					}
 					else if (context.getCurrentModelName().equals("modulModel")) {
-						sitDidacticaCtrlPanel.setFields((String)model.getValueAt(row, 0), (String)model.getValueAt(row, 1), 
-								(String)model.getValueAt(row, 2), (String)model.getValueAt(row, 3), (String)model.getValueAt(row, 4));
+						sitDidacticaCtrlPanel.setFields((String)model.getValueAt(row, 0), 
+								(String)model.getValueAt(t.convertRowIndexToModel(row), 1), 
+								(String)model.getValueAt(t.convertRowIndexToModel(row), 2), 
+								(String)model.getValueAt(t.convertRowIndexToModel(row), 3), 
+								(String)model.getValueAt(t.convertRowIndexToModel(row), 4));
 						
 						enableEditButtons(true);
 					}

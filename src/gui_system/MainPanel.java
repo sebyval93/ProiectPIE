@@ -38,6 +38,7 @@ public class MainPanel extends JPanel {
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 		table.setRowHeight(30);
 		table.setCellSelectionEnabled(false);
+		table.setAutoCreateRowSorter(true);
 		
 		context = new ModelContext(table);
 		
@@ -52,7 +53,7 @@ public class MainPanel extends JPanel {
 						Object selectedRowData[] = new Object[model.getColumnCount()];
 						
 						for (int i = 0; i < model.getColumnCount(); ++i) {
-							selectedRowData[i] = model.getValueAt(row, i);
+							selectedRowData[i] = model.getValueAt(t.convertRowIndexToModel(row), i);
 						}
 						
 						context.switchToStudenti(selectedRowData);
