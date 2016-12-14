@@ -103,6 +103,10 @@ public class LoginPanel extends JPanel {
 						if(user.getPassword().equals(
 								EncryptService.getHashOfString(String.valueOf(PasswordTF.getPassword())))){
 							Singleton.getInstance().currentUser = user;
+							if (IdTF.getText().equalsIgnoreCase("admin"))
+								parentFrame.showUnelteMenu();
+							else
+								parentFrame.hideUnelteMenu();
 							PasswordTF.setText("");
 							IdTF.setText("");
 							parentFrame.showMainPanel();

@@ -101,6 +101,21 @@ public final class GrupaService {
 		return list;
 	}
 	
+	public static Grupa getGrupaByNume(String nume) {
+		Grupa grupa = null;
+		Session session = null;
+		try{
+			session = Singleton.getInstance().getNewSession();
+			grupa = (Grupa) session.createQuery("from Grupa where NUME = '" + nume + "'").getResultList().get(0);
+			session.close();
+		}catch (Exception e) {
+            e.printStackTrace();        
+        }finally{
+        	session.close();
+        }
+		return grupa;
+	}
+	
 	public static List<Grupa> getAllGrupaByAn(AnUniversitar an){
 		Session session = null;
 		List<Grupa> list = null;
