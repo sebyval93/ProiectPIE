@@ -3,6 +3,8 @@ package com.testConnection;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Calendar;
 import java.util.Date;
@@ -26,7 +28,8 @@ import gui_system.ResetWeeksPanel;
 
 public class TestConnection {
 
-	public static void main(String[] args){
+	public static void main(String[] args) throws FileNotFoundException{
+		
 		
 	}
 	

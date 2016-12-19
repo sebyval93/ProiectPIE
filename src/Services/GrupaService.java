@@ -33,7 +33,7 @@ public final class GrupaService {
 			session = Singleton.getInstance().getNewSession();
 			session.beginTransaction();
 			Grupa grupa = new Grupa(an,nume);
-			session.update(grupa);
+			session.save(grupa);
 			session.getTransaction().commit();
 			done = true;
 		}catch (Exception e) {
@@ -129,6 +129,23 @@ public final class GrupaService {
         	session.close();
         }
 		return list;
+	}
+	
+	public static boolean deleteAllFromTable(){
+		boolean done = false;
+		Session session = null;
+			try{
+				session = Singleton.getInstance().getNewSession();
+				session.beginTransaction();
+				session.createQuery("delete from Grupa").executeUpdate();
+				session.getTransaction().commit();
+				done = true;
+			}catch (Exception e) {
+	            e.printStackTrace();           
+	        } finally { 
+	        	session.close();
+	        }
+		return done;
 	}
 	
 	
