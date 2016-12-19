@@ -20,5 +20,6 @@
 	<classpathentry kind="lib" path="lib/jsr250-api-1.0.jar"/>
 	<classpathentry kind="lib" path="lib/ojdbc6.jar"/>
 	<classpathentry kind="lib" path="lib/jcalendar-1.4.jar"/>
+	<classpathentry kind="lib" path="lib/poi-3.15.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
