@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import org.hibernate.Session;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
 
 import Singleton.Singleton;
 import entity.*;
@@ -26,7 +28,7 @@ public final class PrezentaService {
 		
 	}
 	
-	public static boolean addPrezenta(Modul modul, Saptamana saptamana, Student student, String prezent){
+	public static boolean addPrezenta(Modul modul, Saptamana saptamana, Student student, int prezent){
 		Session session = null;
 		boolean done = false;
 		try{
@@ -64,7 +66,7 @@ public final class PrezentaService {
 		return done;
 	}
 	
-	public static boolean updatePrezentaByID(int ID,Modul modul, Saptamana saptamana, Student student, String prezent){
+	public static boolean updatePrezentaByID(int ID,Modul modul, Saptamana saptamana, Student student, int prezent){
 		boolean done = false;
 		Session session = null;
 		Prezenta prezenta = getPrezentaByID(ID);
@@ -72,7 +74,7 @@ public final class PrezentaService {
 			prezenta.setModul(modul);
 			prezenta.setSaptamana(saptamana);
 			prezenta.setStudent(student);
-			prezenta.setPrezent(prezent);
+			prezenta.setPrezent(new BigDecimal(prezent));
 			try{
 				session = Singleton.getInstance().getNewSession();
 				session.beginTransaction();
@@ -101,6 +103,34 @@ public final class PrezentaService {
         	session.close();
         }
 		return list;
+	}
+	
+	public static int getNumberOfAbsencesForAStudentForModule(Student student,Disciplina disciplina){
+		if(student != null && disciplina != null){
+			Session session = null;
+			try{
+				session = Singleton.getInstance().getNewSession();
+				List<Modul> moduls;
+				
+				DetachedCriteria dc1 = DetachedCriteria.forClass(Modul.class)
+						.add(Restrictions.disjunction()
+							.add(Restrictions.eq("student", student))
+							.add(Restrictions.eq("student", student)));
+				
+				DetachedCriteria dc = DetachedCriteria.forClass(Prezenta.class)
+						.add(Restrictions.disjunction()
+							.add(Restrictions.eq("student", student))
+							.add(Restrictions.eq("student", student)));
+				session.close();
+			}catch (Exception e) {
+	            e.printStackTrace();        
+	        }finally{
+	        	session.close();
+	        }
+			
+			
+		}
+		return 0;
 	}
 	
 }

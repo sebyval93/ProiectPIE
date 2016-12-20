@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import org.hibernate.Session;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
 
 import Singleton.Singleton;
 import entity.*;
@@ -26,13 +28,13 @@ public final class ModulService {
 	}
 	
 	public static boolean addModul(Disciplina disciplina, Profesor profesor, String activitate, String participanti,
-			int interval){
+			int interval,int operat){
 		boolean done = false;
 		Session session = null;
 		try{
 			session = Singleton.getInstance().getNewSession();
 			session.beginTransaction();
-			Modul modul = new Modul(disciplina,profesor,activitate,participanti,new BigDecimal(interval));
+			Modul modul = new Modul(disciplina,profesor,activitate,participanti,new BigDecimal(interval), new BigDecimal(operat));
 			session.save(modul);
 			session.getTransaction().commit();
 			done = true;
@@ -64,7 +66,7 @@ public final class ModulService {
 	}
 	
 	public static boolean updateModulByID(int ID,Disciplina disciplina, Profesor profesor, String activitate, String participanti,
-			int interval){
+			int interval,int operat){
 		boolean done = false;
 		Session session = null;
 		Modul modul = getModulByID(ID);
@@ -74,6 +76,7 @@ public final class ModulService {
 			modul.setActivitate(activitate);
 			modul.setParticipanti(participanti);
 			modul.setInterval(new BigDecimal(interval));
+			modul.setOperat(new BigDecimal(operat));
 			try{
 				session = Singleton.getInstance().getNewSession();
 				session.beginTransaction();
@@ -118,5 +121,28 @@ public final class ModulService {
         }
 		return list;
 	}
+	
+	public static List<Modul> getAllModulsForStudentAndDisciplina(Student student, Disciplina disciplina){
+		List<Modul> list = null;
+		Session session = null;
+		try{
+			session = Singleton.getInstance().getNewSession();
+			DetachedCriteria dc = DetachedCriteria.forClass(Modul.class)
+						.add(Restrictions.eq("disciplina", disciplina))
+						.add(Restrictions.disjunction()
+								.add(Restrictions.eq("participanti", student.getSubgrupa()).ignoreCase())
+								.add(Restrictions.eq("participanti", student.getSubgrupa().getGrupa()).ignoreCase())
+							);
+			list =  dc.getExecutableCriteria(session).list();
+			session.close();
+		}catch (Exception e) {
+            e.printStackTrace();        
+        }finally{
+        	session.close();
+        }
+		return list;
+	}
 
+	
+	
 }

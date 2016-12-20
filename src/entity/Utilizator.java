@@ -1,4 +1,5 @@
 package entity;
+//made by DMIRICA
 
 import java.math.BigDecimal;
 import java.security.NoSuchAlgorithmException;

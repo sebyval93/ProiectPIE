@@ -28,6 +28,8 @@ public class TestConnection {
 
 	public static void main(String[] args){
 		
+		Disciplina disc = DisciplinaService.getDisciplinaByNumeScurt("LFT");
+		System.out.println(disc);
 	}
 	
 }

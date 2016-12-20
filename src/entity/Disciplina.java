@@ -10,9 +10,12 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+
 
 
 @Entity
@@ -20,6 +23,7 @@ import javax.persistence.Table;
 public class Disciplina implements java.io.Serializable {
 
 	private BigDecimal id;
+	private Semestru semestru;
 	private String denumire;
 	private BigDecimal an;
 	private BigDecimal orecurs;
@@ -36,9 +40,10 @@ public class Disciplina implements java.io.Serializable {
 		this.id = id;
 	}
 
-	public Disciplina(BigDecimal id, String denumire, BigDecimal an, BigDecimal orecurs, BigDecimal orelab,
-			BigDecimal oreseminar, BigDecimal oreproiect, String numeScurt, Set<Modul> moduls) {
+	public Disciplina(BigDecimal id, Semestru semestru, String denumire, BigDecimal an, BigDecimal orecurs,
+			BigDecimal orelab, BigDecimal oreseminar, BigDecimal oreproiect, String numeScurt, Set<Modul> moduls) {
 		this.id = id;
+		this.semestru = semestru;
 		this.denumire = denumire;
 		this.an = an;
 		this.orecurs = orecurs;
@@ -49,10 +54,11 @@ public class Disciplina implements java.io.Serializable {
 		this.moduls = moduls;
 	}
 	
-	public Disciplina(String denumire, BigDecimal an, BigDecimal orecurs, BigDecimal orelab,
+	public Disciplina(String denumire,Semestru semestru, BigDecimal an, BigDecimal orecurs, BigDecimal orelab,
 			BigDecimal oreseminar, BigDecimal oreproiect, String numeScurt) {
 		this.id = null;
 		this.denumire = denumire;
+		this.semestru = semestru;
 		this.an = an;
 		this.orecurs = orecurs;
 		this.orelab = orelab;
@@ -71,6 +77,16 @@ public class Disciplina implements java.io.Serializable {
 
 	public void setId(BigDecimal id) {
 		this.id = id;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "ID_SEMESTRU")
+	public Semestru getSemestru() {
+		return this.semestru;
+	}
+
+	public void setSemestru(Semestru semestru) {
+		this.semestru = semestru;
 	}
 
 	@Column(name = "DENUMIRE", length = 60)
@@ -144,14 +160,11 @@ public class Disciplina implements java.io.Serializable {
 	public void setModuls(Set<Modul> moduls) {
 		this.moduls = moduls;
 	}
-
+	
 	@Override
 	public String toString() {
 		return "Disciplina [id= " + id + ", denumire= " + denumire + ", an= " + an + ", orecurs= " + orecurs + ", orelab= "
 				+ orelab + ", oreseminar= " + oreseminar + ", oreproiect= " + oreproiect + ", numeScurt= " + numeScurt
 				+ "]";
 	}
-	
-	
-
 }
