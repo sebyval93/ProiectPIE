@@ -323,9 +323,9 @@ public class AdminPanel extends JPanel {
 				String activitate = sitDidacticaCtrlPanel.getSelectedActivitate();
 				String participanti = sitDidacticaCtrlPanel.getSelectedParticipanti();
 				int interval = sitDidacticaCtrlPanel.getSelectedInterval();
-				
+				int operat = 0;/// AM PUSO DOAR SA REZOLV EROAREA MODIFICI TU
 				if (disciplina != null || profesor != null || activitate != null || participanti != null || interval != -1)
-					ModulService.addModul(disciplina, profesor, activitate, participanti, interval);
+					ModulService.addModul(disciplina, profesor, activitate, participanti, interval,operat);
 				else
 					System.out.println("Could not add modul to database. Found invalid field.");
 			}

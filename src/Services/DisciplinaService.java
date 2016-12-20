@@ -25,14 +25,14 @@ public final class DisciplinaService {
 		return disciplina;
 	}
 		
-	public static boolean addDisciplina(String denumire, int an, int orecurs, int orelab,
+	public static boolean addDisciplina(String denumire,Semestru semestru, int an, int orecurs, int orelab,
 			int oreseminar, int oreproiect, String numeScurt){
 		boolean done = false;
 		Session session = null;
 		try{
 			session = Singleton.getInstance().getNewSession();
 			session.beginTransaction();
-			Disciplina disciplina = new Disciplina(denumire,new BigDecimal(an),new BigDecimal(orecurs),
+			Disciplina disciplina = new Disciplina(denumire,semestru,new BigDecimal(an),new BigDecimal(orecurs),
 					new BigDecimal(orelab),new BigDecimal(oreseminar),new BigDecimal(oreproiect),numeScurt);
 			session.save(disciplina);
 			session.getTransaction().commit();
@@ -65,13 +65,14 @@ public final class DisciplinaService {
 		return done;
 	}
 	
-	public static boolean updateDisciplinaByID(int ID,String denumire, int an, int orecurs, int orelab,
+	public static boolean updateDisciplinaByID(int ID,Semestru semestru,String denumire, int an, int orecurs, int orelab,
 			int oreseminar, int oreproiect, String numeScurt){
 		boolean done = false;
 		Session session = null;
 		Disciplina disciplina = getDisciplinaByID(ID);
 		if(disciplina != null){
 			disciplina.setDenumire(denumire);
+			disciplina.setSemestru(semestru);
 			disciplina.setAn(new BigDecimal(an));
 			disciplina.setOrecurs(new BigDecimal(orecurs));
 			disciplina.setOrelab(new BigDecimal(orelab));
