@@ -13,7 +13,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-
 @Entity
 @Table(name = "PREZENTA")
 public class Prezenta implements java.io.Serializable {
@@ -22,7 +21,7 @@ public class Prezenta implements java.io.Serializable {
 	private Modul modul;
 	private Saptamana saptamana;
 	private Student student;
-	private String prezent;
+	private BigDecimal prezent;
 
 	public Prezenta() {
 	}
@@ -33,10 +32,8 @@ public class Prezenta implements java.io.Serializable {
 		this.saptamana = saptamana;
 		this.student = student;
 	}
-	
-	
 
-	public Prezenta(BigDecimal id, Modul modul, Saptamana saptamana, Student student, String prezent) {
+	public Prezenta(BigDecimal id, Modul modul, Saptamana saptamana, Student student, BigDecimal prezent) {
 		this.id = id;
 		this.modul = modul;
 		this.saptamana = saptamana;
@@ -44,12 +41,12 @@ public class Prezenta implements java.io.Serializable {
 		this.prezent = prezent;
 	}
 	
-	public Prezenta(Modul modul, Saptamana saptamana, Student student, String prezent) {
+	public Prezenta(Modul modul, Saptamana saptamana, Student student, int prezent) {
 		this.id = null;
 		this.modul = modul;
 		this.saptamana = saptamana;
 		this.student = student;
-		this.prezent = prezent;
+		this.prezent = new BigDecimal(prezent);
 	}
 
 	@Id
@@ -94,12 +91,12 @@ public class Prezenta implements java.io.Serializable {
 		this.student = student;
 	}
 
-	@Column(name = "PREZENT", length = 10)
-	public String getPrezent() {
+	@Column(name = "PREZENT", precision = 22, scale = 0)
+	public BigDecimal getPrezent() {
 		return this.prezent;
 	}
 
-	public void setPrezent(String prezent) {
+	public void setPrezent(BigDecimal prezent) {
 		this.prezent = prezent;
 	}
 

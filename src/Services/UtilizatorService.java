@@ -100,7 +100,6 @@ public final class UtilizatorService {
 			try {
 				utilizator.setPassword(EncryptService.getHashOfString(password));
 			} catch (UnsupportedEncodingException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 			utilizator.setProfesor(profesor);
@@ -135,7 +134,7 @@ public final class UtilizatorService {
 		try{
 			session = Singleton.getInstance().getNewSession();
 			session.beginTransaction();
-			session.createQuery("delete from User_Role").executeUpdate();
+			session.createQuery("delete from Utilizator").executeUpdate();
 			session.getTransaction().commit();
 			done = true;
 		}catch(Exception e){
