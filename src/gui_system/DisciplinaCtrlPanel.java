@@ -148,6 +148,34 @@ public class DisciplinaCtrlPanel extends JPanel {
 		return result;
 	}
 	
+	public String getDenumire() {
+		return txtDenumire.getText();
+	}
+
+	public String getNumeScurt() {
+		return txtNumeScurt.getText();
+	}
+
+	public int getAn() {
+		return Integer.parseInt(txtAn.getText());
+	}
+
+	public int getOreCurs() {
+		return Integer.parseInt(txtOreCurs.getText());
+	}
+
+	public int getOreLaborator() {
+		return Integer.parseInt(txtOreLaborator.getText());
+	}
+
+	public int getOreSeminar() {
+		return Integer.parseInt(txtOreSeminar.getText());
+	}
+
+	public int getOreProiect() {
+		return Integer.parseInt(txtOreProiect.getText());
+	}
+
 	public void resetFields() {
 		txtDenumire.setText("");
 		txtAn.setText("");

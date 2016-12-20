@@ -11,6 +11,7 @@ import javax.swing.SwingConstants;
 import Services.UtilizatorService;
 import Utils.EncryptService;
 import Utils.Functions;
+import Utils.Week;
 import entity.Utilizator;
 import main.MainFrame;
 import java.awt.event.ActionListener;
@@ -31,7 +32,7 @@ public class LoginPanel extends JPanel {
 	main.MainFrame parentFrame;
 
 	public LoginPanel() {
-		Singleton.getInstance().getCurrentWeek();
+		Singleton.getInstance().getCurrentSaptamana();
 		setLayout(null);
 		
 		JPanel panel = new JPanel();
@@ -103,12 +104,16 @@ public class LoginPanel extends JPanel {
 						if(user.getPassword().equals(
 								EncryptService.getHashOfString(String.valueOf(PasswordTF.getPassword())))){
 							Singleton.getInstance().currentUser = user;
+							Singleton.getInstance().getCurrentProfesor();
+							Singleton.getInstance().setCurrentWeek(new Week(Singleton.getInstance().currentSaptamana));
 							if (IdTF.getText().equalsIgnoreCase("admin"))
 								parentFrame.showUnelteMenu();
 							else
 								parentFrame.hideUnelteMenu();
 							PasswordTF.setText("");
 							IdTF.setText("");
+							parentFrame.updateWeekBrowser();
+							//getModuleFromSaptamanaAndProfesor(Singleton.getInstance().)
 							parentFrame.showMainPanel();
 						}else{
 							warningLbl.setText("Datele nu corespund!");

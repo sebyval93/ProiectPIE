@@ -139,6 +139,22 @@ public final class DisciplinaService {
 		return disciplina;
 	}
 	
+	public static Disciplina getDisciplinaByDenumire(String denumire) {
+		Disciplina disciplina = null;
+		Session session = null;
+		
+		try{
+			session = Singleton.getInstance().getNewSession();
+			disciplina = (Disciplina) session.createQuery("from Disciplina where denumire = '" + denumire + "'").getResultList().get(0);
+			session.close();
+		}catch (Exception e) {
+            e.printStackTrace();        
+        }finally{
+        	session.close();
+        }
+		return disciplina;
+	}
+	
 	public static List<Disciplina> getDisciplineByAn(int an){
 		Session session = null;
 		List<Disciplina> list = null;

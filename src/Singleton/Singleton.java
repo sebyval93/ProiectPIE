@@ -6,7 +6,9 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
+import Services.ProfesorService;
 import Services.SaptamanaService;
+import Utils.Week;
 import entity.*;
 
 public class Singleton {
@@ -14,7 +16,9 @@ public class Singleton {
 	private static Singleton singleton = null;
 	public SessionFactory sessionFactory;
 	public Utilizator currentUser = null;
-	public Saptamana currentWeek = null;
+	public Profesor currentProfesor = null;
+	public Saptamana currentSaptamana = null;
+	public Week currentWeek = null;
 	
 	private Singleton(){
 		initSingleton();
@@ -33,8 +37,22 @@ public class Singleton {
 		
 	}
 	
-	public void getCurrentWeek(){
-		currentWeek = SaptamanaService.getCurrentWeek();
+	public void getCurrentSaptamana(){
+		currentSaptamana = SaptamanaService.getCurrentWeek();
+	}
+	
+	public void setCurrentWeek(Week week) {
+		currentWeek = week;
+	}
+	
+	public void getCurrentProfesor() {
+		currentProfesor = currentUser.getProfesor();
+		if (currentProfesor.getId().intValue() == 0) {
+			if (currentUser.getUsername().equals("admin"))
+				System.out.println("Logat ca admin");
+			else
+				System.out.println("Eroare getCurrentProfesor");
+		}
 	}
 	
 	//Build the sessionFactory

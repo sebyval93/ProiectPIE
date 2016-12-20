@@ -29,6 +29,22 @@ public class SaptamanaService {
 		return saptamana;
 		
 	}
+	
+	public static Saptamana getSaptamanaByDenumireAndSemestru(String denumire, String semestru){
+		Saptamana saptamana = null;
+		Session session = null;
+		try{			
+			session = Singleton.getInstance().getNewSession();			
+			saptamana = (Saptamana) session.createQuery("from Saptamana where DENUMIRE = '" + denumire + "' AND ID_SEM = "
+					+ "(select id from Semestru where numeSem = '" + semestru + "')").getResultList().get(0);
+		}catch (Exception e) {
+            e.printStackTrace();
+        }finally { 
+        	session.close();
+        }
+		return saptamana;
+		
+	}
 		
 	public static boolean addSaptamana(Semestru semestru, String denumire, Date startdate, Date enddate){
 		boolean done = false;

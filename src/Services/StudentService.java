@@ -104,6 +104,21 @@ public final class StudentService {
 		return list;
 	}
 	
+	public static Student getStudentByNume(String nume) {
+		Student student = null;
+		Session session = null;
+		try{
+			session = Singleton.getInstance().getNewSession();
+			student = (Student) session.createQuery("from Student where nume = '" + nume + "'").getResultList().get(0);
+			session.close();
+		}catch (Exception e) {
+            e.printStackTrace();        
+        }finally{
+        	session.close();
+        }
+		return student;
+	}
+	
 	public static List<Student> getAllStudentsBySubgrupa(Subgrupa subgrupa){
 		Session session = null;
 		List<Student> list = null;
@@ -117,6 +132,23 @@ public final class StudentService {
         	session.close();
         }
 		return list;
+	}
+	
+	public static Student getStudentByNumeAndSubgrupa(String nume, Subgrupa subgrupa) {
+		Student student = null;
+		Session session = null;
+		try{
+			session = Singleton.getInstance().getNewSession();
+			student = (Student) session.createQuery("from Student where nume = '" + nume + "' and subgrupa.id =" + subgrupa.getId()).getResultList().get(0);
+			session.close();
+		}catch (Exception e) {
+            //e.printStackTrace();
+			System.out.println("Student not found!");
+        }finally{
+        	session.close();
+        }
+		return student;
+		
 	}
 	
 	public static List<Student> getAllStudentsByGrupa(Grupa grupa){

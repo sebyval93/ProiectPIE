@@ -38,6 +38,12 @@ public class ProfesorCtrlPanel extends JPanel {
 		
 	}
 	
+	
+	
+	public String getNumeProfesor() {
+		return txtNumeProfesor.getText();
+	}
+
 	public Object[] getFields(boolean allowNull) {
 		if(!allowNull) {
 			if (txtNumeProfesor.getText().length() == 0)

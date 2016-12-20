@@ -82,6 +82,13 @@ public class StudentCtrlPanel extends JPanel {
 		
 	}
 	
+	public String getNumeStudent() {
+		return txtNumeStudent.getText();
+	}
+	
+	public String getSelectedSubgrupa() {
+		return (String)cbSubgrupa.getSelectedItem();
+	}
 
 	public Object[] getFields(boolean allowNull) {
 		if(!allowNull) {

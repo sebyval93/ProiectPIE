@@ -247,5 +247,36 @@ public class AdminContext {
             		interval, aux.getParticipanti()});
         });
 	}
+	
+	public void loadStudentListInTable(List<Student> list) {
+		DefaultTableModel model = getCurrentModel();
+        list.stream().forEach((aux) -> {
+            model.addRow(new Object[]{aux.getNume(),aux.getSubgrupa().getGrupa().getNume(),aux.getSubgrupa().getNume()});
+        });
+	}
+	
+	public void resetStudentModel() {
+		DefaultTableModel model = getCurrentModel();
+		model.setRowCount(0);
+		loadAllFromStudent();
+	}
+	
+	public void resetDisciplinaModel() {
+		DefaultTableModel model = getCurrentModel();
+		model.setRowCount(0);
+		loadAllFromDisciplina();
+	}
+	
+	public void resetProfesorModel() {
+		DefaultTableModel model = getCurrentModel();
+		model.setRowCount(0);
+		loadAllFromProfesor();
+	}
+	
+	public void resetModulModel() {
+		DefaultTableModel model = getCurrentModel();
+		model.setRowCount(0);
+		loadAllFromModul();
+	}
 
 }

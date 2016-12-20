@@ -37,7 +37,7 @@ public final class UtilizatorService {
 		Session session = null;
 		try{			
 			session = Singleton.getInstance().getNewSession();			
-			DetachedCriteria dc = DetachedCriteria.forClass(Utilizator.class).add(Restrictions.eq("username" , username));																	
+			DetachedCriteria dc = DetachedCriteria.forClass(Utilizator.class).add(Restrictions.eq("username" , username));
 			utilizator = (Utilizator)dc.getExecutableCriteria(session).uniqueResult();
 		}catch (Exception e) {
             e.printStackTrace();

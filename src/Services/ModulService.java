@@ -1,6 +1,7 @@
 package Services;
 
 import java.math.BigDecimal;
+import java.util.Iterator;
 import java.util.List;
 
 import org.hibernate.Session;
@@ -104,12 +105,49 @@ public final class ModulService {
 		return list;
 	}
 	
+	private static List<Modul> getAllModulByProfesorAndSemestru(Profesor profesor, int semestru) {
+		List<Modul> list = null;
+		Session session = null;
+		try{
+			session = Singleton.getInstance().getNewSession();
+			//TODO
+			//list = session.createQuery(("from Modul where ID_PROFESOR = " + profesor.getId())).getResultList();
+			session.close();
+		}catch (Exception e) {
+            e.printStackTrace();        
+        }finally{
+        	session.close();
+        }
+		return list;
+	}
+	
 	public static List<Modul> getAllFromModul(){
 		List<Modul> list = null;
 		Session session = null;
 		try{
 			session = Singleton.getInstance().getNewSession();
 			list = session.createQuery("from Modul").getResultList();
+			session.close();
+		}catch (Exception e) {
+            e.printStackTrace();        
+        }finally{
+        	session.close();
+        }
+		return list;
+	}
+	
+	public static List<Modul> getAllModulBySaptamanaAndProfesor(Saptamana week, Profesor prof) {
+		List<Modul> list = null;
+		Session session = null;
+		try{
+			session = Singleton.getInstance().getNewSession();
+			list = session.createQuery("from Modul where id = (select modul.id from Prezenta where saptamana.id = " + (week.getId().intValue()) + ")").getResultList();
+			Iterator iter = list.iterator();
+			while (iter.hasNext()) {
+				Modul curr = (Modul) iter.next();
+				if (!curr.getProfesor().getNume().equals(prof.getNume()))
+					iter.remove();
+			}
 			session.close();
 		}catch (Exception e) {
             e.printStackTrace();        

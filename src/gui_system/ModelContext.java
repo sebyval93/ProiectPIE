@@ -1,5 +1,6 @@
 package gui_system;
 
+import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.JLabel;
@@ -9,8 +10,10 @@ import javax.swing.table.DefaultTableModel;
 
 import Services.ModulService;
 import Singleton.Singleton;
+import Utils.Week;
 import entity.Modul;
 import entity.Profesor;
+import entity.Saptamana;
 import entity.Student;
 
 public class ModelContext {
@@ -78,7 +81,12 @@ public class ModelContext {
 		// cautare in baza de date pentru toate modulele la care preda userul
 		//   logat, din saptamana curenta.
 		
-		loadModuleForUser();
+		//loadModuleForUser();
+		loadModuleForProfesorInSaptamana(Singleton.getInstance().currentProfesor, Singleton.getInstance().currentWeek);
+	}
+	
+	public void loadModuleInWeek(Week week) {
+		loadModuleForProfesorInSaptamana(Singleton.getInstance().currentProfesor, week);
 	}
 	
 	private void loadStudentiFromDB(Object selectedRowData[]) {
@@ -157,17 +165,35 @@ public class ModelContext {
 			return false;
 	}
 	
-	public void loadModuleForUser() {
-		Profesor currentProfesor = Singleton.getInstance().currentUser.getProfesor();
-		String sapt = Singleton.getInstance().currentWeek.getDenumire();
-		int nrSapt = Integer.parseInt(sapt.substring(10));
-		List<Modul> allModuleForProfesor = ModulService.getAllModulByProfesor(currentProfesor);
+	public void loadModuleForProfesorInSaptamana(Profesor prof, Week week) {
+		List<Modul> module = ModulService.getAllModulByProfesor(prof);
+		
+		Iterator<Modul> iter = module.iterator();
+		
+		while (iter.hasNext()) {
+			Modul modul = iter.next();
+			switch(modul.getInterval().intValue()) {
+			case 0:
+				//Impar
+				if (week.getSaptamanaNumber() % 2 != 1)
+					iter.remove();
+				break;
+			case 1:
+				//Par
+				if (week.getSaptamanaNumber() % 2 != 0)
+					iter.remove();
+				break;
+			}
+		}
 		
 		moduleModel.setRowCount(0);
+		if (module == null || module.size() == 0) {
+			return;
+		}
 		
-		allModuleForProfesor.stream().forEach((aux) -> {
+		module.stream().forEach((aux) -> {
             moduleModel.addRow(new Object[]{aux.getDisciplina().getDenumire(),aux.getActivitate(),aux.getDisciplina().getAn(),
-            		nrSapt,aux.getParticipanti()});
+            		week.getSaptamanaNumber(),aux.getParticipanti()});
         });
 	}
 	

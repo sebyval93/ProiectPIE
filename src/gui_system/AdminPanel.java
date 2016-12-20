@@ -10,9 +10,14 @@ import javax.swing.JComponent;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 
+import Services.DisciplinaService;
 import Services.ModulService;
+import Services.ProfesorService;
+import Services.StudentService;
+import Services.SubgrupaService;
 import entity.Disciplina;
 import entity.Profesor;
+import entity.Subgrupa;
 import main.MainFrame;
 
 import java.awt.event.MouseAdapter;
@@ -44,6 +49,9 @@ public class AdminPanel extends JPanel {
 	private JPanel coverPanel;
 	private JButton btnCautare, btnAdaugare,
 		btnModificare, btnStergere;
+	
+	private int selectedID = -1;
+	private String selectedModel = "";
 
 	public AdminPanel() {
 		setLayout(null);
@@ -152,16 +160,23 @@ public class AdminPanel extends JPanel {
 					Point p = me.getPoint();
 					int row = t.rowAtPoint(p);
 					if (context.getCurrentModelName().equals("studentModel")) {
+						selectedID = StudentService.getStudentByNume((String)model.getValueAt(t.convertRowIndexToModel(row), 0)).getId().intValue();
+						System.out.println(selectedID);
+						selectedModel = context.getCurrentModelName();
 						studentiCtrlPanel.setFields((String)model.getValueAt(t.convertRowIndexToModel(row), 0),
 								(String)model.getValueAt(t.convertRowIndexToModel(row), 1), 
 								(String)model.getValueAt(t.convertRowIndexToModel(row), 2));
 						enableEditButtons(true);
 					}
 					else if (context.getCurrentModelName().equals("profesorModel")) {
+						selectedID = ProfesorService.getProfesorByNume((String)model.getValueAt(t.convertRowIndexToModel(row), 0)).getId().intValue();
+						selectedModel = context.getCurrentModelName();
 						profesorCtrlPanel.setFields((String)model.getValueAt(t.convertRowIndexToModel(row), 0));
 						enableEditButtons(true);
 					}
 					else if (context.getCurrentModelName().equals("disciplinaModel")) {
+						selectedID = DisciplinaService.getDisciplinaByDenumire((String)model.getValueAt(t.convertRowIndexToModel(row), 0)).getId().intValue();
+						selectedModel = context.getCurrentModelName();
 						disciplinaCtrlPanel.setFields((String)model.getValueAt(t.convertRowIndexToModel(row), 0), 
 								model.getValueAt(t.convertRowIndexToModel(row), 1).toString(), 
 								model.getValueAt(t.convertRowIndexToModel(row), 2).toString(), 
@@ -172,6 +187,8 @@ public class AdminPanel extends JPanel {
 						enableEditButtons(true);
 					}
 					else if (context.getCurrentModelName().equals("modulModel")) {
+						selectedID = DisciplinaService.getDisciplinaByDenumire((String)model.getValueAt(t.convertRowIndexToModel(row), 0)).getId().intValue();
+						selectedModel = context.getCurrentModelName();
 						sitDidacticaCtrlPanel.setFields((String)model.getValueAt(t.convertRowIndexToModel(row), 0), 
 								(String)model.getValueAt(t.convertRowIndexToModel(row), 1), 
 								(String)model.getValueAt(t.convertRowIndexToModel(row), 2), 
@@ -306,70 +323,230 @@ public class AdminPanel extends JPanel {
 	private void actiuneAdaugare() {
 		switch(context.getCurrentModelName()) {
 		case "studentModel":
+			String numeStudent = studentiCtrlPanel.getNumeStudent();
+			String numeSubgrupa = studentiCtrlPanel.getSelectedSubgrupa();
+			Subgrupa subgrupa = SubgrupaService.getSubgrupaByNume(numeSubgrupa);
+			
+			if (numeStudent != "" || numeSubgrupa != "" || subgrupa != null) {
+				StudentService.addStudent(subgrupa, numeStudent);
+				context.resetStudentModel();
+			}
+			else
+				System.out.println("Could not add student to database. Found invalid field.");
+			
 			break;
 		case "profesorModel":
+			String numeProfesor = profesorCtrlPanel.getNumeProfesor();
+			
+			if (numeProfesor != "") {
+				ProfesorService.addProfesor(numeProfesor);
+				context.resetProfesorModel();
+			}
+			else
+				System.out.println("Could not add profesor to database. Found invalid field.");
+			
 			break;
 		case "disciplinaModel":
+			String denumire = disciplinaCtrlPanel.getDenumire();
+			int an = disciplinaCtrlPanel.getAn();
+			int oreCurs = disciplinaCtrlPanel.getOreCurs();
+			int oreLab = disciplinaCtrlPanel.getOreLaborator();
+			int oreSeminar = disciplinaCtrlPanel.getOreSeminar();
+			int oreProiect = disciplinaCtrlPanel.getOreProiect();
+			String numeScurt = disciplinaCtrlPanel.getNumeScurt();
+
+			if (denumire != "" || numeScurt != "" || an > 1 || oreCurs >= 0 || oreLab >= 0 || oreSeminar >= 0 || oreProiect >= 0) {
+				DisciplinaService.addDisciplina(denumire, an, oreCurs, oreLab, oreSeminar, oreProiect, numeScurt);
+				context.resetDisciplinaModel();
+			}
+			else
+				System.out.println("Could not add disciplina to database. Found invalid field.");
+			
 			break;
 		case "modulModel":
-			Object fields[] = sitDidacticaCtrlPanel.getFields(false);
-			if (fields == null){
+			Disciplina disciplina = sitDidacticaCtrlPanel.getSelectedDisciplina();
+			Profesor profesor = sitDidacticaCtrlPanel.getSelectedProfesor();
+			String activitate = sitDidacticaCtrlPanel.getSelectedActivitate();
+			String participanti = sitDidacticaCtrlPanel.getSelectedParticipanti();
+			int interval = sitDidacticaCtrlPanel.getSelectedInterval();
+
+			if (disciplina != null || profesor != null || activitate != null || participanti != null || interval != -1) {
+				ModulService.addModul(disciplina, profesor, activitate, participanti, interval);
+				context.resetModulModel();
+			}
+			else
 				System.out.println("Could not add modul to database. Found invalid field.");
-				break;
-			}
-			else {
-				Disciplina disciplina = sitDidacticaCtrlPanel.getSelectedDisciplina();
-				Profesor profesor = sitDidacticaCtrlPanel.getSelectedProfesor();
-				String activitate = sitDidacticaCtrlPanel.getSelectedActivitate();
-				String participanti = sitDidacticaCtrlPanel.getSelectedParticipanti();
-				int interval = sitDidacticaCtrlPanel.getSelectedInterval();
-				
-				if (disciplina != null || profesor != null || activitate != null || participanti != null || interval != -1)
-					ModulService.addModul(disciplina, profesor, activitate, participanti, interval);
-				else
-					System.out.println("Could not add modul to database. Found invalid field.");
-			}
+
 			break;
 		}
 	}
 	
 	private void actiuneCautare() {
+		//TODO
+		/*
 		switch(context.getCurrentModelName()) {
 		case "studentModel":
+			String numeStudent = studentiCtrlPanel.getNumeStudent();
+			String numeSubgrupa = studentiCtrlPanel.getSelectedSubgrupa();
+			Subgrupa subgrupa = SubgrupaService.getSubgrupaByNume(numeSubgrupa);
+			
+			if (numeStudent != "" || numeSubgrupa != "" || subgrupa != null) {
+				StudentService.getStudentByNumeAndSubgrupa(numeStudent, subgrupa);
+				context.loadStudentListInTable(list);
+			}
+			else
+				System.out.println("Could not add student to database. Found invalid field.");
+			
 			break;
 		case "profesorModel":
+			String numeProfesor = profesorCtrlPanel.getNumeProfesor();
+			
+			if (numeProfesor != "")
+				ProfesorService.addProfesor(numeProfesor);
+			else
+				System.out.println("Could not add profesor to database. Found invalid field.");
+			
 			break;
 		case "disciplinaModel":
+			String denumire = disciplinaCtrlPanel.getDenumire();
+			int an = disciplinaCtrlPanel.getAn();
+			int oreCurs = disciplinaCtrlPanel.getOreCurs();
+			int oreLab = disciplinaCtrlPanel.getOreLaborator();
+			int oreSeminar = disciplinaCtrlPanel.getOreSeminar();
+			int oreProiect = disciplinaCtrlPanel.getOreProiect();
+			String numeScurt = disciplinaCtrlPanel.getNumeScurt();
+			
+			if (denumire != "" || numeScurt != "" || an > 1 || oreCurs >= 0 || oreLab >= 0 || oreSeminar >= 0 || oreProiect >= 0)
+				DisciplinaService.addDisciplina(denumire, an, oreCurs, oreLab, oreSeminar, oreProiect, numeScurt);
+			else
+				System.out.println("Could not add disciplina to database. Found invalid field.");
+			
 			break;
 		case "modulModel":
+			Disciplina disciplina = sitDidacticaCtrlPanel.getSelectedDisciplina();
+			Profesor profesor = sitDidacticaCtrlPanel.getSelectedProfesor();
+			String activitate = sitDidacticaCtrlPanel.getSelectedActivitate();
+			String participanti = sitDidacticaCtrlPanel.getSelectedParticipanti();
+			int interval = sitDidacticaCtrlPanel.getSelectedInterval();
+			
+			if (disciplina != null || profesor != null || activitate != null || participanti != null || interval != -1)
+				ModulService.addModul(disciplina, profesor, activitate, participanti, interval);
+			else
+				System.out.println("Could not add modul to database. Found invalid field.");
+			
 			break;
 		}
+		*/
 	}
 	
 	private void actiuneModificare() {
 		switch(context.getCurrentModelName()) {
 		case "studentModel":
+			if (selectedModel == "studentModel" && selectedID > -1) {
+				String numeStudent = studentiCtrlPanel.getNumeStudent();
+				String numeSubgrupa = studentiCtrlPanel.getSelectedSubgrupa();
+				Subgrupa subgrupa = SubgrupaService.getSubgrupaByNume(numeSubgrupa);
+				
+				if (numeStudent != "" || numeSubgrupa != "" || subgrupa != null) {
+					StudentService.updateStudentByID(selectedID, subgrupa, numeStudent);
+					context.resetStudentModel();
+				}
+				else
+					System.out.println("Could not update student. Found invalid field.");
+			}
+				
 			break;
 		case "profesorModel":
+			if (selectedModel == "profesorModel" && selectedID > -1) {
+				String numeProfesor = profesorCtrlPanel.getNumeProfesor();
+				
+				if (numeProfesor != null) {
+					ProfesorService.updateProfesorByID(selectedID, numeProfesor);
+					context.resetProfesorModel();
+				}
+				else
+					System.out.println("Could not update profesor. Found invalid field.");
+			}
+			
 			break;
 		case "disciplinaModel":
+			if (selectedModel == "disciplinaModel" && selectedID > -1) {
+				String denumire = disciplinaCtrlPanel.getDenumire();
+				int an = disciplinaCtrlPanel.getAn();
+				int oreCurs = disciplinaCtrlPanel.getOreCurs();
+				int oreLab = disciplinaCtrlPanel.getOreLaborator();
+				int oreSeminar = disciplinaCtrlPanel.getOreSeminar();
+				int oreProiect = disciplinaCtrlPanel.getOreProiect();
+				String numeScurt = disciplinaCtrlPanel.getNumeScurt();
+
+				if (denumire != "" || numeScurt != "" || an > 1 || oreCurs >= 0 || oreLab >= 0 || oreSeminar >= 0 || oreProiect >= 0) {
+					DisciplinaService.updateDisciplinaByID(selectedID, denumire, an, oreCurs, oreLab, oreSeminar, oreProiect, numeScurt);
+					context.resetDisciplinaModel();
+				}
+				else
+					System.out.println("Could not update disciplina. Found invalid field.");
+				
+			}
+			
 			break;
 		case "modulModel":
+			if (selectedModel == "modulModel" && selectedID > -1) {
+				Disciplina disciplina = sitDidacticaCtrlPanel.getSelectedDisciplina();
+				Profesor profesor = sitDidacticaCtrlPanel.getSelectedProfesor();
+				String activitate = sitDidacticaCtrlPanel.getSelectedActivitate();
+				String participanti = sitDidacticaCtrlPanel.getSelectedParticipanti();
+				int interval = sitDidacticaCtrlPanel.getSelectedInterval();
+
+				if (disciplina != null || profesor != null || activitate != null || participanti != null || interval != -1) {
+					System.out.println("selectedID = " + selectedID + "\ndisciplina = " + disciplina + "\nprofesor = " + profesor + "\nactivitate = " + activitate + "\nparticipanti = " + participanti + "\ninterval = " + interval);
+					System.out.println(ModulService.updateModulByID(selectedID, disciplina, profesor, activitate, participanti, interval));
+					context.resetModulModel();
+				}
+				else
+					System.out.println("Could not update modul. Found invalid field.");
+			}
+			
 			break;
 		}
+		
+		selectedID = -1;
+		mainTable.clearSelection();
 	}
 	
 	private void actiuneStergere() {
 		switch(context.getCurrentModelName()) {
 		case "studentModel":
+			if (selectedModel == "studentModel" && selectedID > -1) {
+				StudentService.deleteStudentByID(selectedID);
+				context.resetStudentModel();
+			}
+			
 			break;
 		case "profesorModel":
+			if (selectedModel == "profesorModel" && selectedID > -1) {
+				ProfesorService.deleteProfesorByID(selectedID);
+				context.resetProfesorModel();
+			}
+			
 			break;
 		case "disciplinaModel":
+			if (selectedModel == "disciplinaModel" && selectedID > -1) {
+				DisciplinaService.deleteDisciplinaByID(selectedID);
+				context.resetDisciplinaModel();
+			}
+			
 			break;
 		case "modulModel":
+			if (selectedModel == "modulModel" && selectedID > -1) {
+				ModulService.deleteModulByID(selectedID);
+				context.resetModulModel();
+			}
+			
 			break;
 		}
+		
+		selectedID = -1;
+		mainTable.clearSelection();
 	}
 	
 }
