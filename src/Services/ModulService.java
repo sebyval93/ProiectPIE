@@ -123,7 +123,7 @@ public final class ModulService {
 	}
 	
 
-	public static List<Modul> getAllModulsForStudentAndDisciplina(Student student, Disciplina disciplina){
+	public static List<Modul> getAllModulesForStudentAndDisciplina(Student student, Disciplina disciplina){
 		List<Modul> list = null;
 		Session session = null;
 		try{
@@ -143,6 +143,7 @@ public final class ModulService {
         }
 		return list;
 	}
+	
 	public static boolean deleteAllFromTable(){
 		boolean done = false;
 		Session session = null;
