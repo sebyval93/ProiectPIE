@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -13,6 +14,12 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
+import Services.GrupaService;
+import Services.StudentService;
+import Services.SubgrupaService;
+import entity.Grupa;
+import entity.Student;
+import entity.Subgrupa;
 import main.MainFrame;
 
 public class MainPanel extends JPanel {
@@ -25,7 +32,13 @@ public class MainPanel extends JPanel {
 	ModelContext context;
 	MainFrame parentFrame;
 	
+	public static List<Grupa> allFromGrupa;
+	public static List<Subgrupa> allFromSubgrupa;
+	
 	public MainPanel() {
+		
+		allFromGrupa = GrupaService.getAllFromGrupa();
+		allFromSubgrupa = SubgrupaService.getAllFromSubgrupa();
 		
 		setLayout(null);
 		
@@ -84,6 +97,26 @@ public class MainPanel extends JPanel {
 	
 	public void loadFromDB() {
 		context.switchToModule();
+	}
+	
+	public static List<Student> getStudentiFromParticipant(String participant) {
+		List<Student> studenti = null;
+		
+		if (Character.isLetter(participant.charAt(participant.length() - 1))) {
+			//subgrupa
+			Subgrupa subgrupa = SubgrupaService.getSubgrupaByNume(participant);
+			studenti = StudentService.getAllStudentsBySubgrupa(subgrupa);
+			
+			return studenti;
+		}
+		else {
+			//grupa
+			Grupa grupa = GrupaService.getGrupaByNume(participant);
+			studenti = StudentService.getAllStudentsByGrupa(grupa);
+			
+			return studenti;
+		}
+		
 	}
 
 }

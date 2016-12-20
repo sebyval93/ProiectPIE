@@ -155,5 +155,21 @@ public final class DisciplinaService {
 		return list;
 	}
 
+	public static boolean deleteAllFromTable(){
+		boolean done = false;
+		Session session = null;
+			try{
+				session = Singleton.getInstance().getNewSession();
+				session.beginTransaction();
+				session.createQuery("delete from Disciplina").executeUpdate();
+				session.getTransaction().commit();
+				done = true;
+			}catch (Exception e) {
+	            e.printStackTrace();           
+	        } finally { 
+	        	session.close();
+	        }
+		return done;
+	}
 	
 }

@@ -102,6 +102,21 @@ public final class SubgrupaService {
 		return list;
 	}
 	
+	public static Subgrupa getSubgrupaByNume(String nume) {
+		Subgrupa subgrupa = null;
+		Session session = null;
+		try{
+			session = Singleton.getInstance().getNewSession();
+			subgrupa = (Subgrupa) session.createQuery("from Subgrupa where NUME = '" + nume + "'").getResultList().get(0);
+			session.close();
+		}catch (Exception e) {
+            e.printStackTrace();        
+        }finally{
+        	session.close();
+        }
+		return subgrupa;
+	}
+	
 	public static List<Subgrupa> getAllSubGrupeByGrupa(Grupa grupa){
 		Session session = null;
 		List<Subgrupa> list = null;
@@ -115,6 +130,23 @@ public final class SubgrupaService {
         	session.close();
         }
 		return list;
+	}
+	
+	public static boolean deleteAllFromTable(){
+		boolean done = false;
+		Session session = null;
+			try{
+				session = Singleton.getInstance().getNewSession();
+				session.beginTransaction();
+				session.createQuery("delete from Subgrupa").executeUpdate();
+				session.getTransaction().commit();
+				done = true;
+			}catch (Exception e) {
+	            e.printStackTrace();           
+	        } finally { 
+	        	session.close();
+	        }
+		return done;
 	}
 
 }

@@ -122,6 +122,7 @@ public final class ModulService {
 		return list;
 	}
 	
+
 	public static List<Modul> getAllModulsForStudentAndDisciplina(Student student, Disciplina disciplina){
 		List<Modul> list = null;
 		Session session = null;
@@ -141,6 +142,23 @@ public final class ModulService {
         	session.close();
         }
 		return list;
+	}
+	public static boolean deleteAllFromTable(){
+		boolean done = false;
+		Session session = null;
+			try{
+				session = Singleton.getInstance().getNewSession();
+				session.beginTransaction();
+				session.createQuery("delete from Modul").executeUpdate();
+				session.getTransaction().commit();
+				done = true;
+			}catch (Exception e) {
+	            e.printStackTrace();           
+	        } finally { 
+	        	session.close();
+	        }
+		return done;
+
 	}
 
 	

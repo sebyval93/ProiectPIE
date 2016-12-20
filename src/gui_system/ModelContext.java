@@ -11,6 +11,7 @@ import Services.ModulService;
 import Singleton.Singleton;
 import entity.Modul;
 import entity.Profesor;
+import entity.Student;
 
 public class ModelContext {
 	
@@ -93,10 +94,10 @@ public class ModelContext {
 			studentiModel.setRowCount(0);
 		}
 		
-		//test data
-		for (int i = 0; i < 20; ++i) {
-			studentiModel.addRow(new Object[] { "Student " + i, false });
-		}
+		List<Student> studenti = MainPanel.getStudentiFromParticipant((String) selectedRowData[4]);
+        studenti.stream().forEach((aux) -> {
+        	studentiModel.addRow(new Object[]{aux.getNume(), false});
+        });
 		
 	}
 	

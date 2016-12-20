@@ -221,5 +221,13 @@ public class MainFrame extends JFrame {
 	public void setNewYearStart(){
 		new ModalFrame(this,new ResetWeeksPanel());
 	}
+	
+	public void hideUnelteMenu() {
+		mnUnelte.setEnabled(false);
+	}
+	
+	public void showUnelteMenu() {
+		mnUnelte.setEnabled(true);
+	}
 
 }
