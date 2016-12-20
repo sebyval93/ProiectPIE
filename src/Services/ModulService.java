@@ -123,7 +123,7 @@ public final class ModulService {
         }
 		return list;
 	}
-	cum se numeste functia ta asta ?
+	
 	public static List<Modul> getAllFromModul(){
 		List<Modul> list = null;
 		Session session = null;

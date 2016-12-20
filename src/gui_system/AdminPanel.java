@@ -356,7 +356,7 @@ public class AdminPanel extends JPanel {
 			String numeScurt = disciplinaCtrlPanel.getNumeScurt();
 
 			if (denumire != "" || numeScurt != "" || an > 1 || oreCurs >= 0 || oreLab >= 0 || oreSeminar >= 0 || oreProiect >= 0) {
-				DisciplinaService.addDisciplina(denumire, an, oreCurs, oreLab, oreSeminar, oreProiect, numeScurt);
+				//DisciplinaService.addDisciplina(denumire, an, oreCurs, oreLab, oreSeminar, oreProiect, numeScurt);
 				context.resetDisciplinaModel();
 			}
 			else
@@ -371,20 +371,12 @@ public class AdminPanel extends JPanel {
 			int interval = sitDidacticaCtrlPanel.getSelectedInterval();
 
 			if (disciplina != null || profesor != null || activitate != null || participanti != null || interval != -1) {
-				ModulService.addModul(disciplina, profesor, activitate, participanti, interval);
+				//ModulService.addModul(disciplina, profesor, activitate, participanti, interval);
 				context.resetModulModel();
-
-			else {
-				Disciplina disciplina = sitDidacticaCtrlPanel.getSelectedDisciplina();
-				Profesor profesor = sitDidacticaCtrlPanel.getSelectedProfesor();
-				String activitate = sitDidacticaCtrlPanel.getSelectedActivitate();
-				String participanti = sitDidacticaCtrlPanel.getSelectedParticipanti();
-				int interval = sitDidacticaCtrlPanel.getSelectedInterval();
-				int operat = 0;/// AM PUSO DOAR SA REZOLV EROAREA MODIFICI TU
-				if (disciplina != null || profesor != null || activitate != null || participanti != null || interval != -1)
-					ModulService.addModul(disciplina, profesor, activitate, participanti, interval,operat);
-				else
-					System.out.println("Could not add modul to database. Found invalid field.");
+			}
+			else
+				System.out.println("Could not add modul to database. Found invalid field.");
+		}
 
 	}
 	
@@ -487,7 +479,7 @@ public class AdminPanel extends JPanel {
 				String numeScurt = disciplinaCtrlPanel.getNumeScurt();
 
 				if (denumire != "" || numeScurt != "" || an > 1 || oreCurs >= 0 || oreLab >= 0 || oreSeminar >= 0 || oreProiect >= 0) {
-					DisciplinaService.updateDisciplinaByID(selectedID, denumire, an, oreCurs, oreLab, oreSeminar, oreProiect, numeScurt);
+					//DisciplinaService.updateDisciplinaByID(selectedID, denumire, an, oreCurs, oreLab, oreSeminar, oreProiect, numeScurt);
 					context.resetDisciplinaModel();
 				}
 				else
@@ -505,8 +497,7 @@ public class AdminPanel extends JPanel {
 				int interval = sitDidacticaCtrlPanel.getSelectedInterval();
 
 				if (disciplina != null || profesor != null || activitate != null || participanti != null || interval != -1) {
-					System.out.println("selectedID = " + selectedID + "\ndisciplina = " + disciplina + "\nprofesor = " + profesor + "\nactivitate = " + activitate + "\nparticipanti = " + participanti + "\ninterval = " + interval);
-					System.out.println(ModulService.updateModulByID(selectedID, disciplina, profesor, activitate, participanti, interval));
+					//System.out.println(ModulService.updateModulByID(selectedID, disciplina, profesor, activitate, participanti, interval));
 					context.resetModulModel();
 				}
 				else
