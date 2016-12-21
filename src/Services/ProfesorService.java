@@ -63,7 +63,7 @@ public final class ProfesorService {
 		return done;
 	}
 	
-	public static boolean updateModulByID(int ID,String nume){
+	public static boolean updateProfesorByID(int ID,String nume){
 		boolean done = false;
 		Session session = null;
 		Profesor profesor = getProfesorByID(ID);
@@ -97,6 +97,39 @@ public final class ProfesorService {
         	session.close();
         }
 		return list;
+	}
+	
+	public static Profesor getProfesorByNume(String nume) {
+		Profesor profesor = null;
+		Session session = null;
+		try{
+			session = Singleton.getInstance().getNewSession();
+			profesor = (Profesor) session.createQuery("from Profesor where nume = '" + nume + "'").getResultList().get(0);
+			session.close();
+		}catch (Exception e) {
+            e.printStackTrace();        
+        }finally{
+        	session.close();
+        }
+		return profesor;
+	}
+	
+	public static Profesor getProfesorFromUser(Utilizator user){
+		Profesor profesor = null;
+		System.out.println(user.getProfesor().getId());
+		Session session = null;
+		try{
+			session = Singleton.getInstance().getNewSession();
+			String query = "from Profesor where ID = (select profesor.id from Utilizator where id = " + (user.getProfesor().getId().intValue() + 1) + ")";
+			System.out.println(query);
+			profesor = (Profesor) session.createQuery(query).getResultList().get(0);
+			session.close();
+		}catch (Exception e) {
+            e.printStackTrace();        
+        }finally{
+        	session.close();
+        }
+		return profesor;
 	}
 	
 	public static List<String> getAllNume(){

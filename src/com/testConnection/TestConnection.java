@@ -29,13 +29,13 @@ import gui_system.ResetWeeksPanel;
 public class TestConnection {
 
 	public static void main(String[] args) throws FileNotFoundException{
-				
+
 		Disciplina disc = DisciplinaService.getDisciplinaByNumeScurt("LFT");
 		Student eu = StudentService.getStudentByID(380);
 		System.out.println(eu);
 		int absente = PrezentaService.getNumberOfAbsencesForAStudentForModule(eu, disc);
 		System.out.println(absente);
-		
+
 	}
 	
 }

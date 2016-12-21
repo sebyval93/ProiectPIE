@@ -43,7 +43,7 @@ public class Functions {
 			session = Singleton.getInstance().getNewSession();
 			session.beginTransaction();
 			session.createSQLQuery("DROP SEQUENCE "+ seqName).executeUpdate();
-			session.createSQLQuery("CREATE SEQUENCE "+ seqName + " START WITH 1 INCREMENT BY 1 CACHE 100").executeUpdate();
+			session.createSQLQuery("CREATE SEQUENCE "+ seqName + " START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE").executeUpdate();
 			session.getTransaction().commit();
 		}catch(Exception e){
 			e.printStackTrace();    

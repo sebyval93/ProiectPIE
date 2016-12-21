@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -15,22 +16,37 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 import Services.GrupaService;
+import Services.ModulService;
 import Services.StudentService;
 import Services.SubgrupaService;
+import Singleton.Singleton;
+import Utils.Week;
 import entity.Grupa;
+import entity.Modul;
+import entity.Profesor;
+import entity.Saptamana;
 import entity.Student;
 import entity.Subgrupa;
 import main.MainFrame;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.SwingConstants;
+import java.awt.Color;
+import java.awt.SystemColor;
 
 public class MainPanel extends JPanel {
 	
 	private JTable table;
 	
 	JScrollPane scrollPane;
-	JButton btnBack;
+	JButton btnBack, btnSave,
+		btnWeekPrev, btnWeekNext;
+	JButton lblWeek;
 	
 	ModelContext context;
 	MainFrame parentFrame;
+	
+	Week currWeek;
 	
 	public static List<Grupa> allFromGrupa;
 	public static List<Subgrupa> allFromSubgrupa;
@@ -43,7 +59,7 @@ public class MainPanel extends JPanel {
 		setLayout(null);
 		
 		scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 11, 730, 393);
+		scrollPane.setBounds(10, 11, 730, 368);
 		add(scrollPane);
 		
 		table = new JTable();
@@ -70,6 +86,8 @@ public class MainPanel extends JPanel {
 						}
 						
 						context.switchToStudenti(selectedRowData);
+						hideWeekBrowser();
+						btnSave.setVisible(true);
 					}
 				}
 			}
@@ -77,18 +95,74 @@ public class MainPanel extends JPanel {
 		
 		scrollPane.setViewportView(table);
 		
+		currWeek = new Week(Singleton.getInstance().currentSaptamana);
+		
 		btnBack = new JButton("Inapoi");
 		btnBack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (context.isStudentiModelLoaded()) {
 					context.switchToModule();
+					btnSave.setVisible(false);
+					showWeekBrowser();
 				}
 			}
 		});
 		btnBack.setBounds(10, 416, 730, 23);
 		add(btnBack);
 		this.setPreferredSize(new Dimension(750, 450));
+		
+		btnWeekPrev = new JButton("");
+		btnWeekPrev.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				currWeek.prevWeek();
+				context.loadModuleInWeek(currWeek);
+				updateWeekBrowser();
+			}
+		});
+		btnWeekPrev.setIcon(new ImageIcon(MainPanel.class.getResource("/res/l_arrow.png")));
+		btnWeekPrev.setBounds(10, 384, 50, 29);
+		add(btnWeekPrev);
+		
+		btnWeekNext = new JButton("");
+		btnWeekNext.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				currWeek.nextWeek();
+				context.loadModuleInWeek(currWeek);
+				updateWeekBrowser();
+			}
+		});
+		btnWeekNext.setIcon(new ImageIcon(MainPanel.class.getResource("/res/r_arrow.png")));
+		btnWeekNext.setBounds(690, 384, 50, 29);
+		add(btnWeekNext);
+		
+		lblWeek = new JButton("");
+		lblWeek.setOpaque(true);
+		lblWeek.setHorizontalAlignment(SwingConstants.CENTER);
+		lblWeek.setBounds(70, 384, 610, 29);
+		add(lblWeek);
+		
+		btnSave = new JButton("Salveaza");
+		btnSave.setBounds(10, 390, 730, 23);
+		add(btnSave);
+		
+		btnSave.setVisible(false);
 
+	}
+	
+	public void updateWeekBrowser() {
+		lblWeek.setText("Vizualizare Saptamana " + currWeek.getSaptamanaNumber() + ", Semestrul " + currWeek.getSemestruNumber());
+	}
+	
+	public void hideWeekBrowser() {
+		btnWeekPrev.setVisible(false);
+		lblWeek.setVisible(false);
+		btnWeekNext.setVisible(false);
+	}
+	
+	public void showWeekBrowser() {
+		btnWeekPrev.setVisible(true);
+		lblWeek.setVisible(true);
+		btnWeekNext.setVisible(true);
 	}
 	
 	public void setParentFrame(MainFrame frame) {
@@ -98,6 +172,22 @@ public class MainPanel extends JPanel {
 	public void loadFromDB() {
 		context.switchToModule();
 	}
+	
+	/*public static List<Modul> getModuleFromSaptamanaAndProfesor(Saptamana week, Profesor prof) {
+		List<Modul> module = null;
+		
+		//module = ModulService.getAllModulBySaptamanaAndProfesor(week, prof);
+		module = ModulService.getAllModulByProfesor(prof);
+		for (Modul modul : module) {
+			switch(modul.getInterval().intValue()) {
+			case 0:
+				//Impar
+				if (week.ge)
+			}
+		}
+		
+		return module;
+	}*/
 	
 	public static List<Student> getStudentiFromParticipant(String participant) {
 		List<Student> studenti = null;
@@ -118,5 +208,4 @@ public class MainPanel extends JPanel {
 		}
 		
 	}
-
 }

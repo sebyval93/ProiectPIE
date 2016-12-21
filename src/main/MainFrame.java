@@ -229,5 +229,9 @@ public class MainFrame extends JFrame {
 	public void showUnelteMenu() {
 		mnUnelte.setEnabled(true);
 	}
+	
+	public void updateWeekBrowser() {
+		mainPanel.updateWeekBrowser();
+	}
 
 }
