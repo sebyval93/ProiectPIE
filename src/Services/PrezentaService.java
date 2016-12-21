@@ -118,7 +118,7 @@ public final class PrezentaService {
 				DetachedCriteria dc = DetachedCriteria.forClass(Prezenta.class)
 											.add(Restrictions.eq("student", student))
 											.add(Restrictions.in("modul", moduls))
-											.add(Restrictions.eq("prezent", new BigDecimal(1)));
+											.add(Restrictions.eq("prezent", new BigDecimal(0)));
 				dc.setProjection(Projections.rowCount());
 				Number result = (Number) dc.getExecutableCriteria(session).uniqueResult();
 				absences = result.intValue();
