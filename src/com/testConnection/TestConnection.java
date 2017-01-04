@@ -35,7 +35,8 @@ public class TestConnection {
 		System.out.println(eu);
 		int absente = PrezentaService.getNumberOfAbsencesForAStudentForModule(eu, disc);
 		System.out.println(absente);
-
+		
+		Saptamana a = SaptamanaService.getCurrentWeek();
 	}
 	
 }
