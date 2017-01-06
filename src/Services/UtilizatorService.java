@@ -115,8 +115,7 @@ public final class UtilizatorService {
 	        	session.close();
 	        }
 		}
-		return done;
-		
+		return done;		
 	}
 	
 	public static void generateAccounts(){
@@ -124,6 +123,8 @@ public final class UtilizatorService {
 		Functions.resetSequence("utilizator_seq");
 		List<Profesor> profesori = ProfesorService.getAllFromProfesor();
 		for(Profesor p : profesori){
+			if(p.getNume().equals("admin"))
+				continue;
 			generateAccount(p);
 		}
 	}
@@ -134,7 +135,7 @@ public final class UtilizatorService {
 		try{
 			session = Singleton.getInstance().getNewSession();
 			session.beginTransaction();
-			session.createQuery("delete from Utilizator").executeUpdate();
+			session.createQuery("delete from Utilizator where id <> 0").executeUpdate();
 			session.getTransaction().commit();
 			done = true;
 		}catch(Exception e){
@@ -148,13 +149,9 @@ public final class UtilizatorService {
 	public static boolean generateAccount(Profesor p){
 		boolean done = false;
 		if(p != null){
-			if(p.getId().intValue() == 0){	
-				done = addUtilizator("admin", null, p);
-			}else{
 				String[] split = p.getNume().split(" ");
 				String username = split[1].charAt(0) + split[0];
-				done = addUtilizator(username, null, p);
-			}
+				done = addUtilizator(username, null, p);			
 		}
 		return done;
 	}
