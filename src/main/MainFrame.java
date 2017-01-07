@@ -1,5 +1,7 @@
 package main;
 import java.awt.EventQueue;
+
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import gui_system.AdminPanel;
 import gui_system.LoginPanel;
@@ -8,13 +10,17 @@ import gui_system.ModalFrame;
 import gui_system.ResetWeeksPanel;
 
 import java.awt.event.ActionListener;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.awt.event.ActionEvent;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JSeparator;
 import Singleton.*;
 import javax.swing.SwingConstants;
@@ -211,6 +217,30 @@ public class MainFrame extends JFrame {
 		mntmImport_1 = new JMenuItem("Import");
 		mntmImport_1.setHorizontalAlignment(SwingConstants.LEFT);
 		renewDateMnt.add(mntmImport_1);
+		
+		mntmImport_1.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				FileFilter filter = new FileNameExtensionFilter("XLS  file", "xls");
+				FileInputStream fis = null;
+				JFileChooser fc = new JFileChooser();
+				fc.setCurrentDirectory(new java.io.File("C:"));
+				fc.setDialogTitle("Import");			
+				fc.setFileFilter(filter);	
+				int result = fc.showOpenDialog(mntmImport_1);
+				
+			if(result == JFileChooser.APPROVE_OPTION){			
+				try {
+					fis = new FileInputStream(fc.getSelectedFile());
+					Services.ImportService.doImport(fis);
+					JOptionPane.showMessageDialog(null, "Import succesfuly done!");	
+				} catch (FileNotFoundException e1) {
+					e1.printStackTrace();
+					}			
+			}else if(result == JFileChooser.CANCEL_OPTION){
+				System.out.println("cancel");
+			}		
+		}
+	});
 		
 		mntmDataInceperii = new JMenuItem("Data \u00EEnceperii anului");
 		mntmDataInceperii.addActionListener(new ActionListener() {

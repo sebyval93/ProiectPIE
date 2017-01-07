@@ -169,7 +169,7 @@ public final class ProfesorService {
 			try{
 				session = Singleton.getInstance().getNewSession();
 				session.beginTransaction();
-				session.createQuery("delete from Profesor").executeUpdate();
+				session.createQuery("delete from Profesor where id <> 0").executeUpdate();
 				session.getTransaction().commit();
 				done = true;
 			}catch (Exception e) {

@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.hibernate.Session;
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 
 import Singleton.Singleton;
@@ -106,31 +107,30 @@ public final class PrezentaService {
 	}
 	
 	public static int getNumberOfAbsencesForAStudentForModule(Student student,Disciplina disciplina){
+		int absences = 0;
+
 		if(student != null && disciplina != null){
 			Session session = null;
 			try{
 				session = Singleton.getInstance().getNewSession();
-				List<Modul> moduls;
-				
-				DetachedCriteria dc1 = DetachedCriteria.forClass(Modul.class)
-						.add(Restrictions.disjunction()
-							.add(Restrictions.eq("student", student))
-							.add(Restrictions.eq("student", student)));
+				List<Modul> moduls = ModulService.getAllModulesForStudentAndDisciplina(student,disciplina);
 				
 				DetachedCriteria dc = DetachedCriteria.forClass(Prezenta.class)
-						.add(Restrictions.disjunction()
-							.add(Restrictions.eq("student", student))
-							.add(Restrictions.eq("student", student)));
+											.add(Restrictions.eq("student", student))
+											.add(Restrictions.in("modul", moduls))
+											.add(Restrictions.eq("prezent", new BigDecimal(0)));
+				dc.setProjection(Projections.rowCount());
+				Number result = (Number) dc.getExecutableCriteria(session).uniqueResult();
+				absences = result.intValue();
 				session.close();
 			}catch (Exception e) {
 	            e.printStackTrace();        
 	        }finally{
 	        	session.close();
 	        }
-			
-			
+
 		}
-		return 0;
+		return absences;
 	}
 	
 	public static boolean deleteAllFromTable(){
