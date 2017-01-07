@@ -251,6 +251,10 @@ public class SitDidacticaCtrlPanel extends JPanel {
 	}
 	
 	public Disciplina getSelectedDisciplina() {
+		
+		if (cbDisciplina.getSelectedIndex() == -1)
+			return null;
+		
 		for (Disciplina disciplina : allFromDisciplina) {
 			if (disciplina.getDenumire().toString().equals(cbDisciplina.getSelectedItem().toString())) {
 				return disciplina;
@@ -261,6 +265,10 @@ public class SitDidacticaCtrlPanel extends JPanel {
 	}
 	
 	public Profesor getSelectedProfesor() {
+		
+		if (cbProfesor.getSelectedIndex() == -1)
+			return null;
+		
 		for (Profesor profesor : allFromProfesor) {
 			if (profesor.getNume().toString().equals(cbProfesor.getSelectedItem().toString())) {
 				return profesor;

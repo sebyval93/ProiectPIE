@@ -86,6 +86,10 @@ public class StudentCtrlPanel extends JPanel {
 		return txtNumeStudent.getText();
 	}
 	
+	public String getSelectedGrupa() {
+		return (String)cbGrupa.getSelectedItem();
+	}
+	
 	public String getSelectedSubgrupa() {
 		return (String)cbSubgrupa.getSelectedItem();
 	}

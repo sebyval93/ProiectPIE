@@ -250,8 +250,46 @@ public class AdminContext {
 	
 	public void loadStudentListInTable(List<Student> list) {
 		DefaultTableModel model = getCurrentModel();
+		model.setRowCount(0);
         list.stream().forEach((aux) -> {
             model.addRow(new Object[]{aux.getNume(),aux.getSubgrupa().getGrupa().getNume(),aux.getSubgrupa().getNume()});
+        });
+	}
+	
+	public void loadProfesorListInTable(List<Profesor> list) {
+		DefaultTableModel model = getCurrentModel();
+		model.setRowCount(0);
+        list.stream().forEach((aux) -> {
+            model.addRow(new Object[]{aux.getNume()});
+        });
+	}
+	
+	public void loadDisciplinaListInTable(List<Disciplina> list){
+		DefaultTableModel model = getCurrentModel();
+		model.setRowCount(0);
+        list.stream().forEach((aux) -> {
+            model.addRow(new Object[]{aux.getDenumire(),aux.getAn(),aux.getOrecurs(),aux.getOrelab(),
+            		aux.getOreseminar(),aux.getOreproiect(),aux.getNumeScurt()});
+        });
+	}
+	
+	public void loadModulListInTable(List<Modul> list){
+		DefaultTableModel model = getCurrentModel();
+		model.setRowCount(0);
+        list.stream().forEach((aux) -> {
+        	BigDecimal value = aux.getInterval();
+        	String interval = null;
+        	if (value.intValue() == 0)
+        		interval = "Impar";
+        	else if (value.intValue() == 1)
+        		interval = "Par";
+        	else if (value.intValue() == 2)
+        		interval = "Saptamanal";
+        	else 
+        		interval = "Interval invalid";
+        	
+            model.addRow(new Object[]{aux.getDisciplina().getDenumire(), aux.getActivitate(), aux.getProfesor().getNume(),
+            		interval, aux.getParticipanti()});
         });
 	}
 	

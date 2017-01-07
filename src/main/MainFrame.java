@@ -26,13 +26,16 @@ public class MainFrame extends JFrame {
 	private gui_system.AdminPanel adminPanel;
 
 	JMenuBar menuBar;
-	JMenu mnFile, mnUnelte, mnGenerareRaport;
+	JMenu mnFile, mnUnelte, mnGenerareRaport,
+	mnRaportStudenti;
 	JMenuItem mntmDelogare, mntmExit, 
 	mntmAdministrare, mntmGestionareModule,
-	mntmRaportStudenti, mntmRaportGrupe, mntmTest;
+	mntmRaportGrupe, mntmAn;
 	private JMenu renewDateMnt;
 	private JMenuItem mntmImport_1;
 	private JMenuItem mntmDataInceperii;
+	private JMenuItem mntmRaportDisciplina;
+	private JMenuItem mntmRaportToateDisciplinele;
 
 	/**
 	 * Launch the application.
@@ -186,14 +189,20 @@ public class MainFrame extends JFrame {
 		mnGenerareRaport.setMnemonic('R');
 		mnUnelte.add(mnGenerareRaport);
 		
-		mntmRaportStudenti = new JMenuItem("Studenti");
-		mnGenerareRaport.add(mntmRaportStudenti);
+		mnRaportStudenti = new JMenu("Studenti");
+		mnGenerareRaport.add(mnRaportStudenti);
+		
+		mntmRaportDisciplina = new JMenuItem("O Disciplina");
+		mnRaportStudenti.add(mntmRaportDisciplina);
+		
+		mntmRaportToateDisciplinele = new JMenuItem("Toate Disciplinele");
+		mnRaportStudenti.add(mntmRaportToateDisciplinele);
 		
 		mntmRaportGrupe = new JMenuItem("Grupe");
 		mnGenerareRaport.add(mntmRaportGrupe);
 		
-		mntmTest = new JMenuItem("Test");
-		mnGenerareRaport.add(mntmTest);
+		mntmAn = new JMenuItem("An");
+		mnGenerareRaport.add(mntmAn);
 		mnUnelte.add(mntmGestionareModule);
 		
 		renewDateMnt = new JMenu("Re\u00EEnnoire date");
