@@ -186,7 +186,8 @@ public class AdminPanel extends JPanel {
 								model.getValueAt(t.convertRowIndexToModel(row), 3).toString(), 
 								model.getValueAt(t.convertRowIndexToModel(row), 4).toString(), 
 								model.getValueAt(t.convertRowIndexToModel(row), 5).toString(), 
-								(String)model.getValueAt(t.convertRowIndexToModel(row), 6));
+								model.getValueAt(t.convertRowIndexToModel(row), 6).toString(), 
+								(String)model.getValueAt(t.convertRowIndexToModel(row), 7));
 						enableEditButtons(true);
 					}
 					else if (context.getCurrentModelName().equals("modulModel")) {
@@ -310,12 +311,12 @@ public class AdminPanel extends JPanel {
 		mainTable.getColumnModel().getColumn(1).setMinWidth(40);
 		mainTable.getColumnModel().getColumn(1).setMaxWidth(40);
 		
-		for (int i = 2; i < 6; ++i) {
-			mainTable.getColumnModel().getColumn(i).setMinWidth(75);
-			mainTable.getColumnModel().getColumn(i).setMaxWidth(75);
+		for (int i = 1; i < 7; ++i) {
+			mainTable.getColumnModel().getColumn(i).setMinWidth(55);
+			mainTable.getColumnModel().getColumn(i).setMaxWidth(55);
 		}
-		mainTable.getColumnModel().getColumn(6).setMinWidth(65);
-		mainTable.getColumnModel().getColumn(6).setMaxWidth(65);
+		mainTable.getColumnModel().getColumn(7).setMinWidth(65);
+		mainTable.getColumnModel().getColumn(7).setMaxWidth(65);
 	}
 	
 	private void enableEditButtons(boolean enable) {
@@ -437,6 +438,7 @@ public class AdminPanel extends JPanel {
 		case "disciplinaModel":
 			String denumire = disciplinaCtrlPanel.getDenumire();
 			int an = disciplinaCtrlPanel.getAn();
+			int semestru = disciplinaCtrlPanel.getSemestru();
 			int oreCurs = disciplinaCtrlPanel.getOreCurs();
 			int oreLab = disciplinaCtrlPanel.getOreLaborator();
 			int oreSeminar = disciplinaCtrlPanel.getOreSeminar();
@@ -453,6 +455,12 @@ public class AdminPanel extends JPanel {
 				if (searchString.length() > 22)
 					searchString += " AND ";
 				searchString += ("an = " + an);
+				search = true;
+			}
+			if (semestru != -1) {
+				if (searchString.length() > 22)
+					searchString += " AND ";
+				searchString += ("semestru.id = " + semestru);
 				search = true;
 			}
 			if (oreCurs != -1) {

@@ -38,7 +38,7 @@ public class AdminContext {
 	
 	private String studentColumns[] = { "Nume", "Grupa", "Subgrupa" };
 	private String profesorColumns[] = { "Nume" };
-	private String disciplinaColumns[] = { "Denumire", "An", "Ore curs", "Ore laborator", "Ore seminar", "Ore proiect", "Nume scurt" };
+	private String disciplinaColumns[] = { "Denumire", "An", "Semestru", "Ore curs", "Ore lab.", "Ore sem.", "Ore pro.", "Nume scurt" };
 	private String anColumns[] = { "An" };
 	private String grupaColumns[] = { "Nume", "An" };
 	private String subgrupaColumns[] = { "Nume", "Grupa" };
@@ -215,7 +215,7 @@ public class AdminContext {
 		}		
 		DefaultTableModel model = getCurrentModel();
 		Singleton.Singleton.getInstance().ListOfDisciplines.stream().forEach((aux) -> {
-            model.addRow(new Object[]{aux.getDenumire(),aux.getAn(),aux.getOrecurs(),aux.getOrelab(),
+            model.addRow(new Object[]{aux.getDenumire(),aux.getAn(), aux.getSemestru().getId(),aux.getOrecurs(),aux.getOrelab(),
             		aux.getOreseminar(),aux.getOreproiect(),aux.getNumeScurt()});
         });
 	}
@@ -268,7 +268,7 @@ public class AdminContext {
 		DefaultTableModel model = getCurrentModel();
 		model.setRowCount(0);
         list.stream().forEach((aux) -> {
-            model.addRow(new Object[]{aux.getDenumire(),aux.getAn(),aux.getOrecurs(),aux.getOrelab(),
+            model.addRow(new Object[]{aux.getDenumire(),aux.getAn(), aux.getSemestru().getId(),aux.getOrecurs(),aux.getOrelab(),
             		aux.getOreseminar(),aux.getOreproiect(),aux.getNumeScurt()});
         });
 	}
