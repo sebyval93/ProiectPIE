@@ -20,9 +20,20 @@ import javax.persistence.Table;
 @Table(name = "STUDENT")
 public class Student implements java.io.Serializable {
 
+	@Id
+	@SequenceGenerator(name = "studseq", sequenceName = "STUDENT_SEQ",allocationSize = 1)
+	@GeneratedValue(generator = "studseq", strategy = GenerationType.SEQUENCE)
+	@Column(name = "ID", unique = true, nullable = false, precision = 22, scale = 0)
 	private BigDecimal id;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "ID_SUBGRUPA", nullable = false)
 	private Subgrupa subgrupa;
+	
+	@Column(name = "NUME", nullable = false, length = 60)
 	private String nume;
+	
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "student")
 	private Set<Prezenta> prezentas = new HashSet<Prezenta>(0);
 
 	public Student() {
@@ -47,10 +58,6 @@ public class Student implements java.io.Serializable {
 		this.prezentas = prezentas;
 	}
 
-	@Id
-	@SequenceGenerator(name = "studseq", sequenceName = "STUDENT_SEQ",allocationSize = 1)
-	@GeneratedValue(generator = "studseq", strategy = GenerationType.SEQUENCE)
-	@Column(name = "ID", unique = true, nullable = false, precision = 22, scale = 0)
 	public BigDecimal getId() {
 		return this.id;
 	}
@@ -59,8 +66,6 @@ public class Student implements java.io.Serializable {
 		this.id = id;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "ID_SUBGRUPA", nullable = false)
 	public Subgrupa getSubgrupa() {
 		return this.subgrupa;
 	}
@@ -69,7 +74,6 @@ public class Student implements java.io.Serializable {
 		this.subgrupa = subgrupa;
 	}
 
-	@Column(name = "NUME", nullable = false, length = 60)
 	public String getNume() {
 		return this.nume;
 	}
@@ -78,7 +82,6 @@ public class Student implements java.io.Serializable {
 		this.nume = nume;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "student")
 	public Set<Prezenta> getPrezentas() {
 		return this.prezentas;
 	}

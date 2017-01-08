@@ -1,36 +1,47 @@
 package main;
+import java.awt.Dimension;
 import java.awt.EventQueue;
-
+import java.awt.GridLayout;
+import java.awt.LayoutManager;
+import javax.swing.BorderFactory;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import gui_system.AdminPanel;
 import gui_system.LoginPanel;
 import gui_system.MainPanel;
 import gui_system.ModalFrame;
+import gui_system.MyProgressBar;
 import gui_system.ResetWeeksPanel;
-
 import java.awt.event.ActionListener;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.awt.event.ActionEvent;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import Services.PrezentaService;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.JSeparator;
 import Singleton.*;
+import Utils.ProgressBarListener;
+import Utils.GenerateRecordsWorker;
+
 import javax.swing.SwingConstants;
+import javax.swing.SwingWorker;
 
 public class MainFrame extends JFrame {
 
 	private gui_system.LoginPanel loginPanel;
 	private gui_system.MainPanel mainPanel;
 	private gui_system.AdminPanel adminPanel;
-
+	
 	JMenuBar menuBar;
 	JMenu mnFile, mnUnelte, mnGenerareRaport,
 	mnRaportStudenti;
@@ -40,6 +51,7 @@ public class MainFrame extends JFrame {
 	private JMenu renewDateMnt;
 	private JMenuItem mntmImport_1;
 	private JMenuItem mntmDataInceperii;
+	private JMenuItem mntmGenerarePrezen;
 	private JMenuItem mntmRaportDisciplina;
 	private JMenuItem mntmRaportToateDisciplinele;
 
@@ -72,7 +84,7 @@ public class MainFrame extends JFrame {
 	}
 	
 	public void showLoginPanel() {
-		setTitle("Logare sistem gestiune prezente");
+		setTitle("Login");
 		mainPanel.setVisible(false);
 		adminPanel.setVisible(false);
 		loginPanel.resetState();
@@ -95,7 +107,7 @@ public class MainFrame extends JFrame {
 		mainPanel.loadFromDB();
 		setContentPane(mainPanel);
 		mainPanel.setVisible(true);
-		mnUnelte.setVisible(true);
+		mnUnelte.setVisible(false);
 		mntmDelogare.setVisible(true);
 		mntmGestionareModule.setVisible(false);
 		mntmAdministrare.setVisible(true);
@@ -104,15 +116,26 @@ public class MainFrame extends JFrame {
 		setLocationRelativeTo(null);
 	}
 	
+	public void showProgressPanel(){
+		menuBar.setVisible(false);
+		setTitle("Loading...");
+		adminPanel.setVisible(false);
+		
+	}
+	
 	public void showAdminPanel() {
+		this.getContentPane().setVisible(false);
+		setMenuVisible(true);
 		setTitle("Administrare baza de date");
 		mntmAdministrare.setVisible(false);
 		mntmGestionareModule.setVisible(true);
 		mnGenerareRaport.setVisible(true);
+		mnUnelte.setVisible(true);
 		renewDateMnt.setVisible(true);
 		mainPanel.setVisible(false);
 		setContentPane(adminPanel);
 		adminPanel.setVisible(true);
+		mntmDelogare.setVisible(true);
 		pack();
 		setLocationRelativeTo(null);
 	}
@@ -251,10 +274,60 @@ public class MainFrame extends JFrame {
 		mntmDataInceperii.setHorizontalAlignment(SwingConstants.CENTER);
 		renewDateMnt.add(mntmDataInceperii);
 		
+		mntmGenerarePrezen = new JMenuItem("Generare prezen\u021Be");
+		mntmGenerarePrezen.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				showLoadingScreenAndGenerateRecords();
+			}
+		});
+		renewDateMnt.add(mntmGenerarePrezen);
+		
 		mnUnelte.setVisible(false);
 		mntmDelogare.setVisible(false);
 		mntmGestionareModule.setVisible(false);
 		
+	}
+
+	public void showLoadingScreenAndGenerateRecords(){
+		
+		int n = JOptionPane.showConfirmDialog(
+                this, "Aceasta operatie va genera prezentele pentru toti studentii inscrisi la toate modulele pe tot parcursul anului "
+                        + "si de aceea necesita timp.\nAsigurati-va ca ati importat toate datele si ati introdus toate modulele.Nu exista modalitatea de a intrerupe aceasta actiune.Continuati?",
+                "Generare prezente",
+                JOptionPane.YES_NO_OPTION);
+		if (n == JOptionPane.YES_OPTION) {
+			
+			JPanel p = new JPanel(new GridLayout(1, 1));
+			final JProgressBar progress = new JProgressBar() {
+		        @Override public void updateUI() {
+		            super.updateUI();
+		            setUI(new MyProgressBar());
+		            setBorder(BorderFactory.createEmptyBorder(90, 125, 125, 125));
+		        }
+		    };
+		    progress.setStringPainted(true);
+		    progress.setFont(progress.getFont().deriveFont(24f));
+	        p.setPreferredSize(new Dimension(750, 450));
+	        p.add(progress);
+	        p.setVisible(true);
+	        setContentPane(p);
+	        setMenuVisible(false);
+	        pack();
+	        
+	        SwingWorker<String, Void> worker = new GenerateRecordsWorker(){
+	            @Override public void done() {
+	                showAdminPanel();
+	            }
+	        };
+			worker.addPropertyChangeListener(new ProgressBarListener(progress));
+	        worker.execute();
+			
+		} else if (n == JOptionPane.NO_OPTION) {
+			return;
+		} else {
+			return;
+		}
+			
 	}
 	
 	public void setNewYearStart(){
@@ -262,11 +335,11 @@ public class MainFrame extends JFrame {
 	}
 	
 	public void hideUnelteMenu() {
-		mnUnelte.setEnabled(false);
+		mnUnelte.setVisible(false);
 	}
 	
 	public void showUnelteMenu() {
-		mnUnelte.setEnabled(true);
+		mnUnelte.setVisible(true);
 	}
 	
 	public void updateWeekBrowser() {

@@ -177,6 +177,25 @@ public final class StudentService {
 		
 	}
 	
+	public static List<Student> getStudentiFromParticipant(String participant) {
+		List<Student> studenti = null;
+		
+		if (Character.isLetter(participant.charAt(participant.length() - 1))) {
+			//subgrupa
+			Subgrupa subgrupa = SubgrupaService.getSubgrupaByNume(participant);
+			studenti = StudentService.getAllStudentsBySubgrupa(subgrupa);
+			
+			return studenti;
+		}
+		else {
+			//grupa
+			Grupa grupa = GrupaService.getGrupaByNume(participant);
+			studenti = StudentService.getAllStudentsByGrupa(grupa);
+			
+			return studenti;
+		}
+	}
+
 	public static List<Student> runSearchQuery(String query) {
 		List<Student> list = null;
 		Session session = null;
@@ -191,6 +210,7 @@ public final class StudentService {
         	session.close();
         }
 		return list;
+
 	}
 	
 	public static boolean deleteAllFromTable(){

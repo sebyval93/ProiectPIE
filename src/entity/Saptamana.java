@@ -25,11 +25,29 @@ import javax.persistence.TemporalType;
 @Table(name = "SAPTAMANA")
 public class Saptamana implements java.io.Serializable {
 
+	@Id
+	@SequenceGenerator(name = "saptseq", sequenceName = "SAPTAMANA_SEQ",allocationSize = 1)
+	@GeneratedValue(generator = "saptseq", strategy = GenerationType.SEQUENCE)
+	@Column(name = "ID", unique = true, nullable = false, precision = 22, scale = 0)
 	private BigDecimal id;
+	
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "ID_SEM", nullable = false)
 	private Semestru semestru;
+	
+	@Column(name = "DENUMIRE", nullable = false, length = 20)
 	private String denumire;
+
+	@Temporal(TemporalType.DATE)
+	@Column(name = "STARTDATE", length = 7)
 	private Date startdate;
+	
+	@Temporal(TemporalType.DATE)
+	@Column(name = "ENDDATE", length = 7)
 	private Date enddate;
+	
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "saptamana")
 	private Set<Prezenta> prezentas = new HashSet<Prezenta>(0);
 
 	public Saptamana() {
@@ -59,10 +77,6 @@ public class Saptamana implements java.io.Serializable {
 		this.prezentas = prezentas;
 	}
 
-	@Id
-	@SequenceGenerator(name = "saptseq", sequenceName = "SAPTAMANA_SEQ",allocationSize = 1)
-	@GeneratedValue(generator = "saptseq", strategy = GenerationType.SEQUENCE)
-	@Column(name = "ID", unique = true, nullable = false, precision = 22, scale = 0)
 	public BigDecimal getId() {
 		return this.id;
 	}
@@ -71,8 +85,6 @@ public class Saptamana implements java.io.Serializable {
 		this.id = id;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "ID_SEM", nullable = false)
 	public Semestru getSemestru() {
 		return this.semestru;
 	}
@@ -81,7 +93,6 @@ public class Saptamana implements java.io.Serializable {
 		this.semestru = semestru;
 	}
 
-	@Column(name = "DENUMIRE", nullable = false, length = 20)
 	public String getDenumire() {
 		return this.denumire;
 	}
@@ -90,8 +101,6 @@ public class Saptamana implements java.io.Serializable {
 		this.denumire = denumire;
 	}
 
-	@Temporal(TemporalType.DATE)
-	@Column(name = "STARTDATE", length = 7)
 	public Date getStartdate() {
 		return this.startdate;
 	}
@@ -100,8 +109,6 @@ public class Saptamana implements java.io.Serializable {
 		this.startdate = startdate;
 	}
 
-	@Temporal(TemporalType.DATE)
-	@Column(name = "ENDDATE", length = 7)
 	public Date getEnddate() {
 		return this.enddate;
 	}
@@ -110,7 +117,6 @@ public class Saptamana implements java.io.Serializable {
 		this.enddate = enddate;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "saptamana")
 	public Set<Prezenta> getPrezentas() {
 		return this.prezentas;
 	}

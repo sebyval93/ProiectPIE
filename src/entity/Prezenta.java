@@ -17,10 +17,26 @@ import javax.persistence.Table;
 @Table(name = "PREZENTA")
 public class Prezenta implements java.io.Serializable {
 
+	@Id
+	@SequenceGenerator(name = "prezseq", sequenceName = "PREZENTA_SEQ",allocationSize = 5000)
+	@GeneratedValue(generator = "prezseq", strategy = GenerationType.SEQUENCE)
+	@Column(name = "ID", unique = true, nullable = false, precision = 22, scale = 0)
 	private BigDecimal id;
+	
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "ID_MODUL", nullable = false)
 	private Modul modul;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "ID_SAPTAMANA", nullable = false)
 	private Saptamana saptamana;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "ID_STUDENT", nullable = false)
 	private Student student;
+	
+	@Column(name = "PREZENT", precision = 22, scale = 0)
 	private BigDecimal prezent;
 
 	public Prezenta() {
@@ -48,11 +64,7 @@ public class Prezenta implements java.io.Serializable {
 		this.student = student;
 		this.prezent = new BigDecimal(prezent);
 	}
-
-	@Id
-	@SequenceGenerator(name = "prezseq", sequenceName = "PREZENTA_SEQ",allocationSize = 1)
-	@GeneratedValue(generator = "prezseq", strategy = GenerationType.SEQUENCE)
-	@Column(name = "ID", unique = true, nullable = false, precision = 22, scale = 0)
+	
 	public BigDecimal getId() {
 		return this.id;
 	}
@@ -61,8 +73,7 @@ public class Prezenta implements java.io.Serializable {
 		this.id = id;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "ID_MODUL", nullable = false)
+	
 	public Modul getModul() {
 		return this.modul;
 	}
@@ -70,9 +81,7 @@ public class Prezenta implements java.io.Serializable {
 	public void setModul(Modul modul) {
 		this.modul = modul;
 	}
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "ID_SAPTAMANA", nullable = false)
+	
 	public Saptamana getSaptamana() {
 		return this.saptamana;
 	}
@@ -80,9 +89,7 @@ public class Prezenta implements java.io.Serializable {
 	public void setSaptamana(Saptamana saptamana) {
 		this.saptamana = saptamana;
 	}
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "ID_STUDENT", nullable = false)
+	
 	public Student getStudent() {
 		return this.student;
 	}
@@ -91,7 +98,6 @@ public class Prezenta implements java.io.Serializable {
 		this.student = student;
 	}
 
-	@Column(name = "PREZENT", precision = 22, scale = 0)
 	public BigDecimal getPrezent() {
 		return this.prezent;
 	}

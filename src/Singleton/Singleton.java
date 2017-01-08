@@ -1,13 +1,23 @@
 package Singleton;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.StatelessSession;
 import org.hibernate.cfg.Configuration;
 
+import Services.AnUniversitarService;
+import Services.DisciplinaService;
+import Services.GrupaService;
+import Services.ModulService;
 import Services.ProfesorService;
 import Services.SaptamanaService;
+import Services.SemestruService;
+import Services.StudentService;
+import Services.SubgrupaService;
+import Services.UtilizatorService;
 import Utils.Week;
 import entity.*;
 
@@ -17,12 +27,33 @@ public class Singleton {
 	public SessionFactory sessionFactory;
 	public Utilizator currentUser = null;
 	public Profesor currentProfesor = null;
-	public Saptamana currentSaptamana = null;
 	public Week currentWeek = null;
+	
+	
+	
+	//		Normal user lists
+	
+	public List<AnUniversitar> ListOfYears;
+	public List<Semestru> ListOfSemesters;
+	public List<Saptamana> ListOfWeeks;
+	public List<Grupa> ListOfGroups;
+	public List<Subgrupa> ListOfSubgroups;
+	public List<Modul> ListOfTeacherModules;
+	
+	// 		End
+	
+	//		Admin user lists
+	
+	public List<Profesor> ListOfTeachers;
+	public List<Disciplina> ListOfDisciplines;
+	public List<Student> ListOfStudents;
+	public List<Modul> ListOfModules;
+	public List<Utilizator> ListOfAccounts;
+	
+	//		End
 	
 	private Singleton(){
 		initSingleton();
-		getCurrentSession();
 	}
 	
 	public static Singleton getInstance() {
@@ -34,11 +65,15 @@ public class Singleton {
 	
 	public void initSingleton(){
 		buildSessionFactory();
-		
 	}
 	
+	/*
 	public void getCurrentSaptamana(){
 		currentSaptamana = SaptamanaService.getCurrentWeek();
+	}*/
+	
+	public void getCurrentWeek(){
+		currentWeek = new Week(SaptamanaService.getCurrentWeek());
 	}
 	
 	public void setCurrentWeek(Week week) {
@@ -70,8 +105,75 @@ public class Singleton {
 		return sessionFactory.getCurrentSession();
 	}
 	
+	public StatelessSession getStatelessSession(){		
+		return sessionFactory.openStatelessSession();
+	}
+	
 	public Session getNewSession(){
 		return sessionFactory.openSession();
 	}
+	
+	
+		public void loadListOfWeeks(){
+			ListOfWeeks = SaptamanaService.getAllFromSaptamana();
+		}
+		
+		public void loadListOfYears(){
+			ListOfYears = AnUniversitarService.getAllFromAn();
+		}
+		
+		public void loadListOfModulesForProfesor(Profesor x){
+			ListOfTeacherModules = ModulService.getAllModulByProfesor(x);
+		}
+		
+		public void loadListOfSemesters(){
+			ListOfSemesters = SemestruService.getAllFromSemestru();
+		}
+		
+		public void loadListOfGroups(){
+			ListOfGroups = GrupaService.getAllFromGrupa();
+		}
+		
+		public void loadListOfSubgroups(){
+			ListOfSubgroups = SubgrupaService.getAllFromSubgrupa();
+		}
+			
+		public void loadAllModules(){
+			Singleton.getInstance().ListOfModules = ModulService.getAllFromModul();
+		}
+		
+		public void loadAllDisciplines(){
+			Singleton.getInstance().ListOfDisciplines = DisciplinaService.getAllFromDisciciplina();
+		}
+		
+		public void loadAllAccounts(){
+			Singleton.getInstance().ListOfAccounts = UtilizatorService.getAllFromUtilizator();
+		}
+		
+		public void loadAllStudents(){
+			Singleton.getInstance().ListOfStudents = StudentService.getAllFromStudent();
+		}
+		
+		public void loadAllTeachers(){
+			Singleton.getInstance().ListOfTeachers = ProfesorService.getAllFromProfesor();
+		}
+		
+		public void loadListsForNormalUser(Utilizator u){
+			loadListOfYears();
+			loadListOfWeeks();
+			loadListOfGroups();
+			loadListOfSemesters();
+			loadListOfSubgroups();
+			loadListOfModulesForProfesor(u.getProfesor());
+		}
+		
+		public void loadListsForAdminUser(){
+			loadAllStudents();
+			loadAllTeachers();
+			loadAllModules();
+			loadAllDisciplines();
+			loadAllAccounts();		
+		}
+		
 	
 }

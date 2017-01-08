@@ -32,6 +32,7 @@ public class AdminContext {
 		disciplinaModel, anModel, grupaModel, subgrupaModel, modulModel, prezentaModel, 
 		saptamanaModel, semestruModel, currentModel;
 	
+	
 	private String selectionColumns[] = { "Tabele" };
 	private String selectionData[][] = { { "Student" }, { "Profesor" }, { "Disciplina" }, { "Situatie didactica" } };
 	
@@ -75,7 +76,7 @@ public class AdminContext {
 		currentModel = studentModel;
 		centerMainTableCells();
 		loadAllFromStudent();
-		
+
 	}
 	
 	
@@ -129,8 +130,7 @@ public class AdminContext {
 		for (int i = 0; i < mainTable.getColumnCount(); i++) {
 			mainTable.getColumnModel().getColumn(i).setCellRenderer(centerCellRenderer);
 		}
-		((JLabel) mainTable.getTableHeader().getDefaultRenderer()).setHorizontalAlignment(JLabel.CENTER);
-		
+		((JLabel) mainTable.getTableHeader().getDefaultRenderer()).setHorizontalAlignment(JLabel.CENTER);		
 	}
 	
 	private void setupTableModels() {
@@ -202,36 +202,36 @@ public class AdminContext {
 	}
 	
 	public void loadAllFromStudent(){
-		List<Student> list = StudentService.getAllFromStudent();
 		DefaultTableModel model = getCurrentModel();
-        list.stream().forEach((aux) -> {
+		Singleton.Singleton.getInstance().ListOfStudents.stream().forEach((aux) -> {
             model.addRow(new Object[]{aux.getNume(),aux.getSubgrupa().getGrupa().getNume(),aux.getSubgrupa().getNume()});
         });
 		
 	}
 	
 	public void loadAllFromDisciplina(){
-		List<Disciplina> list = DisciplinaService.getAllFromDisciciplina();
+		if(Singleton.Singleton.getInstance().ListOfDisciplines == null){
+			Singleton.Singleton.getInstance().ListOfDisciplines = DisciplinaService.getAllFromDisciciplina();
+		}		
 		DefaultTableModel model = getCurrentModel();
-        list.stream().forEach((aux) -> {
+		Singleton.Singleton.getInstance().ListOfDisciplines.stream().forEach((aux) -> {
             model.addRow(new Object[]{aux.getDenumire(),aux.getAn(),aux.getOrecurs(),aux.getOrelab(),
             		aux.getOreseminar(),aux.getOreproiect(),aux.getNumeScurt()});
         });
 	}
 	
 	public void loadAllFromProfesor(){
-		List<Profesor> list = ProfesorService.getAllFromProfesor();
 		DefaultTableModel model = getCurrentModel();
-        list.stream().forEach((aux) -> {
+		Singleton.Singleton.getInstance().ListOfTeachers.stream().forEach((aux) -> {
         	if (!aux.getNume().equals("admin"))
         		model.addRow(new Object[]{aux.getNume()});
         });
 	}
 	
 	public void loadAllFromModul(){
-		List<Modul> list = ModulService.getAllFromModul();
+		//List<Modul> list = ModulService.getAllFromModul();
 		DefaultTableModel model = getCurrentModel();
-        list.stream().forEach((aux) -> {
+		Singleton.Singleton.getInstance().ListOfModules.stream().forEach((aux) -> {
         	BigDecimal value = aux.getInterval();
         	String interval = null;
         	if (value.intValue() == 0)

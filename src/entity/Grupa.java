@@ -21,11 +21,20 @@ import javax.persistence.Table;
 @Table(name = "GRUPA")
 public class Grupa implements java.io.Serializable {
 
-	
-
+	@Id
+	@SequenceGenerator(name = "grupaseq", sequenceName = "GRUPA_SEQ",allocationSize = 1)
+	@GeneratedValue(generator = "grupaseq", strategy = GenerationType.SEQUENCE)
+	@Column(name = "ID", unique = true, nullable = false, precision = 22, scale = 0)
 	private BigDecimal id;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "ID_AN", nullable = false)
 	private AnUniversitar anUniversitar;
+	
+	@Column(name = "NUME", length = 20)
 	private String nume;
+	
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "grupa")
 	private Set<Subgrupa> subgrupas = new HashSet<Subgrupa>(0);
 
 	public Grupa() {
@@ -49,10 +58,7 @@ public class Grupa implements java.io.Serializable {
 		this.subgrupas = subgrupas;
 	}
 
-	@Id
-	@SequenceGenerator(name = "grupaseq", sequenceName = "GRUPA_SEQ",allocationSize = 1)
-	@GeneratedValue(generator = "grupaseq", strategy = GenerationType.SEQUENCE)
-	@Column(name = "ID", unique = true, nullable = false, precision = 22, scale = 0)
+	
 	public BigDecimal getId() {
 		return this.id;
 	}
@@ -61,8 +67,6 @@ public class Grupa implements java.io.Serializable {
 		this.id = id;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "ID_AN", nullable = false)
 	public AnUniversitar getAnUniversitar() {
 		return this.anUniversitar;
 	}
@@ -71,7 +75,6 @@ public class Grupa implements java.io.Serializable {
 		this.anUniversitar = anUniversitar;
 	}
 
-	@Column(name = "NUME", length = 20)
 	public String getNume() {
 		return this.nume;
 	}
@@ -80,7 +83,6 @@ public class Grupa implements java.io.Serializable {
 		this.nume = nume;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "grupa")
 	public Set<Subgrupa> getSubgrupas() {
 		return this.subgrupas;
 	}

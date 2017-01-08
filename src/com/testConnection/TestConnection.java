@@ -17,9 +17,12 @@ import org.hibernate.Session;
 import org.hibernate.engine.jdbc.connections.internal.UserSuppliedConnectionProviderImpl;
 
 import com.sun.deploy.uitoolkit.impl.fx.ui.UITextArea;
+import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 
 import Services.*;
+import Singleton.Singleton;
 import Utils.*;
+import antlr.Utils;
 import entity.*;
 import gui_system.ModalFrame;
 import gui_system.NewPasswordModal;
@@ -30,12 +33,15 @@ public class TestConnection {
 
 	public static void main(String[] args) throws FileNotFoundException{
 
-		Disciplina disc = DisciplinaService.getDisciplinaByNumeScurt("LFT");
-		Student eu = StudentService.getStudentByID(380);
-		System.out.println(eu);
-		int absente = PrezentaService.getNumberOfAbsencesForAStudentForModule(eu, disc);
-		System.out.println(absente);
-
+			
+		PrezentaService.resetPrezentaSeq();
+		Modul modul = ModulService.getModulByID(24);
+		Saptamana sapt = SaptamanaService.getSaptamanaByID(1);
+		Student s = StudentService.getStudentByID(22);
+		System.out.println(PrezentaService.addPrezenta(modul, sapt, s, 0));
+			
+			
+		
 	}
 	
 }

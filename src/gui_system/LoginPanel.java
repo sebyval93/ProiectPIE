@@ -2,16 +2,35 @@ package gui_system;
 
 import javax.swing.JPanel;
 import java.awt.Dimension;
+import java.awt.Image;
+
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import javax.imageio.ImageIO;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.SwingConstants;
+
+import Services.AnUniversitarService;
+import Services.DisciplinaService;
+import Services.GrupaService;
+import Services.ModulService;
+import Services.SaptamanaService;
+import Services.SemestruService;
+import Services.StudentService;
+import Services.SubgrupaService;
 import Services.UtilizatorService;
 import Utils.EncryptService;
 import Utils.Functions;
 import Utils.Week;
+import Utils.LoadListWorker;
+import entity.AnUniversitar;
+import entity.Disciplina;
+import entity.Profesor;
+import entity.Saptamana;
 import entity.Utilizator;
 import main.MainFrame;
 import java.awt.event.ActionListener;
@@ -21,6 +40,10 @@ import java.awt.Color;
 import Singleton.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
 
 
 public class LoginPanel extends JPanel {
@@ -28,15 +51,16 @@ public class LoginPanel extends JPanel {
 	private JPasswordField PasswordTF;
 	private JButton LoginButton;
 	private JLabel warningLbl;
-	
+	private JLabel GifLbl;
+	private JPanel panel;
 	main.MainFrame parentFrame;
 
 	public LoginPanel() {
-		Singleton.getInstance().getCurrentSaptamana();
+		Singleton.getInstance().getCurrentWeek();
 		setLayout(null);
 		
-		JPanel panel = new JPanel();
-		panel.setBounds(77, 89, 190, 73);
+		panel = new JPanel();
+		panel.setBounds(30, 89, 190, 73);
 		add(panel);
 		panel.setLayout(null);
 		
@@ -88,8 +112,16 @@ public class LoginPanel extends JPanel {
 		});
 		LoginButton.setBounds(35, 50, 155, 23);
 		panel.add(LoginButton);
-		setPreferredSize(new Dimension(350, 250));
+		setPreferredSize(new Dimension(250, 250));
 		
+		GifLbl = new JLabel("");
+		GifLbl.setBounds(25, 25, 200, 200);
+		
+		URL url = MainFrame.class.getResource("/res/load200.gif");
+	    Icon icon = new ImageIcon(url);
+	    GifLbl.setIcon(icon);
+	    GifLbl.setVisible(false);
+		add(GifLbl);
 	}
 	
 	public void doLogin() {
@@ -105,13 +137,32 @@ public class LoginPanel extends JPanel {
 								EncryptService.getHashOfString(String.valueOf(PasswordTF.getPassword())))){
 							Singleton.getInstance().currentUser = user;
 							Singleton.getInstance().getCurrentProfesor();
-							Singleton.getInstance().setCurrentWeek(new Week(Singleton.getInstance().currentSaptamana));
 							if (IdTF.getText().equalsIgnoreCase("admin"))
-								parentFrame.showUnelteMenu();
-							else
+							{	
+								showLoadingGif();
+								PasswordTF.setText("");
+								IdTF.setText("");
+								warningLbl.setText("");
+								//load list with special thread;
+								LoadListWorker myWorker = new LoadListWorker(){
+									@Override public void done() {
+										parentFrame.showAdminPanel();
+										parentFrame.showUnelteMenu();
+										hideLoadingGif();
+						            }
+								};
+								myWorker.execute();		
+
+								
+								return;
+								
+							}else{
 								parentFrame.hideUnelteMenu();
+								Singleton.getInstance().loadListsForNormalUser(user);
+							}
 							PasswordTF.setText("");
 							IdTF.setText("");
+							
 							parentFrame.updateWeekBrowser();
 							//getModuleFromSaptamanaAndProfesor(Singleton.getInstance().)
 							parentFrame.showMainPanel();
@@ -133,11 +184,20 @@ public class LoginPanel extends JPanel {
 	public void setParentFrame(MainFrame frame) {
 		parentFrame = frame;
 	}
-	
-	
+
 	public void resetState() {
 		IdTF.setText("");
 		PasswordTF.setText("");
+	}
+	
+	public void showLoadingGif(){
+		GifLbl.setVisible(true);
+		panel.setVisible(false);
+	}
+	
+	public void hideLoadingGif(){
+		GifLbl.setVisible(false);
+		panel.setVisible(true);
 	}
 	
 	public void createPasswordForNewUser(Utilizator x){
