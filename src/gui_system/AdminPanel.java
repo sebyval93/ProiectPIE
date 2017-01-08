@@ -157,6 +157,7 @@ public class AdminPanel extends JPanel {
 					JTable t =(JTable) me.getSource();
 					
 					DefaultTableModel model = (DefaultTableModel) t.getModel();
+					
 					Point p = me.getPoint();
 					int row = t.rowAtPoint(p);
 					if (context.getCurrentModelName().equals("studentModel")) {

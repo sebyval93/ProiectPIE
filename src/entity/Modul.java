@@ -21,13 +21,33 @@ import javax.persistence.Table;
 @Table(name = "MODUL")
 public class Modul implements java.io.Serializable {
 
+	@Id
+	@SequenceGenerator(name = "modseq", sequenceName = "MODUL_SEQ",allocationSize = 1)
+	@GeneratedValue(generator = "modseq", strategy = GenerationType.SEQUENCE)
+	@Column(name = "ID", unique = true, nullable = false, precision = 22, scale = 0)
 	private BigDecimal id;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "ID_DISCIPLINA", nullable = false)
 	private Disciplina disciplina;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "ID_PROFESOR", nullable = false)
 	private Profesor profesor;
+	
+	@Column(name = "ACTIVITATE", nullable = false, length = 20)
 	private String activitate;
+	
+	@Column(name = "PARTICIPANTI", nullable = false, length = 20)
 	private String participanti;
+	
+	@Column(name = "INTERVAL", nullable = false, precision = 22, scale = 0)
 	private BigDecimal interval;
+	
+	@Column(name = "OPERAT", nullable = false, precision = 22, scale = 0)
 	private BigDecimal operat;
+	
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "modul")
 	private Set<Prezenta> prezentas = new HashSet<Prezenta>(0);
 
 	public Modul() {
@@ -67,10 +87,6 @@ public class Modul implements java.io.Serializable {
 		this.operat = operat;
 	}
 
-	@Id
-	@SequenceGenerator(name = "modseq", sequenceName = "MODUL_SEQ",allocationSize = 1)
-	@GeneratedValue(generator = "modseq", strategy = GenerationType.SEQUENCE)
-	@Column(name = "ID", unique = true, nullable = false, precision = 22, scale = 0)
 	public BigDecimal getId() {
 		return this.id;
 	}
@@ -79,8 +95,6 @@ public class Modul implements java.io.Serializable {
 		this.id = id;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "ID_DISCIPLINA", nullable = false)
 	public Disciplina getDisciplina() {
 		return this.disciplina;
 	}
@@ -89,8 +103,6 @@ public class Modul implements java.io.Serializable {
 		this.disciplina = disciplina;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "ID_PROFESOR", nullable = false)
 	public Profesor getProfesor() {
 		return this.profesor;
 	}
@@ -99,7 +111,6 @@ public class Modul implements java.io.Serializable {
 		this.profesor = profesor;
 	}
 
-	@Column(name = "ACTIVITATE", nullable = false, length = 20)
 	public String getActivitate() {
 		return this.activitate;
 	}
@@ -108,7 +119,6 @@ public class Modul implements java.io.Serializable {
 		this.activitate = activitate;
 	}
 
-	@Column(name = "PARTICIPANTI", nullable = false, length = 20)
 	public String getParticipanti() {
 		return this.participanti;
 	}
@@ -117,7 +127,6 @@ public class Modul implements java.io.Serializable {
 		this.participanti = participanti;
 	}
 
-	@Column(name = "INTERVAL", nullable = false, precision = 22, scale = 0)
 	public BigDecimal getInterval() {
 		return this.interval;
 	}
@@ -126,7 +135,6 @@ public class Modul implements java.io.Serializable {
 		this.interval = interval;
 	}
 
-	@Column(name = "OPERAT", nullable = false, precision = 22, scale = 0)
 	public BigDecimal getOperat() {
 		return this.operat;
 	}
@@ -135,7 +143,6 @@ public class Modul implements java.io.Serializable {
 		this.operat = operat;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "modul")
 	public Set<Prezenta> getPrezentas() {
 		return this.prezentas;
 	}
@@ -146,7 +153,7 @@ public class Modul implements java.io.Serializable {
 	
 	@Override
 	public String toString() {
-		return "Modul [id=" + id + ", disciplina=" + disciplina + ", profesor=" + profesor + ", activitate="
+		return "Modul [id=" + id + ", disciplina=" + disciplina.getDenumire() + ", profesor=" + profesor.getNume() + ", activitate="
 				+ activitate + ", participanti=" + participanti + ", interval=" + interval + "]";
 	}
 

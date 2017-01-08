@@ -21,9 +21,20 @@ import oracle.net.ano.EncryptionService;
 @Table(name = "UTILIZATOR")
 public class Utilizator implements java.io.Serializable {
 
+	@Id
+	@SequenceGenerator(name = "utilseq", sequenceName = "UTILIZATOR_SEQ",allocationSize = 1)
+	@GeneratedValue(generator = "utilseq", strategy = GenerationType.SEQUENCE)
+	@Column(name = "ID", unique = true, nullable = false, precision = 22, scale = 0)
 	private BigDecimal id;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "PROFESOR", nullable = false)
 	private Profesor profesor;
+	
+	@Column(name = "USERNAME", nullable = false, length = 20)
 	private String username;
+	
+	@Column(name = "PASSWORD", nullable = true, length = 100)
 	private String password;
 
 	public Utilizator() {
@@ -43,10 +54,6 @@ public class Utilizator implements java.io.Serializable {
 		this.password = password;
 	}
 
-	@Id
-	@SequenceGenerator(name = "utilseq", sequenceName = "UTILIZATOR_SEQ",allocationSize = 1)
-	@GeneratedValue(generator = "utilseq", strategy = GenerationType.SEQUENCE)
-	@Column(name = "ID", unique = true, nullable = false, precision = 22, scale = 0)
 	public BigDecimal getId() {
 		return this.id;
 	}
@@ -55,10 +62,6 @@ public class Utilizator implements java.io.Serializable {
 		this.id = id;
 	}
 	
-	
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "PROFESOR", nullable = false)
 	public Profesor getProfesor() {
 		return this.profesor;
 	}
@@ -67,7 +70,6 @@ public class Utilizator implements java.io.Serializable {
 		this.profesor = profesor;
 	}
 
-	@Column(name = "USERNAME", nullable = false, length = 20)
 	public String getUsername() {
 		return this.username;
 	}
@@ -76,7 +78,6 @@ public class Utilizator implements java.io.Serializable {
 		this.username = username;
 	}
 
-	@Column(name = "PASSWORD", nullable = true, length = 100)
 	public String getPassword() {
 		return this.password;
 	}

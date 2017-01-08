@@ -19,8 +19,16 @@ import javax.persistence.Table;
 @Table(name = "AN_UNIVERSITAR")
 public class AnUniversitar implements java.io.Serializable {
 
+	@Id
+	@SequenceGenerator(name = "anseq", sequenceName = "AN_SEQ",allocationSize = 1)
+	@GeneratedValue(generator = "anseq", strategy = GenerationType.SEQUENCE)
+	@Column(name = "ID", unique = true, nullable = false, precision = 22, scale = 0)
 	private BigDecimal id;
+	
+	@Column(name = "AN", nullable = false, precision = 22, scale = 0)
 	private BigDecimal an;
+		
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "anUniversitar")
 	private Set<Grupa> grupas = new HashSet<Grupa>(0);
 
 	public AnUniversitar() {
@@ -42,10 +50,6 @@ public class AnUniversitar implements java.io.Serializable {
 		this.grupas = grupas;
 	}
 
-	@Id
-	@SequenceGenerator(name = "anseq", sequenceName = "AN_SEQ",allocationSize = 1)
-	@GeneratedValue(generator = "anseq", strategy = GenerationType.SEQUENCE)
-	@Column(name = "ID", unique = true, nullable = false, precision = 22, scale = 0)
 	public BigDecimal getId() {
 		return this.id;
 	}
@@ -54,7 +58,6 @@ public class AnUniversitar implements java.io.Serializable {
 		this.id = id;
 	}
 
-	@Column(name = "AN", nullable = false, precision = 22, scale = 0)
 	public BigDecimal getAn() {
 		return this.an;
 	}
@@ -63,7 +66,6 @@ public class AnUniversitar implements java.io.Serializable {
 		this.an = an;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "anUniversitar")
 	public Set<Grupa> getGrupas() {
 		return this.grupas;
 	}

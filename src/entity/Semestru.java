@@ -19,8 +19,16 @@ import javax.persistence.Table;
 @Table(name = "SEMESTRU")
 public class Semestru implements java.io.Serializable {
 
+	@Id
+	@Column(name = "ID", unique = true, nullable = false, precision = 22, scale = 0)
+	@SequenceGenerator(name = "semseq", sequenceName = "SEMESTRU_SEQ",allocationSize = 1)
+	@GeneratedValue(generator = "semseq", strategy = GenerationType.SEQUENCE)
 	private BigDecimal id;
+	
+	@Column(name = "NUME_SEM", nullable = false, length = 20)
 	private String numeSem;
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "semestru")
 	private Set<Saptamana> saptamanas = new HashSet<Saptamana>(0);
 
 	public Semestru() {
@@ -42,11 +50,6 @@ public class Semestru implements java.io.Serializable {
 		this.saptamanas = saptamanas;
 	}
 
-	@Id
-
-	@Column(name = "ID", unique = true, nullable = false, precision = 22, scale = 0)
-	@SequenceGenerator(name = "semseq", sequenceName = "SEMESTRU_SEQ",allocationSize = 1)
-	@GeneratedValue(generator = "semseq", strategy = GenerationType.SEQUENCE)
 	public BigDecimal getId() {
 		return this.id;
 	}
@@ -55,7 +58,6 @@ public class Semestru implements java.io.Serializable {
 		this.id = id;
 	}
 
-	@Column(name = "NUME_SEM", nullable = false, length = 20)
 	public String getNumeSem() {
 		return this.numeSem;
 	}
@@ -64,7 +66,6 @@ public class Semestru implements java.io.Serializable {
 		this.numeSem = numeSem;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "semestru")
 	public Set<Saptamana> getSaptamanas() {
 		return this.saptamanas;
 	}

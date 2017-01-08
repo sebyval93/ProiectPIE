@@ -22,15 +22,38 @@ import javax.persistence.Table;
 @Table(name = "DISCIPLINA")
 public class Disciplina implements java.io.Serializable {
 
+	@Id
+	@SequenceGenerator(name = "discipseq", sequenceName = "DISCIPLINA_SEQ",allocationSize = 1)
+	@GeneratedValue(generator = "discipseq", strategy = GenerationType.SEQUENCE)
+	@Column(name = "ID", unique = true, nullable = false, precision = 22, scale = 0)
 	private BigDecimal id;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "ID_SEMESTRU")
 	private Semestru semestru;
+	
+	@Column(name = "DENUMIRE", length = 60)
 	private String denumire;
+	
+	@Column(name = "AN", precision = 22, scale = 0)
 	private BigDecimal an;
+	
+	@Column(name = "ORECURS", precision = 22, scale = 0)
 	private BigDecimal orecurs;
+	
+	@Column(name = "ORELAB", precision = 22, scale = 0)
 	private BigDecimal orelab;
+	
+	@Column(name = "ORESEMINAR", precision = 22, scale = 0)
 	private BigDecimal oreseminar;
+	
+	@Column(name = "OREPROIECT", precision = 22, scale = 0)
 	private BigDecimal oreproiect;
+	
+	@Column(name = "NUME_SCURT", length = 10)
 	private String numeScurt;
+	
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "disciplina")
 	private Set<Modul> moduls = new HashSet<Modul>(0);
 
 	public Disciplina() {
@@ -67,10 +90,7 @@ public class Disciplina implements java.io.Serializable {
 		this.numeScurt = numeScurt;
 	}
 
-	@Id
-	@SequenceGenerator(name = "discipseq", sequenceName = "DISCIPLINA_SEQ",allocationSize = 1)
-	@GeneratedValue(generator = "discipseq", strategy = GenerationType.SEQUENCE)
-	@Column(name = "ID", unique = true, nullable = false, precision = 22, scale = 0)
+	
 	public BigDecimal getId() {
 		return this.id;
 	}
@@ -79,8 +99,6 @@ public class Disciplina implements java.io.Serializable {
 		this.id = id;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "ID_SEMESTRU")
 	public Semestru getSemestru() {
 		return this.semestru;
 	}
@@ -89,7 +107,6 @@ public class Disciplina implements java.io.Serializable {
 		this.semestru = semestru;
 	}
 
-	@Column(name = "DENUMIRE", length = 60)
 	public String getDenumire() {
 		return this.denumire;
 	}
@@ -98,7 +115,6 @@ public class Disciplina implements java.io.Serializable {
 		this.denumire = denumire;
 	}
 
-	@Column(name = "AN", precision = 22, scale = 0)
 	public BigDecimal getAn() {
 		return this.an;
 	}
@@ -107,7 +123,6 @@ public class Disciplina implements java.io.Serializable {
 		this.an = an;
 	}
 
-	@Column(name = "ORECURS", precision = 22, scale = 0)
 	public BigDecimal getOrecurs() {
 		return this.orecurs;
 	}
@@ -116,7 +131,6 @@ public class Disciplina implements java.io.Serializable {
 		this.orecurs = orecurs;
 	}
 
-	@Column(name = "ORELAB", precision = 22, scale = 0)
 	public BigDecimal getOrelab() {
 		return this.orelab;
 	}
@@ -125,7 +139,6 @@ public class Disciplina implements java.io.Serializable {
 		this.orelab = orelab;
 	}
 
-	@Column(name = "ORESEMINAR", precision = 22, scale = 0)
 	public BigDecimal getOreseminar() {
 		return this.oreseminar;
 	}
@@ -134,7 +147,6 @@ public class Disciplina implements java.io.Serializable {
 		this.oreseminar = oreseminar;
 	}
 
-	@Column(name = "OREPROIECT", precision = 22, scale = 0)
 	public BigDecimal getOreproiect() {
 		return this.oreproiect;
 	}
@@ -143,7 +155,6 @@ public class Disciplina implements java.io.Serializable {
 		this.oreproiect = oreproiect;
 	}
 
-	@Column(name = "NUME_SCURT", length = 10)
 	public String getNumeScurt() {
 		return this.numeScurt;
 	}
@@ -152,7 +163,6 @@ public class Disciplina implements java.io.Serializable {
 		this.numeScurt = numeScurt;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "disciplina")
 	public Set<Modul> getModuls() {
 		return this.moduls;
 	}

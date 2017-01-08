@@ -13,6 +13,7 @@ import javax.swing.event.DocumentListener;
 import com.sun.javafx.font.Disposer;
 
 import Services.UtilizatorService;
+import Singleton.Singleton;
 import Utils.EncryptService;
 import entity.Utilizator;
 import main.MainFrame;
@@ -59,7 +60,10 @@ public class NewPasswordModal {
 								try {
 									UtilizatorService.updateUtilizator(utilizator.getId().intValue(), utilizator.getUsername(),
 											utilizator.getPassword(), utilizator.getProfesor());
-									Singleton.Singleton.getInstance().currentUser = UtilizatorService.getUtilizatorByID(utilizator.getId().intValue());
+									Singleton.getInstance().currentUser = UtilizatorService.getUtilizatorByID(utilizator.getId().intValue());
+									//todo
+									Singleton.getInstance().currentUser = utilizator;
+									Singleton.getInstance().getCurrentProfesor();
 									frame.showMainPanel();
 									mySelf.getRootFrame().dispose();   
 								} catch (NoSuchAlgorithmException e1) {

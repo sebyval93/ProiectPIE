@@ -48,13 +48,13 @@ public class MainPanel extends JPanel {
 	
 	Week currWeek;
 	
-	public static List<Grupa> allFromGrupa;
-	public static List<Subgrupa> allFromSubgrupa;
+	//public static List<Grupa> allFromGrupa;
+	//public static List<Subgrupa> allFromSubgrupa;
 	
 	public MainPanel() {
-		
-		allFromGrupa = GrupaService.getAllFromGrupa();
-		allFromSubgrupa = SubgrupaService.getAllFromSubgrupa();
+		currWeek = Singleton.getInstance().currentWeek;		
+		//allFromGrupa = GrupaService.getAllFromGrupa();
+		//allFromSubgrupa = SubgrupaService.getAllFromSubgrupa();
 		
 		setLayout(null);
 		
@@ -95,13 +95,13 @@ public class MainPanel extends JPanel {
 		
 		scrollPane.setViewportView(table);
 		
-		currWeek = new Week(Singleton.getInstance().currentSaptamana);
+		
 		
 		btnBack = new JButton("Inapoi");
 		btnBack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (context.isStudentiModelLoaded()) {
-					context.switchToModule();
+					context.switchToModule(currWeek);
 					btnSave.setVisible(false);
 					showWeekBrowser();
 				}
@@ -115,7 +115,7 @@ public class MainPanel extends JPanel {
 		btnWeekPrev.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				currWeek.prevWeek();
-				context.loadModuleInWeek(currWeek);
+				context.loadModulesForWeek(currWeek);
 				updateWeekBrowser();
 			}
 		});
@@ -127,7 +127,7 @@ public class MainPanel extends JPanel {
 		btnWeekNext.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				currWeek.nextWeek();
-				context.loadModuleInWeek(currWeek);
+				context.loadModulesForWeek(currWeek);
 				updateWeekBrowser();
 			}
 		});
@@ -170,42 +170,8 @@ public class MainPanel extends JPanel {
 	}
 	
 	public void loadFromDB() {
-		context.switchToModule();
+		context.switchToModule(currWeek);
 	}
 	
-	/*public static List<Modul> getModuleFromSaptamanaAndProfesor(Saptamana week, Profesor prof) {
-		List<Modul> module = null;
-		
-		//module = ModulService.getAllModulBySaptamanaAndProfesor(week, prof);
-		module = ModulService.getAllModulByProfesor(prof);
-		for (Modul modul : module) {
-			switch(modul.getInterval().intValue()) {
-			case 0:
-				//Impar
-				if (week.ge)
-			}
-		}
-		
-		return module;
-	}*/
 	
-	public static List<Student> getStudentiFromParticipant(String participant) {
-		List<Student> studenti = null;
-		
-		if (Character.isLetter(participant.charAt(participant.length() - 1))) {
-			//subgrupa
-			Subgrupa subgrupa = SubgrupaService.getSubgrupaByNume(participant);
-			studenti = StudentService.getAllStudentsBySubgrupa(subgrupa);
-			
-			return studenti;
-		}
-		else {
-			//grupa
-			Grupa grupa = GrupaService.getGrupaByNume(participant);
-			studenti = StudentService.getAllStudentsByGrupa(grupa);
-			
-			return studenti;
-		}
-		
-	}
 }

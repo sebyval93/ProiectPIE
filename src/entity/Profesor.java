@@ -18,9 +18,17 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "PROFESOR")
 public class Profesor implements java.io.Serializable {
-
+	
+	@Id
+	@SequenceGenerator(name = "profseq", sequenceName = "PROFESOR_SEQ",allocationSize = 1)
+	@GeneratedValue(generator = "profseq", strategy = GenerationType.SEQUENCE)
+	@Column(name = "ID", unique = true, nullable = false, precision = 22, scale = 0)
 	private BigDecimal id;
+	
+	@Column(name = "NUME", length = 60)
 	private String nume;
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "profesor")
 	private Set<Modul> moduls = new HashSet<Modul>(0);
 
 	public Profesor() {
@@ -41,10 +49,7 @@ public class Profesor implements java.io.Serializable {
 		this.nume = nume;
 	}
 
-	@Id
-	@SequenceGenerator(name = "profseq", sequenceName = "PROFESOR_SEQ",allocationSize = 1)
-	@GeneratedValue(generator = "profseq", strategy = GenerationType.SEQUENCE)
-	@Column(name = "ID", unique = true, nullable = false, precision = 22, scale = 0)
+
 	public BigDecimal getId() {
 		return this.id;
 	}
@@ -53,7 +58,6 @@ public class Profesor implements java.io.Serializable {
 		this.id = id;
 	}
 
-	@Column(name = "NUME", length = 60)
 	public String getNume() {
 		return this.nume;
 	}
@@ -62,7 +66,6 @@ public class Profesor implements java.io.Serializable {
 		this.nume = nume;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "profesor")
 	public Set<Modul> getModuls() {
 		return this.moduls;
 	}

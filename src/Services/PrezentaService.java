@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import org.hibernate.Session;
+import org.hibernate.StatelessSession;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
@@ -141,6 +142,111 @@ public final class PrezentaService {
 				session.beginTransaction();
 				session.createQuery("delete from Prezenta").executeUpdate();
 				session.getTransaction().commit();
+				done = true;
+			}catch (Exception e) {
+	            e.printStackTrace();           
+	        } finally { 
+	        	session.close();
+	        }
+		return done;
+	}
+	
+	public static boolean resetPrezentaSeq(){
+		boolean done = false;
+		Session session = null;
+			try{
+				session = Singleton.getInstance().getNewSession();
+				session.beginTransaction();
+				session.createSQLQuery("DROP SEQUENCE PREZENTA_SEQ").executeUpdate();
+				session.createSQLQuery("CREATE SEQUENCE PREZENTA_SEQ MINVALUE 1 MAXVALUE 999999999999999999999999999"
+						+ " START WITH 1 INCREMENT BY 5000 NOCACHE NOCYCLE").executeUpdate();
+				session.getTransaction().commit();
+				done = true;
+			}catch (Exception e) {
+	            e.printStackTrace();           
+	        } finally { 
+	        	session.close();
+	        }
+		return done;
+	}
+	
+	public static boolean generateAllRecords(){
+		resetPrezentaSeq();
+		System.out.println("reseted seq");
+		boolean done = false;
+		StatelessSession session = null;
+			try{
+				session = Singleton.getInstance().getStatelessSession();
+				
+
+				System.out.println("startt");
+				
+				for(Saptamana saptamana : Singleton.getInstance().ListOfWeeks){
+					session.beginTransaction();
+					System.out.println(saptamana.getDenumire());
+					for(Modul modul : Singleton.getInstance().ListOfModules){
+						
+						//Daca modul face parte din semestrul saptamanii
+						if(saptamana.getSemestru().getId().intValue() 
+								!= modul.getDisciplina().getSemestru().getId().intValue()){
+							continue;
+						}else{
+							
+							//Daca modulul este saptamanal
+							if(modul.getInterval().intValue() == 0){
+								
+								List<Student> listOfParticipants 
+										= StudentService.getStudentiFromParticipant(modul.getParticipanti());
+								
+								for(Student student : listOfParticipants){
+									Prezenta prezenta = new Prezenta(modul,saptamana,student,0);
+									session.insert(prezenta);
+								}
+								System.out.println("Added for module " + modul);
+								
+								continue;							
+							}
+							//Daca modululul este in saptamanile impare
+							if(modul.getInterval().intValue() == 1){
+								//Daca saptamana este impara
+								if(saptamana.getId().intValue() % 2 != 0){
+									
+									List<Student> listOfParticipants 
+										= StudentService.getStudentiFromParticipant(modul.getParticipanti());
+											
+									for(Student student : listOfParticipants){
+										Prezenta prezenta = new Prezenta(modul,saptamana,student,0);
+										session.insert(prezenta);
+									}
+									System.out.println("Added for module " + modul);
+									
+									continue;
+								}
+							}
+							//Daca modululul este in saptamanile pare
+							if(modul.getInterval().intValue() == 2){
+								//Daca saptamana este para
+								if(saptamana.getId().intValue() % 2 == 0){
+									
+									List<Student> listOfParticipants 
+										= StudentService.getStudentiFromParticipant(modul.getParticipanti());
+									
+									for(Student student : listOfParticipants){
+										Prezenta prezenta = new Prezenta(modul,saptamana,student,0);
+										session.insert(prezenta);
+									}
+									System.out.println("Added for module " + modul);
+									
+									continue;
+								}
+							}
+							
+						}
+					}
+					session.getTransaction().commit();
+				}
+				
+				
 				done = true;
 			}catch (Exception e) {
 	            e.printStackTrace();           

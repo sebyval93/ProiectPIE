@@ -40,7 +40,11 @@ public class Week {
 				semestru = 2;
 				String weekStr = "saptamana " + num;
 				String semestruStr = "semestru " + semestru;
-				week = SaptamanaService.getSaptamanaByDenumireAndSemestru(weekStr, semestruStr);
+				//week = SaptamanaService.getSaptamanaByDenumireAndSemestru(weekStr, semestruStr);
+				week = Singleton.Singleton.getInstance().ListOfWeeks.stream()
+			            .filter(e -> e.getId().intValue() == 15)
+			            .findFirst()
+			            .get();
 				return;
 			}
 			else if (week.getSemestru().getNumeSem().equals("semestru 2"))
@@ -49,7 +53,11 @@ public class Week {
 		
 		String nextWeekStr = "saptamana " + (num + 1);
 		String semestruStr = "semestru " + semestru;
-		week = SaptamanaService.getSaptamanaByDenumireAndSemestru(nextWeekStr, semestruStr);
+		//week = SaptamanaService.getSaptamanaByDenumireAndSemestru(nextWeekStr, semestruStr);
+		week = Singleton.Singleton.getInstance().ListOfWeeks.stream()
+	            .filter(e -> e.getId().intValue() == week.getId().intValue() + 1)
+	            .findFirst()
+	            .get();
 		num = Integer.parseInt(week.getDenumire().split(" ")[1]);
 		semestru = Integer.parseInt(week.getSemestru().getNumeSem().split(" ")[1]);
 	}
@@ -64,13 +72,21 @@ public class Week {
 				semestru = 1;
 				String weekStr = "saptamana " + num;
 				String semestruStr = "semestru " + semestru;
-				week = SaptamanaService.getSaptamanaByDenumireAndSemestru(weekStr, semestruStr);
+				//week = SaptamanaService.getSaptamanaByDenumireAndSemestru(weekStr, semestruStr);
+				week = Singleton.Singleton.getInstance().ListOfWeeks.stream()
+			            .filter(e -> e.getId().intValue() == 14)
+			            .findFirst()
+			            .get();
 				return;
 		}
 		
 		String prevWeekStr = "saptamana " + (num - 1);
 		String semestruStr = "semestru " + semestru;
-		week = SaptamanaService.getSaptamanaByDenumireAndSemestru(prevWeekStr, semestruStr);
+		//week = SaptamanaService.getSaptamanaByDenumireAndSemestru(prevWeekStr, semestruStr);
+		week = Singleton.Singleton.getInstance().ListOfWeeks.stream()
+	            .filter(e -> e.getId().intValue() == week.getId().intValue() - 1)
+	            .findFirst()
+	            .get();
 		num = Integer.parseInt(week.getDenumire().split(" ")[1]);
 		semestru = Integer.parseInt(week.getSemestru().getNumeSem().split(" ")[1]);
 	}
