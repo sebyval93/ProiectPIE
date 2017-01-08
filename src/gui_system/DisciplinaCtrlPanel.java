@@ -157,23 +157,38 @@ public class DisciplinaCtrlPanel extends JPanel {
 	}
 
 	public int getAn() {
-		return Integer.parseInt(txtAn.getText());
+		if (txtAn.getText().isEmpty())
+			return -1;
+		else
+			return Integer.parseInt(txtAn.getText());
 	}
 
 	public int getOreCurs() {
-		return Integer.parseInt(txtOreCurs.getText());
+		if (txtOreCurs.getText().isEmpty())
+			return -1;
+		else
+			return Integer.parseInt(txtOreCurs.getText());
 	}
 
 	public int getOreLaborator() {
-		return Integer.parseInt(txtOreLaborator.getText());
+		if (txtOreLaborator.getText().isEmpty())
+			return -1;
+		else
+			return Integer.parseInt(txtOreLaborator.getText());
 	}
 
 	public int getOreSeminar() {
-		return Integer.parseInt(txtOreSeminar.getText());
+		if (txtOreSeminar.getText().isEmpty())
+			return -1;
+		else
+			return Integer.parseInt(txtOreSeminar.getText());
 	}
 
 	public int getOreProiect() {
-		return Integer.parseInt(txtOreProiect.getText());
+		if (txtOreProiect.getText().isEmpty())
+			return -1;
+		else
+			return Integer.parseInt(txtOreProiect.getText());
 	}
 
 	public void resetFields() {

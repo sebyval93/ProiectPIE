@@ -178,6 +178,22 @@ public final class ModulService {
 		return done;
 
 	}
+	
+	public static List<Modul> runSearchQuery(String query) {
+		List<Modul> list = null;
+		Session session = null;
+		try{
+			session = Singleton.getInstance().getNewSession();
+			list = session.createQuery(query).getResultList();
+			session.close();
+		}catch (Exception e) {
+            //e.printStackTrace();
+			System.out.println("Modul not found!");
+        }finally{
+        	session.close();
+        }
+		return list;
+	}
 
 	public static List<Modul> getAllModulBySaptamanaAndProfesor(Saptamana week, Profesor prof) {
 		List<Modul> list = null;

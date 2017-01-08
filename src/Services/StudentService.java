@@ -194,7 +194,23 @@ public final class StudentService {
 			
 			return studenti;
 		}
-		
+	}
+
+	public static List<Student> runSearchQuery(String query) {
+		List<Student> list = null;
+		Session session = null;
+		try{
+			session = Singleton.getInstance().getNewSession();
+			list = session.createQuery(query).getResultList();
+			session.close();
+		}catch (Exception e) {
+            //e.printStackTrace();
+			System.out.println("Student not found!");
+        }finally{
+        	session.close();
+        }
+		return list;
+
 	}
 	
 	public static boolean deleteAllFromTable(){

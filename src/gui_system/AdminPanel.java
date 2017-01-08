@@ -11,11 +11,13 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 
 import Services.DisciplinaService;
+import Services.GrupaService;
 import Services.ModulService;
 import Services.ProfesorService;
 import Services.StudentService;
 import Services.SubgrupaService;
 import entity.Disciplina;
+import entity.Grupa;
 import entity.Profesor;
 import entity.Subgrupa;
 import main.MainFrame;
@@ -382,29 +384,54 @@ public class AdminPanel extends JPanel {
 	}
 	
 	private void actiuneCautare() {
-		//TODO
-		/*
+		String searchString = "";
+		boolean search = false;
+		
 		switch(context.getCurrentModelName()) {
 		case "studentModel":
 			String numeStudent = studentiCtrlPanel.getNumeStudent();
 			String numeSubgrupa = studentiCtrlPanel.getSelectedSubgrupa();
-			Subgrupa subgrupa = SubgrupaService.getSubgrupaByNume(numeSubgrupa);
+			String numeGrupa = studentiCtrlPanel.getSelectedGrupa();
+			Grupa grupa;
+			Subgrupa subgrupa;
 			
-			if (numeStudent != "" || numeSubgrupa != "" || subgrupa != null) {
-				StudentService.getStudentByNumeAndSubgrupa(numeStudent, subgrupa);
-				context.loadStudentListInTable(list);
+			searchString = "from Student where ";
+			
+			if (!numeStudent.isEmpty()) {
+				searchString += ("upper(nume) like upper('%" + numeStudent + "%')");
+				search = true;
 			}
-			else
-				System.out.println("Could not add student to database. Found invalid field.");
+			if (numeGrupa != null) {
+				grupa = GrupaService.getGrupaByNume(numeGrupa);
+				if (searchString.length() > 19)
+					searchString += " AND ";
+				searchString += ("grupa.id = " + grupa.getId());
+				search = true;
+			}
+			if (numeSubgrupa != null) {
+				subgrupa = SubgrupaService.getSubgrupaByNume(numeSubgrupa);
+				if (searchString.length() > 19)
+					searchString += " AND ";
+				searchString += ("subgrupa.id = " + subgrupa.getId());
+				search = true;
+			}
+			
+			if (search)
+				context.loadStudentListInTable(StudentService.runSearchQuery(searchString));
 			
 			break;
 		case "profesorModel":
 			String numeProfesor = profesorCtrlPanel.getNumeProfesor();
 			
-			if (numeProfesor != "")
-				ProfesorService.addProfesor(numeProfesor);
-			else
-				System.out.println("Could not add profesor to database. Found invalid field.");
+			searchString = "from Profesor where ";
+			
+			if (!numeProfesor.isEmpty()) {
+				searchString += ("upper(nume) like upper('%" + numeProfesor + "%')");
+				search = true;
+			}
+			
+			if (search)
+				context.loadProfesorListInTable(ProfesorService.runSearchQuery(searchString));
 			
 			break;
 		case "disciplinaModel":
@@ -416,11 +443,52 @@ public class AdminPanel extends JPanel {
 			int oreProiect = disciplinaCtrlPanel.getOreProiect();
 			String numeScurt = disciplinaCtrlPanel.getNumeScurt();
 			
-			if (denumire != "" || numeScurt != "" || an > 1 || oreCurs >= 0 || oreLab >= 0 || oreSeminar >= 0 || oreProiect >= 0)
-				DisciplinaService.addDisciplina(denumire, an, oreCurs, oreLab, oreSeminar, oreProiect, numeScurt);
-			else
-				System.out.println("Could not add disciplina to database. Found invalid field.");
+			searchString = "from Disciplina where ";
 			
+			if (!denumire.isEmpty()) {
+				searchString += ("upper(denumire) like upper('%" + denumire + "%')");
+				search = true;
+			}
+			if (an != -1) {
+				if (searchString.length() > 22)
+					searchString += " AND ";
+				searchString += ("an = " + an);
+				search = true;
+			}
+			if (oreCurs != -1) {
+				if (searchString.length() > 22)
+					searchString += " AND ";
+				searchString += ("orecurs = " + oreCurs);
+				search = true;
+			}
+			if (oreLab != -1) {
+				if (searchString.length() > 22)
+					searchString += " AND ";
+				searchString += ("orelab = " + oreLab);
+				search = true;
+			}
+			if (oreSeminar != -1) {
+				if (searchString.length() > 22)
+					searchString += " AND ";
+				searchString += ("oreseminar = " + oreSeminar);
+				search = true;
+			}
+			if (oreProiect != -1) {
+				if (searchString.length() > 22)
+					searchString += " AND ";
+				searchString += ("oreproiect = " + oreProiect);
+				search = true;
+			}
+			if (!numeScurt.isEmpty()) {
+				if (searchString.length() > 22)
+					searchString += " AND ";
+				searchString += ("upper(numeScurt) like upper('%" + numeScurt + "%')");
+				search = true;
+			}
+			
+			if (search)
+				context.loadDisciplinaListInTable(DisciplinaService.runSearchQuery(searchString));
+
 			break;
 		case "modulModel":
 			Disciplina disciplina = sitDidacticaCtrlPanel.getSelectedDisciplina();
@@ -429,14 +497,41 @@ public class AdminPanel extends JPanel {
 			String participanti = sitDidacticaCtrlPanel.getSelectedParticipanti();
 			int interval = sitDidacticaCtrlPanel.getSelectedInterval();
 			
-			if (disciplina != null || profesor != null || activitate != null || participanti != null || interval != -1)
-				ModulService.addModul(disciplina, profesor, activitate, participanti, interval);
-			else
-				System.out.println("Could not add modul to database. Found invalid field.");
+			searchString = "from Modul where ";
+			
+			if (disciplina != null) {
+				searchString += ("disciplina.id = " + disciplina.getId());
+				search = true;
+			}
+			if (profesor != null) {
+				if (searchString.length() > 17)
+					searchString += " AND ";
+				searchString += ("profesor.id = " + profesor.getId());
+			}
+			if (activitate != null) {
+				if (searchString.length() > 17)
+					searchString += " AND ";
+				searchString += ("upper(activitate) like upper('%" + activitate + "%')");
+				search = true;
+			}
+			if (participanti != null) {
+				if (searchString.length() > 17)
+					searchString += " AND ";
+				searchString += ("upper(participanti) like upper('%" + participanti + "%')");
+				search = true;
+			}
+			if (interval != -1) {
+				if (searchString.length() > 17)
+					searchString += " AND ";
+				searchString += ("interval = " + interval);
+				search = true;
+			}
+			
+			if (search)
+				context.loadModulListInTable(ModulService.runSearchQuery(searchString));
 			
 			break;
 		}
-		*/
 	}
 	
 	private void actiuneModificare() {

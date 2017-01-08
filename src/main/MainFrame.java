@@ -3,26 +3,25 @@ import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.GridLayout;
 import java.awt.LayoutManager;
-
 import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-
 import gui_system.AdminPanel;
 import gui_system.LoginPanel;
 import gui_system.MainPanel;
 import gui_system.ModalFrame;
 import gui_system.MyProgressBar;
 import gui_system.ResetWeeksPanel;
-
 import java.awt.event.ActionListener;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.awt.event.ActionEvent;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-
 import Services.PrezentaService;
-
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
@@ -44,14 +43,18 @@ public class MainFrame extends JFrame {
 	private gui_system.AdminPanel adminPanel;
 	
 	JMenuBar menuBar;
-	JMenu mnFile, mnUnelte, mnGenerareRaport;
+	JMenu mnFile, mnUnelte, mnGenerareRaport,
+	mnRaportStudenti;
 	JMenuItem mntmDelogare, mntmExit, 
 	mntmAdministrare, mntmGestionareModule,
-	mntmRaportStudenti, mntmRaportGrupe, mntmTest;
+	mntmRaportGrupe, mntmAn;
 	private JMenu renewDateMnt;
 	private JMenuItem mntmImport_1;
 	private JMenuItem mntmDataInceperii;
 	private JMenuItem mntmGenerarePrezen;
+	private JMenuItem mntmRaportDisciplina;
+	private JMenuItem mntmRaportToateDisciplinele;
+
 	/**
 	 * Launch the application.
 	 */
@@ -215,18 +218,52 @@ public class MainFrame extends JFrame {
 		mnGenerareRaport.setMnemonic('R');
 		mnUnelte.add(mnGenerareRaport);
 		
-		mntmRaportStudenti = new JMenuItem("Studenti");
-		mnGenerareRaport.add(mntmRaportStudenti);
+		mnRaportStudenti = new JMenu("Studenti");
+		mnGenerareRaport.add(mnRaportStudenti);
+		
+		mntmRaportDisciplina = new JMenuItem("O Disciplina");
+		mnRaportStudenti.add(mntmRaportDisciplina);
+		
+		mntmRaportToateDisciplinele = new JMenuItem("Toate Disciplinele");
+		mnRaportStudenti.add(mntmRaportToateDisciplinele);
 		
 		mntmRaportGrupe = new JMenuItem("Grupe");
 		mnGenerareRaport.add(mntmRaportGrupe);
 		
-		mntmTest = new JMenuItem("Test");
-		mnGenerareRaport.add(mntmTest);
+		mntmAn = new JMenuItem("An");
+		mnGenerareRaport.add(mntmAn);
 		mnUnelte.add(mntmGestionareModule);
 		
 		renewDateMnt = new JMenu("Re\u00EEnnoire date");
 		mnUnelte.add(renewDateMnt);
+		
+		mntmImport_1 = new JMenuItem("Import");
+		mntmImport_1.setHorizontalAlignment(SwingConstants.LEFT);
+		renewDateMnt.add(mntmImport_1);
+		
+		mntmImport_1.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				FileFilter filter = new FileNameExtensionFilter("XLS  file", "xls");
+				FileInputStream fis = null;
+				JFileChooser fc = new JFileChooser();
+				fc.setCurrentDirectory(new java.io.File("C:"));
+				fc.setDialogTitle("Import");			
+				fc.setFileFilter(filter);	
+				int result = fc.showOpenDialog(mntmImport_1);
+				
+			if(result == JFileChooser.APPROVE_OPTION){			
+				try {
+					fis = new FileInputStream(fc.getSelectedFile());
+					Services.ImportService.doImport(fis);
+					JOptionPane.showMessageDialog(null, "Import succesfuly done!");	
+				} catch (FileNotFoundException e1) {
+					e1.printStackTrace();
+					}			
+			}else if(result == JFileChooser.CANCEL_OPTION){
+				System.out.println("cancel");
+			}		
+		}
+	});
 		
 		mntmDataInceperii = new JMenuItem("Data \u00EEnceperii anului");
 		mntmDataInceperii.addActionListener(new ActionListener() {
@@ -236,10 +273,6 @@ public class MainFrame extends JFrame {
 		});
 		mntmDataInceperii.setHorizontalAlignment(SwingConstants.CENTER);
 		renewDateMnt.add(mntmDataInceperii);
-		
-		mntmImport_1 = new JMenuItem("Import");
-		mntmImport_1.setHorizontalAlignment(SwingConstants.LEFT);
-		renewDateMnt.add(mntmImport_1);
 		
 		mntmGenerarePrezen = new JMenuItem("Generare prezen\u021Be");
 		mntmGenerarePrezen.addActionListener(new ActionListener() {

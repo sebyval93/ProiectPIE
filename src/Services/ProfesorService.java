@@ -147,13 +147,29 @@ public final class ProfesorService {
 		return list;
 	}
 	
+	public static List<Profesor> runSearchQuery(String query) {
+		List<Profesor> list = null;
+		Session session = null;
+		try{
+			session = Singleton.getInstance().getNewSession();
+			list = session.createQuery(query).getResultList();
+			session.close();
+		}catch (Exception e) {
+            //e.printStackTrace();
+			System.out.println("Profesor not found!");
+        }finally{
+        	session.close();
+        }
+		return list;
+	}
+	
 	public static boolean deleteAllFromTable(){
 		boolean done = false;
 		Session session = null;
 			try{
 				session = Singleton.getInstance().getNewSession();
 				session.beginTransaction();
-				session.createQuery("delete from Profesor").executeUpdate();
+				session.createQuery("delete from Profesor where id <> 0").executeUpdate();
 				session.getTransaction().commit();
 				done = true;
 			}catch (Exception e) {

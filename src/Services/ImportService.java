@@ -22,6 +22,8 @@ public final class ImportService{
 			
 	
 	public static boolean doImport(FileInputStream file){
+		if(file == null)
+			return false;
 		
 		boolean done = false;
 		
@@ -36,7 +38,8 @@ public final class ImportService{
 			
 			deletePrezenta();
 			deleteModul();
-			//deleteFromProfesori();
+			deleteUtilizatori();
+			deleteFromProfesori();
 			deleteFromDiscipline();
 			deleteFromStudent();
 			deleteFromSubgrupa();
@@ -46,7 +49,8 @@ public final class ImportService{
 			addGrupa();
 			addSubgrupa();
 			addStudent();
-			//addProfesori();	
+			addProfesori();	
+			addUtilizatori();
 			addDiscipline();
 			done = true;
 			
@@ -55,17 +59,15 @@ public final class ImportService{
 		}			
 		return done;
 	}
-
 	
-	public static void addAniUniversitari(){				
+	public static void addAniUniversitari(){	
+		
 		for(int k = 1; k<=an_universitar_wk.getLastRowNum();k++){	
 			HSSFRow row1 = an_universitar_wk.getRow(k);
-			HSSFCell cellA1 = row1.getCell((short) 1);	
+			HSSFCell cellA1 = row1.getCell((short) 0);			
 			int an_universitar = (int) cellA1.getNumericCellValue();
-						
-			AnUniversitarService.addAn(an_universitar);
-		}
-		
+			AnUniversitarService.addAn(an_universitar);	
+		}		
 	}
 	
 	public static void addProfesori(){
@@ -74,7 +76,7 @@ public final class ImportService{
 		for(int j = 1; j<=profesori_wk.getLastRowNum(); j++){
 			
 			HSSFRow row1 = profesori_wk.getRow(j);
-			HSSFCell cellA1 = row1.getCell((short) 1);	
+			HSSFCell cellA1 = row1.getCell((short) 0);	
 			String nume_profesor = cellA1.getStringCellValue();
 						
 		ProfesorService.addProfesor(nume_profesor);
@@ -87,32 +89,31 @@ public final class ImportService{
 		for(int i = 1; i<=discipline_wk.getLastRowNum(); i++){
 			HSSFRow row1 = discipline_wk.getRow(i);
 			
-			HSSFCell cellA1 = row1.getCell((short) 1);	
+			HSSFCell cellA1 = row1.getCell((short) 0);	
 			String disciplina = cellA1.getStringCellValue();
 			
-			HSSFCell cellB1 = row1.getCell((short) 2);
+			HSSFCell cellB1 = row1.getCell((short) 1);
 			String nume_scurt =  cellB1.getStringCellValue();
 			
-			HSSFCell cellC1 = row1.getCell((short) 3);
+			HSSFCell cellC1 = row1.getCell((short) 2);
 			int an_studiu =  (int) cellC1.getNumericCellValue();
+
+			HSSFCell cellD1 = row1.getCell((short) 3);
+			int id_semestru =   (int) cellD1.getNumericCellValue();
 			
-			HSSFCell cellD1 = row1.getCell((short) 4);
-			int id_semestru =  (int) cellD1.getNumericCellValue();
-			
-			HSSFCell cellE1 = row1.getCell((short) 5);
+			HSSFCell cellE1 = row1.getCell((short) 4);
 			int curs =  (int) cellE1.getNumericCellValue();
 			
-			HSSFCell cellF1 = row1.getCell((short) 6);
+			HSSFCell cellF1 = row1.getCell((short) 5);
 			int seminar =  (int) cellF1.getNumericCellValue();
 					
-		    HSSFCell cellG1 = row1.getCell((short) 7);
-		    int laborator =  (int) cellG1.getNumericCellValue();	
+		    HSSFCell cellG1 = row1.getCell((short) 6);
+		    int laborator =  (int) cellG1.getNumericCellValue();
 		    
-		    HSSFCell cellH1 = row1.getCell((short) 8);
+		    HSSFCell cellH1 = row1.getCell((short) 7);
 		    int proiect =  (int) cellH1.getNumericCellValue();
 		    
 		    DisciplinaService.addDisciplina(disciplina,SemestruService.getSemestruByID(id_semestru),an_studiu, curs, laborator, seminar, proiect, nume_scurt);
-		
 	}
 	
 		}
@@ -122,10 +123,10 @@ public final class ImportService{
 			
 			HSSFRow row1 = grupa_wk.getRow(l);
 			
-			HSSFCell cellA1 = row1.getCell((short) 1);	
+			HSSFCell cellA1 = row1.getCell((short) 0);	
 			String nume_grupa = cellA1.getStringCellValue();
 			
-			HSSFCell cellB1 = row1.getCell((short) 2);
+			HSSFCell cellB1 = row1.getCell((short) 1);
 			int an_studiu =  (int) cellB1.getNumericCellValue();
 			GrupaService.addGrupa(AnUniversitarService.getAnByID(an_studiu), nume_grupa);		
 			
@@ -137,10 +138,10 @@ public final class ImportService{
 			
 			HSSFRow row1 = subgrupa_wk.getRow(m);
 			
-			HSSFCell cellA1 = row1.getCell((short) 1);	
+			HSSFCell cellA1 = row1.getCell((short) 0);	
 			String nume_grupa = cellA1.getStringCellValue();
 			
-			HSSFCell cellB1 = row1.getCell((short) 2);	
+			HSSFCell cellB1 = row1.getCell((short) 1);	
 			int id_grupa = (int) cellB1.getNumericCellValue();
 			
 			SubgrupaService.addSubgrupa(GrupaService.getGrupaByID(id_grupa), nume_grupa);
@@ -152,15 +153,19 @@ public final class ImportService{
 		HSSFRow row1 = student_wk.getRow(n);
 		
 		
-		HSSFCell cellA1 = row1.getCell((short) 1);	
+		HSSFCell cellA1 = row1.getCell((short) 0);	
 		String nume_student = cellA1.getStringCellValue();
 		
-		HSSFCell cellB1 = row1.getCell((short) 2);	
+		HSSFCell cellB1 = row1.getCell((short) 1);	
 		int id_subgrupa = (int) cellB1.getNumericCellValue();
 		
 		StudentService.addStudent(SubgrupaService.getSubgrupaByID(id_subgrupa), nume_student);
 		
 		}
+	}
+	
+	public static void addUtilizatori(){
+			UtilizatorService.generateAccounts();
 	}
 		
 	public static void deleteFromStudent(){
@@ -202,6 +207,11 @@ public final class ImportService{
 	public static void deletePrezenta(){
 		Utils.Functions.resetSequence("PREZENTA_SEQ");
 		PrezentaService.deleteAllFromTable();
+	}
+	
+	public static void deleteUtilizatori(){
+		Utils.Functions.resetSequence("UTILIZATOR_SEQ");
+		UtilizatorService.deleteAllFromUtilizator();
 	}
 	
 }

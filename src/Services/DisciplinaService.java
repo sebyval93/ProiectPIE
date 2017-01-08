@@ -170,6 +170,22 @@ public final class DisciplinaService {
         }
 		return list;
 	}
+	
+	public static List<Disciplina> runSearchQuery(String query) {
+		List<Disciplina> list = null;
+		Session session = null;
+		try{
+			session = Singleton.getInstance().getNewSession();
+			list = session.createQuery(query).getResultList();
+			session.close();
+		}catch (Exception e) {
+            //e.printStackTrace();
+			System.out.println("Disciplina not found!");
+        }finally{
+        	session.close();
+        }
+		return list;
+	}
 
 	public static boolean deleteAllFromTable(){
 		boolean done = false;
