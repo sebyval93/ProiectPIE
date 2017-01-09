@@ -401,7 +401,7 @@ public class AdminPanel extends JPanel {
 			searchString = "from Profesor where ";
 			
 			if (!numeProfesor.isEmpty()) {
-				searchString += ("upper(nume) like upper('%" + numeProfesor + "%')");
+				searchString += ("upper(nume) like upper('%" + numeProfesor + "%') AND upper(nume) not like 'ADMIN'");
 				search = true;
 			}
 			
