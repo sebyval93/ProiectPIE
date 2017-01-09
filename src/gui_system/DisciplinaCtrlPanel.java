@@ -216,6 +216,7 @@ public class DisciplinaCtrlPanel extends JPanel {
 	public void resetFields() {
 		txtDenumire.setText("");
 		txtAn.setText("");
+		txtSemestru.setText("");
 		txtOreCurs.setText("");
 		txtOreLaborator.setText("");
 		txtOreSeminar.setText("");
