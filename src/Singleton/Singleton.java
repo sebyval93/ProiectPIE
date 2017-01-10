@@ -28,6 +28,7 @@ public class Singleton {
 	public Utilizator currentUser = null;
 	public Profesor currentProfesor = null;
 	public Week currentWeek = null;
+	public Saptamana currentWeekStatic;
 	
 	
 	
@@ -74,6 +75,7 @@ public class Singleton {
 	
 	public void getCurrentWeek(){
 		currentWeek = new Week(SaptamanaService.getCurrentWeek());
+		currentWeekStatic = currentWeek.getSaptamana();
 	}
 	
 	public void setCurrentWeek(Week week) {

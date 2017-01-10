@@ -33,15 +33,14 @@ public class TestConnection {
 
 	public static void main(String[] args) throws FileNotFoundException{
 
-			
-		PrezentaService.resetPrezentaSeq();
-		Modul modul = ModulService.getModulByID(24);
-		Saptamana sapt = SaptamanaService.getSaptamanaByID(1);
-		Student s = StudentService.getStudentByID(22);
-		System.out.println(PrezentaService.addPrezenta(modul, sapt, s, 0));
-			
-			
 		
+		
+		Modul modul = ModulService.getModulByID(18);
+		Saptamana sapt = SaptamanaService.getSaptamanaByID(1);
+		
+		List<Prezenta> list = PrezentaService.getRecordsForModuleAndWeek(modul,sapt);	
+			
+
 	}
 	
 }

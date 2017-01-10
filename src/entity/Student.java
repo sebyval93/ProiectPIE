@@ -26,7 +26,7 @@ public class Student implements java.io.Serializable {
 	@Column(name = "ID", unique = true, nullable = false, precision = 22, scale = 0)
 	private BigDecimal id;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "ID_SUBGRUPA", nullable = false)
 	private Subgrupa subgrupa;
 	

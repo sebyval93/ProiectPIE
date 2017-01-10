@@ -17,6 +17,7 @@ import javax.persistence.Table;
 @Table(name = "PREZENTA")
 public class Prezenta implements java.io.Serializable {
 
+	
 	@Id
 	@SequenceGenerator(name = "prezseq", sequenceName = "PREZENTA_SEQ",allocationSize = 5000)
 	@GeneratedValue(generator = "prezseq", strategy = GenerationType.SEQUENCE)
@@ -32,7 +33,7 @@ public class Prezenta implements java.io.Serializable {
 	@JoinColumn(name = "ID_SAPTAMANA", nullable = false)
 	private Saptamana saptamana;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "ID_STUDENT", nullable = false)
 	private Student student;
 	
@@ -105,5 +106,12 @@ public class Prezenta implements java.io.Serializable {
 	public void setPrezent(BigDecimal prezent) {
 		this.prezent = prezent;
 	}
+	
+	@Override
+	public String toString() {
+		return "Prezenta [id=" + id + ", modul=" + modul.getDisciplina().getDenumire() + ", saptamana=" + saptamana.getDenumire() + ", student=" 
+				+ student.getNume() + ", prezent=" + prezent + "]";
+	}
+
 
 }

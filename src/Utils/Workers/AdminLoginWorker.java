@@ -1,4 +1,4 @@
-package Utils;
+package Utils.Workers;
 
 import javax.swing.SwingWorker;
 
@@ -8,7 +8,7 @@ import Services.StudentService;
 import Services.UtilizatorService;
 import Singleton.Singleton;
 
-public class LoadListWorker extends SwingWorker<String, Void> {
+public class AdminLoginWorker extends SwingWorker<String, Void> {
 
     @Override
     protected String doInBackground() throws Exception {

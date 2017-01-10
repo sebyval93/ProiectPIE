@@ -1,46 +1,57 @@
 package gui_system;
 
-import java.util.Iterator;
+import java.math.BigDecimal;
 import java.util.List;
 
 import javax.swing.JLabel;
 import javax.swing.JTable;
+import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 import Services.ModulService;
-import Services.StudentService;
+import Services.PrezentaService;
 import Singleton.Singleton;
+import Utils.RecordTableModel;
 import Utils.Week;
 import entity.Modul;
-import entity.Profesor;
+import entity.Prezenta;
+import entity.Saptamana;
 import entity.Student;
 
 public class ModelContext {
-	
-	private DefaultTableModel moduleModel, studentiModel, currentModel;
-	private enum ContextType { MODULE, STUDENTI };
+	private AbstractTableModel currentModel;
+	private DefaultTableModel moduleModel;
+	private RecordTableModel studentiModel;
 	private JTable table;
 	private DefaultTableCellRenderer centerCellRenderer;
 	
 	String moduleColumns[] = { "Nume Disciplina", "Activitate", "An Disciplina", "Numar Saptamana", "Participanti" };
-	String studentiColumns[] = { "Nume Student", "Prezenta" };
-	
-	//                        0        1
+	private Saptamana week;
+	private Modul modul;
+	List<Prezenta> list;
+	public Modul getModul() {
+		return modul;
+	}
+
+	public void setModul(Modul modul) {
+		this.modul = modul;
+	}
+
+	//                          0        1
 	//private enum TipGrupa { SUBGRUPA, GRUPA };
-	//                        0        1
+	//                          0        1
 	//private enum Prezenta { ABSENT, PREZENT };
-	//                         0      1       2
-	//private enum Saptamana { IMPARA, PARA, INTEGRAL };
-	//                         0       1         2         3
+	//                          0        1       
+	//private enum Saptamana { INTEGRAL, IMPAR, PAR };
+	//                          0        1       2         
+	
 	private enum Activitate { CURS, SEMINAR, LABORATOR, PROIECT };	
 	
 	public ModelContext(JTable table) {
 		this.table = table;
 		setupTableModels();
-		//currentModel = moduleModel;
-		//loadModuleFromDB();
-		//loadModuleModel();
+
 	}
 	
 	public void switchToStudenti(Object selectedRowData[]) {
@@ -52,14 +63,12 @@ public class ModelContext {
 	public void switchToModule(Week week) {
 		currentModel = moduleModel;
 		loadModuleModel();
-		//loadModuleFromDB();
 		loadModulesForWeek(week);
 	}
 	
 	private void loadModuleModel() {
 
 		table.setModel(moduleModel);
-		
 		for (int i = 0; i < table.getColumnCount(); ++i) {
 			table.getColumnModel().getColumn(i).setCellRenderer(centerCellRenderer);
 		}
@@ -68,7 +77,6 @@ public class ModelContext {
 	}
 	
 	private void loadStudentiModel() {
-
 		table.setModel(studentiModel);
 		
 		for (int i = 0; i < table.getColumnCount() - 1; ++i) {
@@ -78,32 +86,14 @@ public class ModelContext {
 	}
 	
 	private void loadModuleFromDB() {
-		// toate modulele din saptamana curenta ale profesorului logat.
-		// cautare in baza de date pentru toate modulele la care preda userul
-		//   logat, din saptamana curenta.
-		
-		//loadModuleForUser();
 		loadModulesForWeek(Singleton.getInstance().currentWeek);
 	}
 	
 	private void loadStudentiFromDB(Object selectedRowData[]) {
-		// toti studentii care fac parte din (sub)grupa care participa la un modul.
-		// din selectedRowData luam informatia despre (sub)grupe, si in functie de ea afisam studentii
-		
-		for (int i = 0; i < selectedRowData.length; ++i) {
-			System.out.print(selectedRowData[i] + " ");
-		}
-		System.out.println();
-		
-		if (studentiModel.getRowCount() > 0) {
-			studentiModel.setRowCount(0);
-		}
-		
-		List<Student> studenti = StudentService.getStudentiFromParticipant((String) selectedRowData[4]);
-        studenti.stream().forEach((aux) -> {
-        	studentiModel.addRow(new Object[]{aux.getNume(), false});
-        });
-		
+		studentiModel = new RecordTableModel();
+		currentModel = studentiModel;
+		list = PrezentaService.getRecordsForModuleAndWeek(modul, week);
+		studentiModel.addRows(list);
 	}
 	
 	private void setupTableModels() {
@@ -121,30 +111,19 @@ public class ModelContext {
 			moduleModel.addColumn(moduleColumns[i]);
 		}
 		
-		studentiModel = new DefaultTableModel() {
-		      public boolean isCellEditable(int row, int column){  
-		    	  if (column == 1)
-		    		  return true;
-		    	  
-		          return false;
-		      }
-		      
-	            public Class getColumnClass(int column) {
-	            	switch (column) {
-	                   case 0:
-	                       return String.class;
-	                   default:
-	                       return Boolean.class;
-	               }
-	           };
-		};
+		studentiModel = new RecordTableModel();
 		
-		for (int i = 0; i < studentiColumns.length; ++i) {
-			studentiModel.addColumn(studentiColumns[i]);
-		}
 	}
 	
-	public DefaultTableModel getCurrentModel() {
+	public boolean addRecordsForStudents(){
+		
+		boolean done = PrezentaService.updateListOfRecords(list);
+		modul.setOperat(new BigDecimal(1));
+		ModulService.updateModul(modul);
+		return done;
+	}
+	
+	public AbstractTableModel getCurrentModel() {
 		return currentModel;
 	}
 	
@@ -163,67 +142,85 @@ public class ModelContext {
 	}
 	
 	public void loadModulesForWeek(Week week) {
-
-		Iterator<Modul> iter = Singleton.getInstance().ListOfTeacherModules.iterator();
-	
-		/*
-		while (iter.hasNext()) {
-			Modul modul = iter.next();
-			switch(modul.getInterval().intValue()) {
-			case 1:
-				//Impar
+		this.week = week.getSaptamana();
+		moduleModel.setRowCount(0);
+		
+		if(week.getSaptamana().getId().intValue() != Singleton.getInstance().currentWeekStatic.getId().intValue()){
+			if(week.getSaptamana().getId().intValue() % 2 == 0){	//sapt para
 				
-				if (week.getSaptamanaNumber() % 2 != 1){
-					System.out.println(week.getSaptamanaNumber());
-					iter.remove();
-				}
-				break;
+				Singleton.getInstance().ListOfTeacherModules.stream()
+						.filter(e -> (e.getInterval().intValue()  == 0 || e.getInterval().intValue() == 2) 
+								&& e.getDisciplina().getSemestru().getId().intValue() == week.getSaptamana().getSemestru().getId().intValue())
+						.forEach((aux) -> {
+							moduleModel.addRow(new Object[]{aux.getDisciplina().getDenumire(),aux.getActivitate(),aux.getDisciplina().getAn(),
+		            		week.getSaptamanaNumber(),aux.getParticipanti()});
+		        });
 				
-			case 2:
-				//Par
-				
-				if (week.getSaptamanaNumber() % 2 != 0){
-					System.out.println(week.getSaptamanaNumber());
-					iter.remove();
-				}
-				break;
-				
+			}else{													//sapt impara
+				Singleton.getInstance().ListOfTeacherModules.stream()
+						.filter(e -> (e.getInterval().intValue()  == 0 ||  e.getInterval().intValue() == 1) 
+								&& e.getDisciplina().getSemestru().getId().intValue() == week.getSaptamana().getSemestru().getId().intValue() )
+						.forEach((aux) -> {
+							moduleModel.addRow(new Object[]{aux.getDisciplina().getDenumire(),aux.getActivitate(),aux.getDisciplina().getAn(),
+		            		week.getSaptamanaNumber(),aux.getParticipanti()});
+		        });
 			}
+			return;
+		}else{						
+			if(week.getSaptamana().getId().intValue() % 2 == 0){	//sapt para
+							
+							Singleton.getInstance().ListOfTeacherModules.stream()
+									.filter(e -> (e.getInterval().intValue()  == 0 || e.getInterval().intValue() == 2) 
+											&& e.getDisciplina().getSemestru().getId().intValue() == week.getSaptamana().getSemestru().getId().intValue()
+											&& e.getOperat().intValue() != 1)
+									.forEach((aux) -> {
+										moduleModel.addRow(new Object[]{aux.getDisciplina().getDenumire(),aux.getActivitate(),aux.getDisciplina().getAn(),
+					            		week.getSaptamanaNumber(),aux.getParticipanti()});
+					        });
+							
+						}else{													//sapt impara
+							Singleton.getInstance().ListOfTeacherModules.stream()
+									.filter(e -> (e.getInterval().intValue()  == 0 ||  e.getInterval().intValue() == 1) 
+											&& e.getDisciplina().getSemestru().getId().intValue() == week.getSaptamana().getSemestru().getId().intValue() 
+											&& e.getOperat().intValue() != 1)
+									.forEach((aux) -> {
+										moduleModel.addRow(new Object[]{aux.getDisciplina().getDenumire(),aux.getActivitate(),aux.getDisciplina().getAn(),
+					            		week.getSaptamanaNumber(),aux.getParticipanti()});
+					        });
 			
-			
-		}
-		
-		moduleModel.setRowCount(0);
-		module.stream().forEach((aux) -> {
-            moduleModel.addRow(new Object[]{aux.getDisciplina().getDenumire(),aux.getActivitate(),aux.getDisciplina().getAn(),
-            		week.getSaptamanaNumber(),aux.getParticipanti()});
-        });
-        */
-		
-		//if (module == null || module.size() == 0) {
-		//	return;
-		//}
-		moduleModel.setRowCount(0);
-		if(week.getSaptamana().getId().intValue() % 2 == 0){	//sapt para
-			
-			Singleton.getInstance().ListOfTeacherModules.stream()
-					.filter(e -> (e.getInterval().intValue()  == 0 || e.getInterval().intValue() == 2) 
-							&& e.getDisciplina().getSemestru().getId().intValue() == week.getSaptamana().getSemestru().getId().intValue())
-					.forEach((aux) -> {
-						moduleModel.addRow(new Object[]{aux.getDisciplina().getDenumire(),aux.getActivitate(),aux.getDisciplina().getAn(),
-	            		week.getSaptamanaNumber(),aux.getParticipanti()});
-	        });
-			
-		}else{													//sapt impara
-			Singleton.getInstance().ListOfTeacherModules.stream()
-					.filter(e -> (e.getInterval().intValue()  == 0 ||  e.getInterval().intValue() == 1) 
-							&& e.getDisciplina().getSemestru().getId().intValue() == week.getSaptamana().getSemestru().getId().intValue() )
-					.forEach((aux) -> {
-						moduleModel.addRow(new Object[]{aux.getDisciplina().getDenumire(),aux.getActivitate(),aux.getDisciplina().getAn(),
-	            		week.getSaptamanaNumber(),aux.getParticipanti()});
-	        });
-		}
-		
+						}
+
+			}
+	
 	}
 	
+	public void loadAllModulesForActualWeek(Week week){
+		
+		if(week.getSaptamana().getId().intValue() == Singleton.getInstance().currentWeekStatic.getId().intValue()){
+			moduleModel.setRowCount(0);
+			if(week.getSaptamana().getId().intValue() % 2 == 0){	//sapt para
+				
+				Singleton.getInstance().ListOfTeacherModules.stream()
+						.filter(e -> (e.getInterval().intValue()  == 0 || e.getInterval().intValue() == 2) 
+								&& e.getDisciplina().getSemestru().getId().intValue() == week.getSaptamana().getSemestru().getId().intValue())
+						.forEach((aux) -> {
+							moduleModel.addRow(new Object[]{aux.getDisciplina().getDenumire(),aux.getActivitate(),aux.getDisciplina().getAn(),
+		            		week.getSaptamanaNumber(),aux.getParticipanti()});
+		        });
+				
+			}else{													//sapt impara
+				Singleton.getInstance().ListOfTeacherModules.stream()
+						.filter(e -> (e.getInterval().intValue()  == 0 ||  e.getInterval().intValue() == 1) 
+								&& e.getDisciplina().getSemestru().getId().intValue() == week.getSaptamana().getSemestru().getId().intValue())
+						.forEach((aux) -> {
+							moduleModel.addRow(new Object[]{aux.getDisciplina().getDenumire(),aux.getActivitate(),aux.getDisciplina().getAn(),
+		            		week.getSaptamanaNumber(),aux.getParticipanti()});
+		        });
+
+			}
+
+		}
+			
+	}
 }
+
