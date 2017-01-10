@@ -18,6 +18,7 @@ import entity.Subgrupa;
 import javax.swing.JRadioButton;
 
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.ButtonGroup;
@@ -153,31 +154,44 @@ public class SitDidacticaCtrlPanel extends JPanel {
 		allFromDisciplina = DisciplinaService.getAllFromDisciciplina();
 		allFromProfesor = ProfesorService.getAllFromProfesor();
 		
+		Iterator profIterator = allFromProfesor.iterator();
+		while(profIterator.hasNext()) {
+			Profesor prof = (Profesor)profIterator.next();
+			if (prof.getNume().equals("admin"))
+				profIterator.remove();
+		}
+		
 		allFromProfesor.remove("admin");
 		
 		cbDisciplina.removeAllItems();
+		cbDisciplina.addItem("");
 		for (Object disciplina : allFromDisciplina.toArray())
 			cbDisciplina.addItem(((Disciplina) disciplina).getDenumire().toString());
 		
 		cbProfesor.removeAllItems();
+		cbProfesor.addItem("");
 		for (Object profesor : allFromProfesor.toArray())
 			cbProfesor.addItem(((Profesor) profesor).getNume().toString());
 		
 		cbActivitate.removeAllItems();
+		cbActivitate.addItem("");
 		for (Object activitate : activitati.toArray())
 			cbActivitate.addItem(activitate.toString());
 		
 		cbInterval.removeAllItems();
+		cbInterval.addItem("");
 		for (Object interval : interval.toArray())
 			cbInterval.addItem(interval.toString());
 		
 		if (radioGrupa.isSelected()) {
 			cbParticipanti.removeAllItems();
+			cbParticipanti.addItem("");
 			for (Object grupa : allFromGrupa.toArray())
 				cbParticipanti.addItem(grupa.toString());
 		}
 		else if (radioSubgrupa.isSelected()) {
 			cbParticipanti.removeAllItems();
+			cbParticipanti.addItem("");
 			for (Object subgrupa : allFromSubgrupa.toArray())
 				cbParticipanti.addItem(subgrupa.toString());
 		}
@@ -188,6 +202,7 @@ public class SitDidacticaCtrlPanel extends JPanel {
 	public void loadGrupa() {
 		if (allFromGrupa != null) {
 			cbParticipanti.removeAllItems();
+			cbParticipanti.addItem("");
 			for (Object grupa : allFromGrupa.toArray())
 				cbParticipanti.addItem(grupa.toString());
 			cbParticipanti.setSelectedIndex(-1);
@@ -197,6 +212,7 @@ public class SitDidacticaCtrlPanel extends JPanel {
 	public void loadSubgrupa() {
 		if (allFromSubgrupa != null) {
 			cbParticipanti.removeAllItems();
+			cbParticipanti.addItem("");
 			for (Object subgrupa : allFromSubgrupa.toArray())
 				cbParticipanti.addItem(subgrupa.toString());
 			cbParticipanti.setSelectedIndex(-1);

@@ -2,6 +2,9 @@ package gui_system;
 
 import javax.swing.JPanel;
 import javax.swing.JLabel;
+
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.util.List;
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
@@ -47,6 +50,35 @@ public class StudentCtrlPanel extends JPanel {
 		cbGrupa.setBounds(326, 0, 102, 20);
 		panel.add(cbGrupa);
 		
+		cbGrupa.addItemListener(new ItemListener() {
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				//JComboBox<String> cb = (JComboBox)e.getSource();
+				
+				if (e.getStateChange() == ItemEvent.SELECTED) {
+					if (cbGrupa.getSelectedIndex() == -1 || cbGrupa.getSelectedIndex() == 0) {
+						cbSubgrupa.removeAllItems();
+						
+						cbSubgrupa.addItem("");
+						for (Object subgrupa : allFromSubgrupa.toArray())
+							cbSubgrupa.addItem(subgrupa.toString());
+						
+						cbSubgrupa.setSelectedIndex(-1);
+						return;
+					}
+					cbSubgrupa.removeAllItems();
+					List<Subgrupa> list = SubgrupaService.getAllSubGrupeByGrupa(GrupaService.getGrupaByNume((String)e.getItem()));
+					cbSubgrupa.addItem("");
+					for (Subgrupa sg : list) {
+						cbSubgrupa.addItem(sg.getNume());
+					}
+					cbSubgrupa.setSelectedIndex(-1);
+				}
+				
+			}
+			
+		});
+		
 		JLabel lblSubgrupa = new JLabel("Subgrupa:");
 		lblSubgrupa.setBounds(438, 3, 55, 14);
 		panel.add(lblSubgrupa);
@@ -65,6 +97,8 @@ public class StudentCtrlPanel extends JPanel {
 		//loadAllFromGrupa();
 		//init combo boxes with info from db.
 		//all of them.
+		cbGrupa.addItem("");
+		cbSubgrupa.addItem("");
 		
 		for (Object grupa : allFromGrupa.toArray())
 			cbGrupa.addItem(grupa.toString());

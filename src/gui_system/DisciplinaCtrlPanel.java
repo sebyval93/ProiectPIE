@@ -13,9 +13,9 @@ import javax.swing.SwingConstants;
 public class DisciplinaCtrlPanel extends JPanel {
 	private JTextField txtDenumire, txtNumeScurt, 
 		txtAn, txtOreCurs, txtOreLaborator, txtOreSeminar, 
-		txtOreProiect;
+		txtOreProiect, txtSemestru;
 	
-	private IntFilter oreFilter, anFilter;
+	private IntFilter oreFilter, anFilter, semestruFilter;
 
 	/**
 	 * Create the panel.
@@ -27,9 +27,11 @@ public class DisciplinaCtrlPanel extends JPanel {
 		
 		oreFilter = new IntFilter();
 		anFilter = new IntFilter();
+		semestruFilter = new IntFilter();
 		
 		oreFilter.setMaxLength(3);
 		anFilter.setMaxLength(1);
+		semestruFilter.setMaxLength(1);
 		
 		JPanel panel = new JPanel();
 		panel.setBounds(44, 31, 646, 56);
@@ -77,21 +79,21 @@ public class DisciplinaCtrlPanel extends JPanel {
 		txtOreCurs.setColumns(10);
 		
 		JLabel lblOreLaborator = new JLabel("Ore laborator:");
-		lblOreLaborator.setBounds(317, 39, 69, 14);
+		lblOreLaborator.setBounds(434, 39, 69, 14);
 		panel.add(lblOreLaborator);
 		
 		txtOreLaborator = new JTextField();
-		txtOreLaborator.setBounds(394, 36, 30, 20);
+		txtOreLaborator.setBounds(506, 36, 30, 20);
 		panel.add(txtOreLaborator);
 		txtOreLaborator.setHorizontalAlignment(SwingConstants.CENTER);
 		txtOreLaborator.setColumns(10);
 		
 		JLabel lblOreSeminar = new JLabel("Ore seminar:");
-		lblOreSeminar.setBounds(434, 39, 62, 14);
+		lblOreSeminar.setBounds(546, 39, 62, 14);
 		panel.add(lblOreSeminar);
 		
 		txtOreSeminar = new JTextField();
-		txtOreSeminar.setBounds(506, 36, 30, 20);
+		txtOreSeminar.setBounds(614, 36, 30, 20);
 		panel.add(txtOreSeminar);
 		txtOreSeminar.setHorizontalAlignment(SwingConstants.CENTER);
 		txtOreSeminar.setColumns(10);
@@ -105,6 +107,16 @@ public class DisciplinaCtrlPanel extends JPanel {
 		panel.add(txtOreProiect);
 		txtOreProiect.setHorizontalAlignment(SwingConstants.CENTER);
 		txtOreProiect.setColumns(10);
+		
+		JLabel lblSemestru = new JLabel("Semestru:");
+		lblSemestru.setBounds(317, 39, 49, 14);
+		panel.add(lblSemestru);
+		
+		txtSemestru = new JTextField();
+		txtSemestru.setHorizontalAlignment(SwingConstants.CENTER);
+		txtSemestru.setBounds(394, 36, 30, 20);
+		panel.add(txtSemestru);
+		txtSemestru.setColumns(10);
 		AbstractDocument oreProiectDoc = (AbstractDocument) txtOreProiect.getDocument();
 		AbstractDocument oreSeminarDoc = (AbstractDocument) txtOreSeminar.getDocument();
 		AbstractDocument oreLaboratorDoc = (AbstractDocument) txtOreLaborator.getDocument();
@@ -112,7 +124,9 @@ public class DisciplinaCtrlPanel extends JPanel {
 		AbstractDocument oreCursDoc = (AbstractDocument) txtOreCurs.getDocument();
 		
 		AbstractDocument anDoc = (AbstractDocument) txtAn.getDocument();
+		AbstractDocument semestruDoc = (AbstractDocument) txtSemestru.getDocument();
 		anDoc.setDocumentFilter(anFilter);
+		semestruDoc.setDocumentFilter(semestruFilter);
 		oreCursDoc.setDocumentFilter(oreFilter);
 		oreSeminarDoc.setDocumentFilter(oreFilter);
 		oreLaboratorDoc.setDocumentFilter(oreFilter);
@@ -120,10 +134,11 @@ public class DisciplinaCtrlPanel extends JPanel {
 
 	}
 	
-	public void setFields(String denumire, String an, String oreCurs, String oreLaborator, 
+	public void setFields(String denumire, String an, String semestru, String oreCurs, String oreLaborator, 
 			String oreSeminar, String oreProiect, String numeScurt) {
 		txtDenumire.setText(denumire);
 		txtAn.setText(String.valueOf(an));
+		txtSemestru.setText(String.valueOf(semestru));
 		txtOreCurs.setText(String.valueOf(oreCurs));
 		txtOreLaborator.setText(String.valueOf(oreLaborator));
 		txtOreSeminar.setText(String.valueOf(oreSeminar));
@@ -162,6 +177,13 @@ public class DisciplinaCtrlPanel extends JPanel {
 		else
 			return Integer.parseInt(txtAn.getText());
 	}
+	
+	public int getSemestru() {
+		if (txtSemestru.getText().isEmpty())
+			return -1;
+		else
+			return Integer.parseInt(txtSemestru.getText());
+	}
 
 	public int getOreCurs() {
 		if (txtOreCurs.getText().isEmpty())
@@ -194,12 +216,11 @@ public class DisciplinaCtrlPanel extends JPanel {
 	public void resetFields() {
 		txtDenumire.setText("");
 		txtAn.setText("");
+		txtSemestru.setText("");
 		txtOreCurs.setText("");
 		txtOreLaborator.setText("");
 		txtOreSeminar.setText("");
 		txtOreProiect.setText("");
 		txtNumeScurt.setText("");
 	}
-	
-
 }

@@ -24,6 +24,8 @@ import main.MainFrame;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.List;
+
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.border.Border;
@@ -67,8 +69,6 @@ public class AdminPanel extends JPanel {
 		selTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 		selTable.setRowHeight(40);
 		selTable.setCellSelectionEnabled(false);
-		
-		
 		
 		mainTable = new JTable(){
 			private Border outside = new MatteBorder(1, 0, 1, 0, Color.RED);
@@ -119,7 +119,7 @@ public class AdminPanel extends JPanel {
 					actiuneCautare();
 			}
 		});
-		btnCautare.setBounds(32, 326, 89, 23);
+		btnCautare.setBounds(32, 353, 89, 23);
 		add(btnCautare);
 		
 		btnAdaugare = new JButton("Adaugare");
@@ -128,7 +128,7 @@ public class AdminPanel extends JPanel {
 				actiuneAdaugare();
 			}
 		});
-		btnAdaugare.setBounds(32, 353, 89, 23);
+		btnAdaugare.setBounds(32, 326, 89, 23);
 		add(btnAdaugare);
 		this.setPreferredSize(new Dimension(900, 450));
 		
@@ -151,6 +151,8 @@ public class AdminPanel extends JPanel {
 		btnStergere.setEnabled(false);
 		btnStergere.setBounds(32, 407, 89, 23);
 		add(btnStergere);
+		
+		showAddAndRemoveButtons(false);
 		
 		mainTable.addMouseListener(new MouseAdapter() {
 			@Override
@@ -186,7 +188,8 @@ public class AdminPanel extends JPanel {
 								model.getValueAt(t.convertRowIndexToModel(row), 3).toString(), 
 								model.getValueAt(t.convertRowIndexToModel(row), 4).toString(), 
 								model.getValueAt(t.convertRowIndexToModel(row), 5).toString(), 
-								(String)model.getValueAt(t.convertRowIndexToModel(row), 6));
+								model.getValueAt(t.convertRowIndexToModel(row), 6).toString(), 
+								(String)model.getValueAt(t.convertRowIndexToModel(row), 7));
 						enableEditButtons(true);
 					}
 					else if (context.getCurrentModelName().equals("modulModel")) {
@@ -211,7 +214,8 @@ public class AdminPanel extends JPanel {
 					DefaultTableModel model = (DefaultTableModel) t.getModel();
 					Point p = me.getPoint();
 					int row = t.rowAtPoint(p);
-					enableEditButtons(false);
+					//enableEditButtons(false);
+					showAddAndRemoveButtons(false);
 					try {
 						String selectedValue = (String) model.getValueAt(row, 0);
 						if (selectedValue == "Student") {
@@ -232,6 +236,7 @@ public class AdminPanel extends JPanel {
 						else if (selectedValue == "Situatie didactica") {
 							context.switchToModulModel();
 							showSitDidacticaCtrlPanel();
+							showAddAndRemoveButtons(true);
 						}
 					} 
 					catch(Exception e) {
@@ -310,12 +315,12 @@ public class AdminPanel extends JPanel {
 		mainTable.getColumnModel().getColumn(1).setMinWidth(40);
 		mainTable.getColumnModel().getColumn(1).setMaxWidth(40);
 		
-		for (int i = 2; i < 6; ++i) {
-			mainTable.getColumnModel().getColumn(i).setMinWidth(75);
-			mainTable.getColumnModel().getColumn(i).setMaxWidth(75);
+		for (int i = 1; i < 7; ++i) {
+			mainTable.getColumnModel().getColumn(i).setMinWidth(55);
+			mainTable.getColumnModel().getColumn(i).setMaxWidth(55);
 		}
-		mainTable.getColumnModel().getColumn(6).setMinWidth(65);
-		mainTable.getColumnModel().getColumn(6).setMaxWidth(65);
+		mainTable.getColumnModel().getColumn(7).setMinWidth(65);
+		mainTable.getColumnModel().getColumn(7).setMaxWidth(65);
 	}
 	
 	private void enableEditButtons(boolean enable) {
@@ -323,50 +328,13 @@ public class AdminPanel extends JPanel {
 		btnStergere.setEnabled(enable);
 	}
 	
+	private void showAddAndRemoveButtons(boolean show) {
+		btnAdaugare.setVisible(show);
+		btnStergere.setVisible(show);
+	}
+	
 	private void actiuneAdaugare() {
-		switch(context.getCurrentModelName()) {
-		case "studentModel":
-			String numeStudent = studentiCtrlPanel.getNumeStudent();
-			String numeSubgrupa = studentiCtrlPanel.getSelectedSubgrupa();
-			Subgrupa subgrupa = SubgrupaService.getSubgrupaByNume(numeSubgrupa);
-			
-			if (numeStudent != "" || numeSubgrupa != "" || subgrupa != null) {
-				StudentService.addStudent(subgrupa, numeStudent);
-				context.resetStudentModel();
-			}
-			else
-				System.out.println("Could not add student to database. Found invalid field.");
-			
-			break;
-		case "profesorModel":
-			String numeProfesor = profesorCtrlPanel.getNumeProfesor();
-			
-			if (numeProfesor != "") {
-				ProfesorService.addProfesor(numeProfesor);
-				context.resetProfesorModel();
-			}
-			else
-				System.out.println("Could not add profesor to database. Found invalid field.");
-			
-			break;
-		case "disciplinaModel":
-			String denumire = disciplinaCtrlPanel.getDenumire();
-			int an = disciplinaCtrlPanel.getAn();
-			int oreCurs = disciplinaCtrlPanel.getOreCurs();
-			int oreLab = disciplinaCtrlPanel.getOreLaborator();
-			int oreSeminar = disciplinaCtrlPanel.getOreSeminar();
-			int oreProiect = disciplinaCtrlPanel.getOreProiect();
-			String numeScurt = disciplinaCtrlPanel.getNumeScurt();
-
-			if (denumire != "" || numeScurt != "" || an > 1 || oreCurs >= 0 || oreLab >= 0 || oreSeminar >= 0 || oreProiect >= 0) {
-				//DisciplinaService.addDisciplina(denumire, an, oreCurs, oreLab, oreSeminar, oreProiect, numeScurt);
-				context.resetDisciplinaModel();
-			}
-			else
-				System.out.println("Could not add disciplina to database. Found invalid field.");
-			
-			break;
-		case "modulModel":
+		if (context.getCurrentModelName().equals("modulModel")) {
 			Disciplina disciplina = sitDidacticaCtrlPanel.getSelectedDisciplina();
 			Profesor profesor = sitDidacticaCtrlPanel.getSelectedProfesor();
 			String activitate = sitDidacticaCtrlPanel.getSelectedActivitate();
@@ -401,14 +369,21 @@ public class AdminPanel extends JPanel {
 				searchString += ("upper(nume) like upper('%" + numeStudent + "%')");
 				search = true;
 			}
-			if (numeGrupa != null) {
+			if (numeGrupa != null && numeSubgrupa == null && numeGrupa.length() != 0) {
 				grupa = GrupaService.getGrupaByNume(numeGrupa);
+				List<Subgrupa> list = SubgrupaService.getAllSubGrupeByGrupa(grupa);
 				if (searchString.length() > 19)
 					searchString += " AND ";
-				searchString += ("grupa.id = " + grupa.getId());
+				
+				for (int i = 0; i < list.size(); ++i) {
+					searchString += ("subgrupa.id = " + list.get(i).getId());
+					if (i < list.size() - 1)
+						searchString += " OR ";
+				}
+
 				search = true;
 			}
-			if (numeSubgrupa != null) {
+			if (numeSubgrupa != null && numeSubgrupa.length() != 0) {
 				subgrupa = SubgrupaService.getSubgrupaByNume(numeSubgrupa);
 				if (searchString.length() > 19)
 					searchString += " AND ";
@@ -426,7 +401,7 @@ public class AdminPanel extends JPanel {
 			searchString = "from Profesor where ";
 			
 			if (!numeProfesor.isEmpty()) {
-				searchString += ("upper(nume) like upper('%" + numeProfesor + "%')");
+				searchString += ("upper(nume) like upper('%" + numeProfesor + "%') AND upper(nume) not like 'ADMIN'");
 				search = true;
 			}
 			
@@ -437,6 +412,7 @@ public class AdminPanel extends JPanel {
 		case "disciplinaModel":
 			String denumire = disciplinaCtrlPanel.getDenumire();
 			int an = disciplinaCtrlPanel.getAn();
+			int semestru = disciplinaCtrlPanel.getSemestru();
 			int oreCurs = disciplinaCtrlPanel.getOreCurs();
 			int oreLab = disciplinaCtrlPanel.getOreLaborator();
 			int oreSeminar = disciplinaCtrlPanel.getOreSeminar();
@@ -453,6 +429,12 @@ public class AdminPanel extends JPanel {
 				if (searchString.length() > 22)
 					searchString += " AND ";
 				searchString += ("an = " + an);
+				search = true;
+			}
+			if (semestru != -1) {
+				if (searchString.length() > 22)
+					searchString += " AND ";
+				searchString += ("semestru.id = " + semestru);
 				search = true;
 			}
 			if (oreCurs != -1) {
@@ -507,6 +489,7 @@ public class AdminPanel extends JPanel {
 				if (searchString.length() > 17)
 					searchString += " AND ";
 				searchString += ("profesor.id = " + profesor.getId());
+				search = true;
 			}
 			if (activitate != null) {
 				if (searchString.length() > 17)
@@ -514,10 +497,14 @@ public class AdminPanel extends JPanel {
 				searchString += ("upper(activitate) like upper('%" + activitate + "%')");
 				search = true;
 			}
-			if (participanti != null) {
+			if (participanti != null && !participanti.isEmpty()) {
 				if (searchString.length() > 17)
 					searchString += " AND ";
-				searchString += ("upper(participanti) like upper('%" + participanti + "%')");
+				if (Character.isAlphabetic(participanti.charAt(participanti.length() - 1)))
+					searchString += ("upper(participanti) like upper('%" + participanti + "%')");
+				else
+					searchString += ("upper(participanti) like upper('%" + participanti + "')");
+					
 				search = true;
 			}
 			if (interval != -1) {
@@ -608,35 +595,11 @@ public class AdminPanel extends JPanel {
 	}
 	
 	private void actiuneStergere() {
-		switch(context.getCurrentModelName()) {
-		case "studentModel":
-			if (selectedModel == "studentModel" && selectedID > -1) {
-				StudentService.deleteStudentByID(selectedID);
-				context.resetStudentModel();
-			}
-			
-			break;
-		case "profesorModel":
-			if (selectedModel == "profesorModel" && selectedID > -1) {
-				ProfesorService.deleteProfesorByID(selectedID);
-				context.resetProfesorModel();
-			}
-			
-			break;
-		case "disciplinaModel":
-			if (selectedModel == "disciplinaModel" && selectedID > -1) {
-				DisciplinaService.deleteDisciplinaByID(selectedID);
-				context.resetDisciplinaModel();
-			}
-			
-			break;
-		case "modulModel":
+		if(context.getCurrentModelName().equals("modulModel")) {
 			if (selectedModel == "modulModel" && selectedID > -1) {
 				ModulService.deleteModulByID(selectedID);
 				context.resetModulModel();
 			}
-			
-			break;
 		}
 		
 		selectedID = -1;
