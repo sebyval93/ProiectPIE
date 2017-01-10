@@ -92,6 +92,27 @@ public final class PrezentaService {
 		return done;
 	}
 	
+	public static boolean updateListOfRecords(List<Prezenta> list){
+		boolean done = false;
+		Session session = null;
+			try{
+				session = Singleton.getInstance().getNewSession();
+				session.beginTransaction();
+				for(Prezenta prezenta : list){
+					session.update(prezenta);
+				}
+				session.getTransaction().commit();
+				done = true;
+			}catch (Exception e) {
+	            e.printStackTrace();           
+	        } finally { 
+	        	session.close();
+	        }
+		
+		return done;
+	}
+
+	
 	public static List<Prezenta> getAllFromPrezenta(){
 		List<Prezenta> list = null;
 		Session session = null;
@@ -254,6 +275,24 @@ public final class PrezentaService {
 	        	session.close();
 	        }
 		return done;
+	}
+	
+	
+	public static List<Prezenta> getRecordsForModuleAndWeek(Modul modul,Saptamana saptamana){
+		List<Prezenta> list = null;
+		Session session = null;
+		try{
+			session = Singleton.getInstance().getNewSession();
+			DetachedCriteria dc = DetachedCriteria.forClass(Prezenta.class).add(Restrictions.eq("modul", modul))
+																		   .add(Restrictions.eq("saptamana",saptamana));
+			list =  dc.getExecutableCriteria(session).list();
+			session.close();
+		}catch (Exception e) {
+            e.printStackTrace();        
+        }finally{
+        	session.close();
+        }
+		return list;
 	}
 	
 }

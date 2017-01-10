@@ -185,7 +185,6 @@ public final class ModulService {
 		try{
 			session = Singleton.getInstance().getNewSession();
 			list = session.createQuery(query).getResultList();
-			session.close();
 		}catch (Exception e) {
             //e.printStackTrace();
 			System.out.println("Modul not found!");
@@ -194,6 +193,23 @@ public final class ModulService {
         }
 		return list;
 	}
+	
+	public static boolean updateModul(Modul modul){
+		boolean done = false;
+		Session session = null;
+		try{
+			session = Singleton.getInstance().getNewSession();
+			session.beginTransaction();
+			session.update(modul);
+			session.getTransaction().commit();		
+		}catch (Exception e) {
+            e.printStackTrace();        
+        }finally{
+        	session.close();
+        }
+		return done;
+	}
+	
 
 	public static List<Modul> getAllModulBySaptamanaAndProfesor(Saptamana week, Profesor prof) {
 		List<Modul> list = null;
@@ -207,7 +223,6 @@ public final class ModulService {
 				if (!curr.getProfesor().getNume().equals(prof.getNume()))
 					iter.remove();
 			}
-			session.close();
 		}catch (Exception e) {
             e.printStackTrace();        
         }finally{

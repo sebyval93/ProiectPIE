@@ -26,7 +26,8 @@ import Services.UtilizatorService;
 import Utils.EncryptService;
 import Utils.Functions;
 import Utils.Week;
-import Utils.LoadListWorker;
+import Utils.Workers.AdminLoginWorker;
+import Utils.Workers.NormalLoginWorker;
 import entity.AnUniversitar;
 import entity.Disciplina;
 import entity.Profesor;
@@ -144,7 +145,7 @@ public class LoginPanel extends JPanel {
 								IdTF.setText("");
 								warningLbl.setText("");
 								//load list with special thread;
-								LoadListWorker myWorker = new LoadListWorker(){
+								AdminLoginWorker myWorker = new AdminLoginWorker(){
 									@Override public void done() {
 										parentFrame.showAdminPanel();
 										parentFrame.showUnelteMenu();
@@ -157,15 +158,23 @@ public class LoginPanel extends JPanel {
 								return;
 								
 							}else{
+								showLoadingGif();
+								PasswordTF.setText("");
+								IdTF.setText("");
+								warningLbl.setText("");
 								parentFrame.hideUnelteMenu();
-								Singleton.getInstance().loadListsForNormalUser(user);
+								NormalLoginWorker myWorker = new NormalLoginWorker(){
+									@Override public void done() {
+										parentFrame.getMainPanel().setCurrWeek(new Week(Singleton.getInstance().currentWeekStatic));
+										parentFrame.updateWeekBrowser();
+										parentFrame.showMainPanel();
+										hideLoadingGif();
+										
+						            }
+								};
+								myWorker.execute();	
 							}
-							PasswordTF.setText("");
-							IdTF.setText("");
 							
-							parentFrame.updateWeekBrowser();
-							//getModuleFromSaptamanaAndProfesor(Singleton.getInstance().)
-							parentFrame.showMainPanel();
 						}else{
 							warningLbl.setText("Datele nu corespund!");
 						}
