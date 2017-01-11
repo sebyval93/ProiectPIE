@@ -34,7 +34,7 @@ import javax.swing.JProgressBar;
 import javax.swing.JSeparator;
 import Singleton.*;
 import Utils.ProgressBarListener;
-import Utils.GenerateRecordsWorker;
+import Utils.Workers.GenerateRecordsWorker;
 
 import javax.swing.SwingConstants;
 import javax.swing.SwingWorker;
@@ -43,6 +43,8 @@ public class MainFrame extends JFrame {
 
 	private gui_system.LoginPanel loginPanel;
 	private gui_system.MainPanel mainPanel;
+	
+
 	private gui_system.AdminPanel adminPanel;
 	
 	JMenuBar menuBar;
@@ -103,7 +105,7 @@ public class MainFrame extends JFrame {
 	
 	public void showMainPanel() {
 		setMenuVisible(true);
-		setTitle("Gestiune module pentru profesorul: "+Singleton.getInstance().currentUser.getUsername());
+		setTitle("Gestiune module pentru profesorul: "+Singleton.getInstance().currentUser.getProfesor().getNume());
 		loginPanel.setVisible(false);
 		adminPanel.setVisible(false);
 		renewDateMnt.setVisible(false);
@@ -273,7 +275,7 @@ public class MainFrame extends JFrame {
 				try {
 					fis = new FileInputStream(fc.getSelectedFile());
 					Services.ImportService.doImport(fis);
-					JOptionPane.showMessageDialog(null, "Import succesfuly done!");	
+					JOptionPane.showMessageDialog(null, "Import realizat cu succes!");	
 				} catch (FileNotFoundException e1) {
 					e1.printStackTrace();
 					}			
@@ -374,6 +376,14 @@ public class MainFrame extends JFrame {
 	
 	public void updateWeekBrowser() {
 		mainPanel.updateWeekBrowser();
+	}
+	
+	public gui_system.MainPanel getMainPanel() {
+		return mainPanel;
+	}
+
+	public void setMainPanel(gui_system.MainPanel mainPanel) {
+		this.mainPanel = mainPanel;
 	}
 
 }

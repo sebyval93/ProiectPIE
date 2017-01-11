@@ -33,7 +33,7 @@ public class Week {
 		return semestru;
 	}
 	
-	public void nextWeek() {
+	public void nextWeek() {		
 		if (week.getDenumire().equals("saptamana 14")) {
 			if (week.getSemestru().getNumeSem().equals("semestru 1")) {
 				num = 1;

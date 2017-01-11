@@ -13,6 +13,7 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
 
 import Services.GrupaService;
@@ -30,6 +31,7 @@ import entity.Subgrupa;
 import main.MainFrame;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 import java.awt.Color;
 import java.awt.SystemColor;
@@ -42,20 +44,16 @@ public class MainPanel extends JPanel {
 	JButton btnBack, btnSave,
 		btnWeekPrev, btnWeekNext;
 	JButton lblWeek;
+	JButton buttonSwitch;
 	
 	ModelContext context;
 	MainFrame parentFrame;
 	
-	Week currWeek;
-	
-	//public static List<Grupa> allFromGrupa;
-	//public static List<Subgrupa> allFromSubgrupa;
-	
+	private Week currWeek;
+		
 	public MainPanel() {
 		currWeek = Singleton.getInstance().currentWeek;		
-		//allFromGrupa = GrupaService.getAllFromGrupa();
-		//allFromSubgrupa = SubgrupaService.getAllFromSubgrupa();
-		
+
 		setLayout(null);
 		
 		scrollPane = new JScrollPane();
@@ -78,16 +76,25 @@ public class MainPanel extends JPanel {
 				int row = t.rowAtPoint(p);
 				if (me.getClickCount() == 2) {
 					if (context.isModuleModelLoaded()) {
-						DefaultTableModel model = context.getCurrentModel();
+						AbstractTableModel model = context.getCurrentModel();
 						Object selectedRowData[] = new Object[model.getColumnCount()];
 						
 						for (int i = 0; i < model.getColumnCount(); ++i) {
 							selectedRowData[i] = model.getValueAt(t.convertRowIndexToModel(row), i);
 						}
+						context.setModul(Singleton.getInstance().ListOfTeacherModules.stream()
+								.filter(e -> (e.getDisciplina().getDenumire().equals(selectedRowData[0]))
+											&& e.getActivitate().equals(selectedRowData[1]) 
+											&& e.getParticipanti().equals(selectedRowData[4])
+										).findFirst().get()
+								
+								);
 						
 						context.switchToStudenti(selectedRowData);
 						hideWeekBrowser();
 						btnSave.setVisible(true);
+						btnBack.setVisible(true);
+						buttonSwitch.setVisible(false);
 					}
 				}
 			}
@@ -103,6 +110,7 @@ public class MainPanel extends JPanel {
 				if (context.isStudentiModelLoaded()) {
 					context.switchToModule(currWeek);
 					btnSave.setVisible(false);
+					btnBack.setVisible(false);
 					showWeekBrowser();
 				}
 			}
@@ -119,6 +127,8 @@ public class MainPanel extends JPanel {
 				updateWeekBrowser();
 			}
 		});
+		
+		btnBack.setVisible(false);
 		btnWeekPrev.setIcon(new ImageIcon(MainPanel.class.getResource("/res/l_arrow.png")));
 		btnWeekPrev.setBounds(10, 384, 50, 29);
 		add(btnWeekPrev);
@@ -126,6 +136,8 @@ public class MainPanel extends JPanel {
 		btnWeekNext = new JButton("");
 		btnWeekNext.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				if(currWeek.getSaptamana().getId().intValue() == Singleton.getInstance().currentWeekStatic.getId().intValue())
+					return;
 				currWeek.nextWeek();
 				context.loadModulesForWeek(currWeek);
 				updateWeekBrowser();
@@ -142,9 +154,25 @@ public class MainPanel extends JPanel {
 		add(lblWeek);
 		
 		btnSave = new JButton("Salveaza");
+		btnSave.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				boolean done = context.addRecordsForStudents();
+				if(done){
+					JOptionPane.showMessageDialog(null, "Actualizat cu succes!");	
+				}
+			}
+		});
 		btnSave.setBounds(10, 390, 730, 23);
 		add(btnSave);
 		
+		buttonSwitch = new JButton("Vezi toate modulele din saptamana curenta!");
+		buttonSwitch.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				context.loadAllModulesForActualWeek(currWeek);
+			}
+		});
+		buttonSwitch.setBounds(10, 416, 730, 23);
+		add(buttonSwitch);
 		btnSave.setVisible(false);
 
 	}
@@ -163,6 +191,8 @@ public class MainPanel extends JPanel {
 		btnWeekPrev.setVisible(true);
 		lblWeek.setVisible(true);
 		btnWeekNext.setVisible(true);
+		btnBack.setVisible(false);
+		buttonSwitch.setVisible(true);
 	}
 	
 	public void setParentFrame(MainFrame frame) {
@@ -173,5 +203,12 @@ public class MainPanel extends JPanel {
 		context.switchToModule(currWeek);
 	}
 	
+	public Week getCurrWeek() {
+		return currWeek;
+	}
+
+	public void setCurrWeek(Week currWeek) {
+		this.currWeek = currWeek;
+	}
 	
 }
