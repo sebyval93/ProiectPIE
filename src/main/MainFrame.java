@@ -12,7 +12,10 @@ import gui_system.LoginPanel;
 import gui_system.MainPanel;
 import gui_system.ModalFrame;
 import gui_system.MyProgressBar;
+import gui_system.ReportStudentSelPanel;
 import gui_system.ResetWeeksPanel;
+import gui_system.YearReportPanel;
+
 import java.awt.event.ActionListener;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -222,15 +225,30 @@ public class MainFrame extends JFrame {
 		mnGenerareRaport.add(mnRaportStudenti);
 		
 		mntmRaportDisciplina = new JMenuItem("O Disciplina");
+		mntmRaportDisciplina.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				showStudentSingleDiscDialog();
+			}
+		});
 		mnRaportStudenti.add(mntmRaportDisciplina);
 		
 		mntmRaportToateDisciplinele = new JMenuItem("Toate Disciplinele");
+		mntmRaportToateDisciplinele.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				showStudentAllDiscDialog();
+			}
+		});
 		mnRaportStudenti.add(mntmRaportToateDisciplinele);
 		
 		mntmRaportGrupe = new JMenuItem("Grupe");
 		mnGenerareRaport.add(mntmRaportGrupe);
 		
 		mntmAn = new JMenuItem("An");
+		mntmAn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				showYearReportDialog();
+			}
+		});
 		mnGenerareRaport.add(mntmAn);
 		mnUnelte.add(mntmGestionareModule);
 		
@@ -332,6 +350,18 @@ public class MainFrame extends JFrame {
 	
 	public void setNewYearStart(){
 		new ModalFrame(this,new ResetWeeksPanel());
+	}
+	
+	public void showYearReportDialog() {
+		new ModalFrame(this, new YearReportPanel());
+	}
+	
+	public void showStudentSingleDiscDialog() {
+		new ModalFrame(this, new ReportStudentSelPanel(true));
+	}
+	
+	public void showStudentAllDiscDialog() {
+		new ModalFrame(this, new ReportStudentSelPanel(false));
 	}
 	
 	public void hideUnelteMenu() {

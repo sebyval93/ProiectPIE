@@ -28,6 +28,7 @@ import java.util.List;
 
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
@@ -92,6 +93,7 @@ public class AdminPanel extends JPanel {
 		mainTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 		mainTable.setRowHeight(30);
 		mainTable.setCellSelectionEnabled(false);
+		mainTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		mainTable.setAutoCreateRowSorter(true);
 		
 		
@@ -375,11 +377,13 @@ public class AdminPanel extends JPanel {
 				if (searchString.length() > 19)
 					searchString += " AND ";
 				
+				searchString += "(";
 				for (int i = 0; i < list.size(); ++i) {
 					searchString += ("subgrupa.id = " + list.get(i).getId());
 					if (i < list.size() - 1)
 						searchString += " OR ";
 				}
+				searchString += ")";
 
 				search = true;
 			}
@@ -390,6 +394,8 @@ public class AdminPanel extends JPanel {
 				searchString += ("subgrupa.id = " + subgrupa.getId());
 				search = true;
 			}
+			
+			System.out.println(searchString);
 			
 			if (search)
 				context.loadStudentListInTable(StudentService.runSearchQuery(searchString));
@@ -467,6 +473,7 @@ public class AdminPanel extends JPanel {
 				searchString += ("upper(numeScurt) like upper('%" + numeScurt + "%')");
 				search = true;
 			}
+			
 			
 			if (search)
 				context.loadDisciplinaListInTable(DisciplinaService.runSearchQuery(searchString));
