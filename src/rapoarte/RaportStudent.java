@@ -42,12 +42,12 @@ public class RaportStudent {
 					.createQuery(
 							"select nume from Subgrupa where id=(select subgrupa from Student where id="
 									+ id + ")").getResultList().get(0);
-			System.out.println("subgrupa este: " + subgrupa);
+			//System.out.println("subgrupa este: " + subgrupa);
 			String grupa = (String) session
 					.createQuery(
 							"select nume from Grupa where id=(select grupa from Subgrupa where id=(select subgrupa from Student where id=381))")
 					.getResultList().get(0);
-			System.out.println("grupa este: " + grupa);
+			//System.out.println("grupa este: " + grupa);
 			
 
 			Query query2 = session
@@ -55,7 +55,7 @@ public class RaportStudent {
 							+ "and participanti in('" + grupa + "', '"+subgrupa+"')");
 
 			list = query2.list();
-			System.out.println(list.size());
+			//System.out.println(list.size());
 
 		} catch (Exception e) {
 			e.printStackTrace();
