@@ -13,7 +13,7 @@ public final class ImportService{
 		
 		static FileInputStream fileInputStream ;
 		static HSSFWorkbook workbook;
-		static HSSFSheet an_universitar_wk;
+		static HSSFSheet an_studiu_wk;
 		static HSSFSheet profesori_wk;
 		static HSSFSheet discipline_wk;
 		static HSSFSheet grupa_wk;
@@ -29,7 +29,7 @@ public final class ImportService{
 		
 		try{
 			workbook = new HSSFWorkbook(file);
-			an_universitar_wk = workbook.getSheet("an_universitar");
+			an_studiu_wk = workbook.getSheet("an_studiu");
 			profesori_wk = workbook.getSheet("Profesori");
 			discipline_wk = workbook.getSheet("discipline");
 			grupa_wk = workbook.getSheet("grupa");
@@ -39,13 +39,13 @@ public final class ImportService{
 			deletePrezenta();
 			deleteModul();
 			deleteUtilizatori();
-			deleteFromProfesori();
-			deleteFromDiscipline();
-			deleteFromStudent();
-			deleteFromSubgrupa();
-			deleteFromGrupa();
-			deleteFromAn();
-			addAniUniversitari();					
+			deleteProfesori();
+			deleteDiscipline();
+			deleteStudent();
+			deleteSubgrupa();
+			deleteGrupa();
+			deleteAnStudiu();
+			addAniStudiu();					
 			addGrupa();
 			addSubgrupa();
 			addStudent();
@@ -60,18 +60,17 @@ public final class ImportService{
 		return done;
 	}
 	
-	public static void addAniUniversitari(){	
+	public static void addAniStudiu(){	
 		
-		for(int k = 1; k<=an_universitar_wk.getLastRowNum();k++){	
-			HSSFRow row1 = an_universitar_wk.getRow(k);
+		for(int k = 1; k<=an_studiu_wk.getLastRowNum();k++){	
+			HSSFRow row1 = an_studiu_wk.getRow(k);
 			HSSFCell cellA1 = row1.getCell((short) 0);			
-			int an_universitar = (int) cellA1.getNumericCellValue();
-			AnUniversitarService.addAn(an_universitar);	
+			int an_studiu = (int) cellA1.getNumericCellValue();
+			AnUniversitarService.addAn(an_studiu);	
 		}		
 	}
 	
 	public static void addProfesori(){
-		deleteFromProfesori();
 		
 		for(int j = 1; j<=profesori_wk.getLastRowNum(); j++){
 			
@@ -84,7 +83,6 @@ public final class ImportService{
 	}
 	
 	public static void addDiscipline(){
-		deleteFromDiscipline();
 		
 		for(int i = 1; i<=discipline_wk.getLastRowNum(); i++){
 			HSSFRow row1 = discipline_wk.getRow(i);
@@ -164,37 +162,37 @@ public final class ImportService{
 		}
 	}
 	
-	public static void addUtilizatori(){
+	public static void addUtilizatori(){		
 			UtilizatorService.generateAccounts();
 	}
 		
-	public static void deleteFromStudent(){
+	public static void deleteStudent(){
 		Utils.Functions.resetSequence("STUDENT_SEQ");
 		StudentService.deleteAllFromTable();		
 	}
 	
-	public static void deleteFromSubgrupa(){
+	public static void deleteSubgrupa(){
 		Utils.Functions.resetSequence("SUBGRUPA_SEQ");
 		SubgrupaService.deleteAllFromTable();
 	}
 	
-	public static void deleteFromGrupa(){
+	public static void deleteGrupa(){
 		Utils.Functions.resetSequence("GRUPA_SEQ");
 		GrupaService.deleteAllFromTable();
 	}
 	
-	public static void deleteFromDiscipline(){
+	public static void deleteDiscipline(){
 		Utils.Functions.resetSequence("DISCIPLINA_SEQ");
 		DisciplinaService.deleteAllFromTable();
 	}
 	
-	public static void deleteFromProfesori(){
+	public static void deleteProfesori(){
 		Utils.Functions.resetSequence("PROFESOR_SEQ");
 		ProfesorService.deleteAllFromTable();
 	
 	}
 	
-	public static void deleteFromAn(){
+	public static void deleteAnStudiu(){
 		Utils.Functions.resetSequence("AN_SEQ");
 		AnUniversitarService.deleteAllFromTable();
 	}
