@@ -203,7 +203,6 @@ public final class ImportService{
 	}
 	
 	public static void deletePrezenta(){
-		Utils.Functions.resetSequence("PREZENTA_SEQ");
 		PrezentaService.deleteAllFromTable();
 	}
 	
