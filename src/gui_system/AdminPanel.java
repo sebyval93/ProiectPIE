@@ -344,7 +344,7 @@ public class AdminPanel extends JPanel {
 			int interval = sitDidacticaCtrlPanel.getSelectedInterval();
 
 			if (disciplina != null || profesor != null || activitate != null || participanti != null || interval != -1) {
-				//ModulService.addModul(disciplina, profesor, activitate, participanti, interval);
+				ModulService.addModul(disciplina, profesor, activitate, participanti, interval,0);
 				context.resetModulModel();
 			}
 			else

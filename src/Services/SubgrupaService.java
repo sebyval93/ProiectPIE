@@ -107,7 +107,9 @@ public final class SubgrupaService {
 		Session session = null;
 		try{
 			session = Singleton.getInstance().getNewSession();
-			subgrupa = (Subgrupa) session.createQuery("from Subgrupa where NUME = '" + nume + "'").getResultList().get(0);
+			DetachedCriteria dc = DetachedCriteria.forClass(Subgrupa.class);
+			dc.add(Restrictions.eq("nume", nume));
+			subgrupa = (Subgrupa)dc.getExecutableCriteria(session).list().get(0);
 			session.close();
 		}catch (Exception e) {
             e.printStackTrace();        
