@@ -5,7 +5,7 @@
  <session-factory>
   <property name="hibernate.connection.driver_class">oracle.jdbc.driver.OracleDriver</property>
   <property name="hibernate.connection.password">hr</property>
-  <property name="hibernate.connection.url">jdbc:oracle:thin:@localhost:1521/PDBORCL</property>
+  <property name="hibernate.connection.url">jdbc:oracle:thin:@5.13.142.56:1521:XE</property>
   <property name="hibernate.connection.username">hr</property>
   <property name="hibernate.default_catalog">HR</property>
   <property name="hibernate.default_schema">HR</property>
