@@ -29,23 +29,17 @@ public class AdminContext {
 	private JTable selTable, mainTable;
 	private DefaultTableCellRenderer centerCellRenderer;
 	private DefaultTableModel tableSelectionModel, studentModel, profesorModel,
-		disciplinaModel, anModel, grupaModel, subgrupaModel, modulModel, prezentaModel, 
-		saptamanaModel, semestruModel, currentModel;
+		disciplinaModel, modulModel, contModel, currentModel;
 	
 	
 	private String selectionColumns[] = { "Tabele" };
-	private String selectionData[][] = { { "Student" }, { "Profesor" }, { "Disciplina" }, { "Situatie didactica" } };
+	private String selectionData[][] = { { "Student" }, { "Profesor" }, { "Disciplina" }, { "Situatie didactica" }, { "Cont" } };
 	
 	private String studentColumns[] = { "Nume", "Grupa", "Subgrupa" };
 	private String profesorColumns[] = { "Nume" };
 	private String disciplinaColumns[] = { "Denumire", "An", "Semestru", "Ore curs", "Ore lab.", "Ore sem.", "Ore pro.", "Nume scurt" };
-	private String anColumns[] = { "An" };
-	private String grupaColumns[] = { "Nume", "An" };
-	private String subgrupaColumns[] = { "Nume", "Grupa" };
 	private String modulColumns[] = { "Disciplina", "Activitate", "Nume profesor", "Interval", "Participanti" };
-	private String prezentaColumns[] = { "Modul", "Nume student", "Prezent", "Nr. saptamana", "Data saptamana" };
-	private String saptamanaColumns[] = { "Denumire", "Data de inceput", "Data de sfarsit", "Semestru" };
-	private String semestruColumns[] = { "Nume" };
+	private String contColumns[] = { "Nume profesor", "Nume cont" };
 	
 	public AdminContext(JTable selTable, JTable mainTable) {
 		this.selTable = selTable;
@@ -66,16 +60,16 @@ public class AdminContext {
 			tableSelectionModel.addRow(selectionData[i]);
 		}
 		
-		selTable.setRowHeight(271 / 4);
+		selTable.setRowHeight(270 / 5);
 	}
 	
-	public void switchToStudent() {
-		studentModel.setRowCount(0);
-		if (!mainTable.getModel().equals(studentModel))
-			mainTable.setModel(studentModel);
-		currentModel = studentModel;
+	public void switchToContModel() {
+		contModel.setRowCount(0);
+		if (!mainTable.getModel().equals(contModel))
+			mainTable.setModel(contModel);
+		currentModel = contModel;
 		centerMainTableCells();
-		loadAllFromStudent();
+		loadAllFromCont();
 
 	}
 	
@@ -109,6 +103,16 @@ public class AdminContext {
 		loadAllFromModul();
 	}
 	
+	public void switchToStudent() {
+		contModel.setRowCount(0);
+		if (!mainTable.getModel().equals(studentModel))
+			mainTable.setModel(studentModel);
+		currentModel = studentModel;
+		centerMainTableCells();
+		loadAllFromStudent();
+
+	}
+	
 	public DefaultTableModel getCurrentModel() {
 		return currentModel;
 	}
@@ -122,6 +126,8 @@ public class AdminContext {
 			return "disciplinaModel";
 		else if (currentModel.equals(modulModel))
 			return "modulModel";
+		else if (currentModel.equals(contModel))
+			return "contModel";
 		else
 			return null;
 	}
@@ -199,6 +205,18 @@ public class AdminContext {
 			modulModel.addColumn(modulColumns[i]);
 		}
 		
+		contModel = new DefaultTableModel() {
+
+		    @Override
+		    public boolean isCellEditable(int row, int column) {
+		       //all cells false
+		       return false;
+		    }
+		};
+		for (int i = 0; i < contColumns.length; ++i) {
+			contModel.addColumn(contColumns[i]);
+		}
+		
 	}
 	
 	public void loadAllFromStudent(){
@@ -241,6 +259,13 @@ public class AdminContext {
         	
             model.addRow(new Object[]{aux.getDisciplina().getDenumire(), aux.getActivitate(), aux.getProfesor().getNume(),
             		interval, aux.getParticipanti()});
+        });
+	}
+	
+	public void loadAllFromCont(){
+		DefaultTableModel model = getCurrentModel();
+		Singleton.Singleton.getInstance().ListOfAccounts.stream().forEach((aux) -> {
+            model.addRow(new Object[]{aux.getProfesor().getNume(), aux.getUsername()});
         });
 	}
 	
