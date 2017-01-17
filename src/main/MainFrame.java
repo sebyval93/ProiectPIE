@@ -41,18 +41,17 @@ import javax.swing.SwingWorker;
 
 public class MainFrame extends JFrame {
 
-	private gui_system.LoginPanel loginPanel;
-	private gui_system.MainPanel mainPanel;
+	private LoginPanel loginPanel;
+	private MainPanel mainPanel;
 	
 
-	private gui_system.AdminPanel adminPanel;
+	private AdminPanel adminPanel;
 	
 	JMenuBar menuBar;
 	JMenu mnFile, mnUnelte, mnGenerareRaport,
 	mnRaportStudenti;
 	JMenuItem mntmDelogare, mntmExit, 
-	mntmAdministrare,
-	mntmRaportGrupe, mntmAn;
+	mntmAdministrare, mntmAn;
 	private JMenu renewDateMnt;
 	private JMenuItem mntmImport_1;
 	private JMenuItem mntmDataInceperii;
@@ -128,7 +127,6 @@ public class MainFrame extends JFrame {
 		setMenuVisible(true);
 		setTitle("Administrare baza de date");
 		mntmAdministrare.setVisible(false);
-		mntmGestionareModule.setVisible(true);
 		mnGenerareRaport.setVisible(true);
 		mnUnelte.setVisible(true);
 		renewDateMnt.setVisible(true);
@@ -142,6 +140,32 @@ public class MainFrame extends JFrame {
 		pack();
 		setLocationRelativeTo(null);
 	}
+	
+	public void showMainPanel() {
+		if(mainPanel == null){
+			mainPanel = new MainPanel();
+			mainPanel.setParentFrame(this);
+		}
+		setMenuVisible(true);
+		setTitle("Gestiune module pentru profesorul: "+Singleton.getInstance().currentUser.getProfesor().getNume());
+		if(loginPanel != null){
+			loginPanel.setVisible(false);
+		}
+		if(adminPanel != null){
+			adminPanel.setVisible(false);
+		}
+		
+		renewDateMnt.setVisible(false);
+		mainPanel.loadFromDB();
+		setContentPane(mainPanel);
+		mainPanel.setVisible(true);
+		mnUnelte.setVisible(false);
+		mntmDelogare.setVisible(true);
+		mntmAdministrare.setVisible(true);
+		mnGenerareRaport.setVisible(false);
+		pack();
+		setLocationRelativeTo(null);
+}
 	
 	public void initFrame(){
 		try {
@@ -222,9 +246,6 @@ public class MainFrame extends JFrame {
 			}
 		});
 		mnRaportStudenti.add(mntmRaportToateDisciplinele);
-		
-		mntmRaportGrupe = new JMenuItem("Grupe");
-		mnGenerareRaport.add(mntmRaportGrupe);
 		
 		mntmAn = new JMenuItem("An");
 		mntmAn.addActionListener(new ActionListener() {
@@ -357,11 +378,11 @@ public class MainFrame extends JFrame {
 		mainPanel.updateWeekBrowser();
 	}
 	
-	public gui_system.MainPanel getMainPanel() {
+	public MainPanel getMainPanel() {
 		return mainPanel;
 	}
 
-	public void setMainPanel(gui_system.MainPanel mainPanel) {
+	public void setMainPanel(MainPanel mainPanel) {
 		this.mainPanel = mainPanel;
 	}
 

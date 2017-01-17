@@ -165,9 +165,9 @@ public class LoginPanel extends JPanel {
 								parentFrame.hideUnelteMenu();
 								NormalLoginWorker myWorker = new NormalLoginWorker(){
 									@Override public void done() {
+										parentFrame.showMainPanel();
 										parentFrame.getMainPanel().setCurrWeek(new Week(Singleton.getInstance().currentWeekStatic));
 										parentFrame.updateWeekBrowser();
-										parentFrame.showMainPanel();
 										hideLoadingGif();
 										
 						            }
