@@ -19,14 +19,11 @@ public class GenerateRecordsWorker extends SwingWorker<String, Void> {
     @Override public String doInBackground() {
         int current = 0;
         int listSize = Singleton.getInstance().ListOfModules.size();
-        //PrezentaService.resetPrezentaSeq();
-		boolean done = false;
+        PrezentaService.deleteAllFromTable();
+        PrezentaService.resetPrezentaSeq();
 		StatelessSession session = null;
 			try{
 				session = Singleton.getInstance().getStatelessSession();
-				
-
-				System.out.println("start");
 				
 				for(Saptamana saptamana : Singleton.getInstance().ListOfWeeks){
 					session.beginTransaction();
@@ -121,8 +118,6 @@ public class GenerateRecordsWorker extends SwingWorker<String, Void> {
 					session.getTransaction().commit();					
 				}
 				
-				
-				done = true;
 			}catch (Exception e) {
 	            e.printStackTrace();           
 	        } finally { 

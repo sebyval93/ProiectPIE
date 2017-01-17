@@ -9,24 +9,32 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 
+import Services.AnUniversitarService;
 import Services.DisciplinaService;
 import Services.ModulService;
+import Services.PrezentaService;
 import Services.StudentService;
 import Singleton.Singleton;
 
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.Element;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.Rectangle;
+import com.itextpdf.text.Font.FontFamily;
+import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Phrase;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
+import com.orsonpdf.Page;
 
 import entity.Disciplina;
 import entity.Modul;
@@ -37,8 +45,35 @@ import entity.Student;
  *
  *@author Nameless ^_^ 
  */
+public class RaportAnTables {
+	
+	public static int getNumberOfAbsencesForAStudentForModule(Student student,Disciplina disciplina){
+		int absences = 0;
 
-public class RaportStudentDisciplina {
+		if(student != null && disciplina != null){
+			Session session = null;
+			try{
+				session = Singleton.getInstance().getNewSession();
+				List<Modul> moduls = ModulService.getAllModulesForStudentAndDisciplina(student,disciplina);
+				if(moduls.size()==0) return 0;
+				else{
+				DetachedCriteria dc = DetachedCriteria.forClass(Prezenta.class)
+											.add(Restrictions.eq("student", student))
+											.add(Restrictions.in("modul", moduls))
+											.add(Restrictions.eq("prezent", new BigDecimal(0)));
+				dc.setProjection(Projections.rowCount());
+				Number result = (Number) dc.getExecutableCriteria(session).uniqueResult();
+				absences = result.intValue();
+				session.close();}
+			}catch (Exception e) {
+	            e.printStackTrace();        
+	        }finally{
+	        	session.close();
+	        }
+
+		}
+		return absences;
+	}
 	
 	public static List<Prezenta> getPrezentaStudentAndModul(Student student, Modul m){
 		List<Prezenta> list = null;
@@ -84,16 +119,22 @@ public class RaportStudentDisciplina {
 		return list;
 	}
 
-	public static void MakeSingleStudentReport() {
+	public static void MakeYearReport(int year) {
 
-		Document document = new Document();
+		Document document = new Document(PageSize.A4);
 		try {
 			PdfWriter writer = PdfWriter.getInstance(document,
-					new FileOutputStream(new File("Raport_Student_Disciplina.pdf")));
+					new FileOutputStream(new File("Tabel_an_"+year+".pdf")));
+			
+			
+			//special font sizes
+			   Font bfBold12 = new Font(FontFamily.TIMES_ROMAN, 12, Font.BOLD, new BaseColor(0, 0, 0)); 
+			   Font bf12 = new Font(FontFamily.TIMES_ROMAN, 12);
 			document.open();
+			
 
 			Paragraph header = new Paragraph("Situatia scolara");
-			Paragraph footer = new Paragraph(RaportStudent.GenerateTime());
+			Paragraph footer = new Paragraph(RaportAnTables.GenerateTime());
 			
 			header.setSpacingBefore(50);
 			header.setSpacingAfter(50);
@@ -101,47 +142,95 @@ public class RaportStudentDisciplina {
 			document.add(header);
 			document.add(new Paragraph(""));
 
-			Student student = StudentService.getStudentByID(380);
-
-			Paragraph namestud = new Paragraph("Student: " + student.getNume() + "\n");
-			Paragraph an = new Paragraph("An universitar: " + student.getSubgrupa().getGrupa().getAnUniversitar().getAn() + "\n");
+			
+			Paragraph an = new Paragraph("An universitar: " + year + "\n");
 			an.setSpacingAfter(15);
 			an.setSpacingBefore(20);
-			namestud.setSpacingBefore(35);
-			document.add(namestud);
+			
 			document.add(an);
 			  
+			List<Disciplina> discipline = DisciplinaService.getDisciplineByAn(year);
+			
+			
+			PdfPTable table = new PdfPTable(discipline.size()+1); // 3 columns.
+			table.setWidthPercentage(100); //Width 100%
+			table.setSpacingBefore(30f); //Space before table
+			table.setSpacingAfter(30f); //Space after table
+			
+			
+			  //Set Column widths 
+			if(year==4){
+			  float[] columnWidths = {2f,1f,1f,1f,1f,1f,1f,1f,1f,1f,1f,1f};
+			  table.setWidths(columnWidths);			  
+			}
 			  
 			  
-			  Disciplina disciplina = DisciplinaService.getDisciplinaByNumeScurt("LFT");
+			  PdfPCell cell1 = new PdfPCell(new Phrase("".trim(),bf12));
+			  cell1.setBorderColor(BaseColor.BLUE); 
+			  cell1.setPaddingLeft(10);
+			  cell1.setHorizontalAlignment(Element.ALIGN_CENTER);
+			  cell1.setVerticalAlignment(Element.ALIGN_MIDDLE);
+			  cell1.setUseBorderPadding(true);
+			  table.addCell(cell1); 
 			  
-			  List<Modul> module = RaportStudentDisciplina.getModuleStudent(student.getId().intValue(), disciplina.getId().intValue());
 			  
-			  for(Modul modul:module){
-				  document.add(new Paragraph(modul.getDisciplina().getDenumire()));
-				  document.add(new Paragraph(modul.getActivitate()));
 				  
-				  PdfPTable table = new PdfPTable(14); // 3 columns.
-				  table.setWidthPercentage(100); //Width 100%
-				  table.setSpacingBefore(30f); //Space before table
-				  table.setSpacingAfter(30f); //Space after table
 				  
-				  //Set Column widths 
-				  float[] columnWidths = {1f, 1f,1f, 1f,1f, 1f,1f, 1f,1f, 1f,1f, 1f,1f, 1f};
-				  table.setWidths(columnWidths);
+				  for(Disciplina disciplina:discipline){
 				  
-				  for(int i=1;i<=14;i++){
-				  
-				  PdfPCell cell1 = new PdfPCell(new Paragraph("S"+i ));
-				  cell1.setBorderColor(BaseColor.BLUE); 
-				  cell1.setPaddingLeft(10);
-				  cell1.setHorizontalAlignment(Element.ALIGN_CENTER);
-				  cell1.setVerticalAlignment(Element.ALIGN_MIDDLE);
-				  cell1.setUseBorderPadding(true);
-				  table.addCell(cell1); 
+				  PdfPCell cell2 = new PdfPCell(new Phrase(disciplina.getNumeScurt().trim(),bf12));
+				  cell2.setBorderColor(BaseColor.BLUE); 
+				  cell2.setPaddingLeft(10);
+				  cell2.setHorizontalAlignment(Element.ALIGN_CENTER);
+				  cell2.setVerticalAlignment(Element.ALIGN_MIDDLE);
+				  cell2.setUseBorderPadding(true);
+				  table.addCell(cell2); 
 				  }
 				  
-				  List<Prezenta> prezente = RaportStudentDisciplina.getPrezentaStudentAndModul(student, modul);
+				  
+				  
+				  for(Student student:StudentService.getAllStudentsByAn(AnUniversitarService.getAnByID(year))){
+					  PdfPCell cell3 = new PdfPCell(new Phrase(student.getNume().trim(),bf12));
+					  
+					  
+					  cell3.setBorderColor(BaseColor.BLUE); 
+					  cell3.setPaddingLeft(10);
+					  cell3.setHorizontalAlignment(Element.ALIGN_CENTER);
+					  cell3.setVerticalAlignment(Element.ALIGN_MIDDLE);
+					  cell3.setUseBorderPadding(true);
+					  table.addCell(cell3);
+					  
+					  
+		
+					  
+					  for(Disciplina disc:discipline){
+						  PdfPCell cell4;
+						  int absente= 0;
+						 try{
+						   absente = RaportAnTables.getNumberOfAbsencesForAStudentForModule(student,disc);
+						 }
+						 finally{
+						
+						  cell4 = new PdfPCell(new Paragraph(String.valueOf(absente)));
+						  //PdfPCell cell21 = new PdfPCell(new Paragraph("****"));
+						  cell4.setBorderColor(BaseColor.GREEN); 
+						  cell4.setPaddingLeft(10);
+						  cell4.setHorizontalAlignment(Element.ALIGN_CENTER);
+						  cell4.setVerticalAlignment(Element.ALIGN_MIDDLE);
+						  table.addCell(cell4);}
+						  
+					  
+					  
+					  }
+						  
+					  }
+					  
+					  
+				  
+				  
+				  
+				  
+				  /*List<Prezenta> prezente = RaportStudentDisciplina.getPrezentaStudentAndModul(student, modul);
 				  System.out.println(":sddddd******"+prezente.size());
 				  if(prezente.size()==0){
 					  for(int i=0;i<14;i++){
@@ -175,7 +264,7 @@ public class RaportStudentDisciplina {
 						  cell1.setUseBorderPadding(true);
 						  table.addCell(cell1);
 					  }
-				  }
+				  }*/
 				  
 				 /* PdfPCell cell11 = new PdfPCell(new Paragraph(disciplina));
 				  cell1.setBorderColor(BaseColor.BLUE); 
@@ -193,7 +282,7 @@ public class RaportStudentDisciplina {
 				  table.addCell(cell11);
 				  table.addCell(cell21);*/
 				  document.add(table);
-			  }
+			  
 			  
 			  
 			 
@@ -208,7 +297,7 @@ public class RaportStudentDisciplina {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
+}
 
 	public static String GenerateTime() {
 		Calendar cal = Calendar.getInstance();
@@ -217,5 +306,6 @@ public class RaportStudentDisciplina {
 		return format1.format(cal.getTime()) + "  "
 				+ format2.format(cal.getTime());
 	}
-
+	
+	
 }

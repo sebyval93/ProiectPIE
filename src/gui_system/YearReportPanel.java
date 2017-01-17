@@ -5,6 +5,8 @@ import javax.swing.JPanel;
 import Services.GrupaService;
 import Services.SubgrupaService;
 import entity.Subgrupa;
+import rapoarte.RaportAn;
+import rapoarte.RaportAnTables;
 
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -70,6 +72,15 @@ public class YearReportPanel extends JPanel {
 		});
 		
 		btnGenerare = new JButton("Generare");
+		btnGenerare.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if (cbAn.getSelectedIndex() >= 1) {
+					int an = Integer.parseInt((String)cbAn.getSelectedItem());
+					RaportAn.MakeYearReport(an);
+					RaportAnTables.MakeYearReport(an);
+				}
+			}
+		});
 		btnGenerare.setEnabled(false);
 		btnGenerare.setBounds(25, 126, 89, 23);
 		add(btnGenerare);

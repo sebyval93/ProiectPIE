@@ -9,6 +9,7 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.JButton;
 import javax.swing.border.TitledBorder;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 import Services.DisciplinaService;
@@ -41,6 +42,7 @@ public class ReportStudentSelPanel extends JPanel {
 	private RapStudentSearchCtrlPanel studentCtrl;
 	private RapDiscSearchCtrlPanel disciplinaCtrl;
 	JPanel ctrlPanel;
+	private DefaultTableCellRenderer centerCellRenderer;
 	
 	String studentCols[] = { "Nume", "Grupa", "Subgrupa" };
 	String disciplinaCols[] = { "Denumire", "An", "Semestru" };
@@ -80,6 +82,8 @@ public class ReportStudentSelPanel extends JPanel {
 		};
 		
 		table.setModel(studentModel);
+		
+		centerTableCells();
 		
 		ctrlPanel = new JPanel();
 		ctrlPanel.setBorder(new TitledBorder(null, "Cautare", TitledBorder.LEADING, TitledBorder.TOP, null, null));
@@ -160,6 +164,13 @@ public class ReportStudentSelPanel extends JPanel {
 	private void closeWindowWithQuestion() {
 		ModalFrame topFrame = (ModalFrame) SwingUtilities.getWindowAncestor(this);
 		topFrame.closeThisWithQuestion();
+	}
+	
+	private void centerTableCells() {
+		for (int i = 0; i < table.getColumnCount(); i++) {
+			table.getColumnModel().getColumn(i).setCellRenderer(centerCellRenderer);
+		}
+		((JLabel) table.getTableHeader().getDefaultRenderer()).setHorizontalAlignment(JLabel.CENTER);		
 	}
 	
 	private void doStudentSearch() {

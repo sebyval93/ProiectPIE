@@ -28,17 +28,21 @@ import gui_system.ModalFrame;
 import gui_system.NewPasswordModal;
 import gui_system.ResetWeeksModal;
 import gui_system.ResetWeeksPanel;
+import rapoarte.RaportAn;
 
 public class TestConnection {
 
 	public static void main(String[] args) throws FileNotFoundException{
 
 		
-		
+		/*
 		Modul modul = ModulService.getModulByID(18);
 		Saptamana sapt = SaptamanaService.getSaptamanaByID(1);
 		
 		List<Prezenta> list = PrezentaService.getRecordsForModuleAndWeek(modul,sapt);	
+		*/
+		
+		
 			
 
 	}
