@@ -2,25 +2,15 @@ package gui_system;
 
 import javax.swing.JPanel;
 import javax.swing.JLabel;
-import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JTextField;
-
-import Services.DisciplinaService;
-import Services.GrupaService;
-import Services.ProfesorService;
-import Services.SubgrupaService;
+import Singleton.*;
 import entity.Disciplina;
 import entity.Grupa;
 import entity.Profesor;
-import entity.Subgrupa;
-
 import javax.swing.JRadioButton;
-
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-
 import javax.swing.ButtonGroup;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -34,9 +24,9 @@ public class SitDidacticaCtrlPanel extends JPanel {
 	private JRadioButton radioGrupa, radioSubgrupa;
 	
 	/*
-	 * 0 curs        0 impar
-	 * 1 seminar     1 par
-	 * 2 laborator   2 saptamanal
+	 * 0 curs        0 saptamanal
+	 * 1 seminar     1 impar
+	 * 2 laborator   2 par
 	 * 3 proiect
 	 */
 	
@@ -48,15 +38,11 @@ public class SitDidacticaCtrlPanel extends JPanel {
 	}
 	
 	private enum Interval {
+		SAPTAMANAL,
 		IMPAR,
-		PAR,
-		SAPTAMANAL
+		PAR
 	}
 	
-	private List<Grupa> allFromGrupa;
-	private List<Subgrupa> allFromSubgrupa;
-	private List<Disciplina> allFromDisciplina;
-	private List<Profesor> allFromProfesor;
 	private List<String> activitati;
 	private List<String> interval;
 	
@@ -139,7 +125,7 @@ public class SitDidacticaCtrlPanel extends JPanel {
 		buttonGroup.add(radioSubgrupa);
 		
 		activitati = Arrays.asList("Curs", "Seminar", "Laborator", "Proiect");
-		interval = Arrays.asList("Impar", "Par", "Saptamanal");
+		interval = Arrays.asList("Saptamana impara", "Saptamana para", "Saptamanal");
 
 		loadCombos();
 		
@@ -149,28 +135,25 @@ public class SitDidacticaCtrlPanel extends JPanel {
 		//init combo boxes with info from db.
 		//all of them.
 		
-		allFromGrupa = GrupaService.getAllFromGrupa();
-		allFromSubgrupa = SubgrupaService.getAllFromSubgrupa();
-		allFromDisciplina = DisciplinaService.getAllFromDisciciplina();
-		allFromProfesor = ProfesorService.getAllFromProfesor();
 		
-		Iterator profIterator = allFromProfesor.iterator();
+		Iterator profIterator = Singleton.getInstance().ListOfTeachers.iterator();
 		while(profIterator.hasNext()) {
 			Profesor prof = (Profesor)profIterator.next();
 			if (prof.getNume().equals("admin"))
 				profIterator.remove();
+				break;
 		}
 		
-		allFromProfesor.remove("admin");
+		Singleton.getInstance().ListOfTeachers.remove("admin");
 		
 		cbDisciplina.removeAllItems();
 		cbDisciplina.addItem("");
-		for (Object disciplina : allFromDisciplina.toArray())
+		for (Object disciplina : Singleton.getInstance().ListOfDisciplines)
 			cbDisciplina.addItem(((Disciplina) disciplina).getDenumire().toString());
 		
 		cbProfesor.removeAllItems();
 		cbProfesor.addItem("");
-		for (Object profesor : allFromProfesor.toArray())
+		for (Object profesor : Singleton.getInstance().ListOfTeachers.toArray())
 			cbProfesor.addItem(((Profesor) profesor).getNume().toString());
 		
 		cbActivitate.removeAllItems();
@@ -186,13 +169,13 @@ public class SitDidacticaCtrlPanel extends JPanel {
 		if (radioGrupa.isSelected()) {
 			cbParticipanti.removeAllItems();
 			cbParticipanti.addItem("");
-			for (Object grupa : allFromGrupa.toArray())
+			for (Object grupa : Singleton.getInstance().ListOfGroups)
 				cbParticipanti.addItem(grupa.toString());
 		}
 		else if (radioSubgrupa.isSelected()) {
 			cbParticipanti.removeAllItems();
 			cbParticipanti.addItem("");
-			for (Object subgrupa : allFromSubgrupa.toArray())
+			for (Object subgrupa : Singleton.getInstance().ListOfSubgroups)
 				cbParticipanti.addItem(subgrupa.toString());
 		}
 		
@@ -200,23 +183,20 @@ public class SitDidacticaCtrlPanel extends JPanel {
 	}
 	
 	public void loadGrupa() {
-		if (allFromGrupa != null) {
-			cbParticipanti.removeAllItems();
-			cbParticipanti.addItem("");
-			for (Object grupa : allFromGrupa.toArray())
-				cbParticipanti.addItem(grupa.toString());
-			cbParticipanti.setSelectedIndex(-1);
-		}
+		cbParticipanti.removeAllItems();
+		cbParticipanti.addItem("");
+		for (Object grupa : Singleton.getInstance().ListOfGroups)
+			cbParticipanti.addItem(grupa.toString());
+		cbParticipanti.setSelectedIndex(-1);
 	}
 	
 	public void loadSubgrupa() {
-		if (allFromSubgrupa != null) {
-			cbParticipanti.removeAllItems();
-			cbParticipanti.addItem("");
-			for (Object subgrupa : allFromSubgrupa.toArray())
-				cbParticipanti.addItem(subgrupa.toString());
-			cbParticipanti.setSelectedIndex(-1);
-		}
+		
+		cbParticipanti.removeAllItems();
+		cbParticipanti.addItem("");
+		for (Object subgrupa : Singleton.getInstance().ListOfSubgroups)
+			cbParticipanti.addItem(subgrupa.toString());
+		cbParticipanti.setSelectedIndex(-1);
 	}
 	
 	public void setFields(String disciplina, String activitate, String numeProfesor,
@@ -227,7 +207,7 @@ public class SitDidacticaCtrlPanel extends JPanel {
 		cbInterval.setSelectedItem(interval);
 		
 		boolean found = false;
-		for (Grupa grupa : allFromGrupa) {
+		for (Grupa grupa : Singleton.getInstance().ListOfGroups) {
 			
 			if (grupa.getNume().equals(participanti)) {
 				found = true;
@@ -271,7 +251,7 @@ public class SitDidacticaCtrlPanel extends JPanel {
 		if (cbDisciplina.getSelectedIndex() == -1)
 			return null;
 		
-		for (Disciplina disciplina : allFromDisciplina) {
+		for (Disciplina disciplina : Singleton.getInstance().ListOfDisciplines) {
 			if (disciplina.getDenumire().toString().equals(cbDisciplina.getSelectedItem().toString())) {
 				return disciplina;
 			}
@@ -285,7 +265,7 @@ public class SitDidacticaCtrlPanel extends JPanel {
 		if (cbProfesor.getSelectedIndex() == -1)
 			return null;
 		
-		for (Profesor profesor : allFromProfesor) {
+		for (Profesor profesor : Singleton.getInstance().ListOfTeachers) {
 			if (profesor.getNume().toString().equals(cbProfesor.getSelectedItem().toString())) {
 				return profesor;
 			}
@@ -313,11 +293,9 @@ public class SitDidacticaCtrlPanel extends JPanel {
 			return -1;
 		else {
 			switch ((String)cbInterval.getSelectedItem()) {
-			case "Impar":
-			case "IMPAR":
+			case "Saptamana impara":
 				return Interval.IMPAR.ordinal();
-			case "Par":
-			case "PAR":
+			case "Saptamana para":
 				return Interval.PAR.ordinal();
 			case "Saptamanal":
 			case "SAPTAMANAL":

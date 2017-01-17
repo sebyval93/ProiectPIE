@@ -57,6 +57,26 @@ public final class ModulService {
 				session.beginTransaction();
 				session.delete(modul);
 				session.getTransaction().commit();
+				done = true;
+			}catch (Exception e) {
+	            e.printStackTrace();           
+	        }finally { 
+	        	session.close();
+	        } 
+		}
+		return done;
+	}
+	
+	public static boolean deleteModul(Modul modul){
+		boolean done = false;
+		Session session = null;
+		if(modul != null){
+			try{
+				session = Singleton.getInstance().getNewSession();
+				session.beginTransaction();
+				session.delete(modul);
+				session.getTransaction().commit();
+				done = true;
 			}catch (Exception e) {
 	            e.printStackTrace();           
 	        }finally { 
@@ -159,6 +179,28 @@ public final class ModulService {
         	session.close();
         }
 		return list;
+	}
+	
+	public static Modul getModul(Disciplina disciplina, Profesor profesor, String activitate, String participanti, int interval){
+		
+		Modul modul = null;
+		Session session = null;
+		try{			
+			session = Singleton.getInstance().getNewSession();			
+			DetachedCriteria dc = DetachedCriteria.forClass(Modul.class).add(Restrictions.eq("disciplina" , disciplina))
+					.add(Restrictions.eq("profesor" , profesor))
+					.add(Restrictions.eq("activitate" , activitate))
+					.add(Restrictions.eq("participanti" , participanti))
+					.add(Restrictions.eq("interval" , new BigDecimal(interval)));
+			modul = (Modul)dc.getExecutableCriteria(session).list().get(0);
+		}catch (Exception e) {
+            e.printStackTrace();
+        }finally { 
+        	session.close();
+        }
+		return modul;
+		
+		
 	}
 
 	public static boolean deleteAllFromTable(){
