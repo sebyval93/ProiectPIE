@@ -164,7 +164,7 @@ public class AdminPanel extends JPanel {
 			@Override
 			public void mousePressed(MouseEvent me) {
 				if (me.getButton() == MouseEvent.BUTTON1) {
-					JTable t =(JTable) me.getSource();
+					JTable t = (JTable) me.getSource();
 					
 					DefaultTableModel model = (DefaultTableModel) t.getModel();
 					
@@ -280,6 +280,7 @@ public class AdminPanel extends JPanel {
 	        public void componentShown ( ComponentEvent e )
 	        {
 	            contCtrlPanel.enableReset(false);
+	            mainTable.setModel(new DefaultTableModel());
 	        }
 	    });
 		
