@@ -209,10 +209,7 @@ public class AdminContext {
 		
 	}
 	
-	public void loadAllFromDisciplina(){
-		if(Singleton.Singleton.getInstance().ListOfDisciplines == null){
-			Singleton.Singleton.getInstance().ListOfDisciplines = DisciplinaService.getAllFromDisciciplina();
-		}		
+	public void loadAllFromDisciplina(){		
 		DefaultTableModel model = getCurrentModel();
 		Singleton.Singleton.getInstance().ListOfDisciplines.stream().forEach((aux) -> {
             model.addRow(new Object[]{aux.getDenumire(),aux.getAn(), aux.getSemestru().getId(),aux.getOrecurs(),aux.getOrelab(),
@@ -229,17 +226,16 @@ public class AdminContext {
 	}
 	
 	public void loadAllFromModul(){
-		//List<Modul> list = ModulService.getAllFromModul();
 		DefaultTableModel model = getCurrentModel();
 		Singleton.Singleton.getInstance().ListOfModules.stream().forEach((aux) -> {
         	BigDecimal value = aux.getInterval();
         	String interval = null;
         	if (value.intValue() == 0)
-        		interval = "Impar";
-        	else if (value.intValue() == 1)
-        		interval = "Par";
-        	else if (value.intValue() == 2)
         		interval = "Saptamanal";
+        	else if (value.intValue() == 1)
+        		interval = "Saptamana impara";
+        	else if (value.intValue() == 2)
+        		interval = "Saptamana para";
         	else 
         		interval = "Interval invalid";
         	
@@ -280,11 +276,11 @@ public class AdminContext {
         	BigDecimal value = aux.getInterval();
         	String interval = null;
         	if (value.intValue() == 0)
-        		interval = "Impar";
-        	else if (value.intValue() == 1)
-        		interval = "Par";
-        	else if (value.intValue() == 2)
         		interval = "Saptamanal";
+        	else if (value.intValue() == 1)
+        		interval = "Saptamana impara";
+        	else if (value.intValue() == 2)
+        		interval = "Saptamana para";
         	else 
         		interval = "Interval invalid";
         	
