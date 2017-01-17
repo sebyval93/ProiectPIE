@@ -4,9 +4,10 @@ import javax.swing.JPanel;
 import java.awt.Dimension;
 
 import java.awt.Point;
-
+import Singleton.*;
 import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 
@@ -19,12 +20,16 @@ import Services.SubgrupaService;
 import Services.UtilizatorService;
 import entity.Disciplina;
 import entity.Grupa;
+import entity.Modul;
 import entity.Profesor;
+import entity.Semestru;
+import entity.Student;
 import entity.Subgrupa;
 import main.MainFrame;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.math.BigDecimal;
 import java.util.List;
 
 import javax.swing.JScrollPane;
@@ -199,7 +204,24 @@ public class AdminPanel extends JPanel {
 						enableEditButtons(true);
 					}
 					else if (context.getCurrentModelName().equals("modulModel")) {
-						selectedID = DisciplinaService.getDisciplinaByDenumire((String)model.getValueAt(t.convertRowIndexToModel(row), 0)).getId().intValue();
+						Disciplina disciplina = DisciplinaService.getDisciplinaByDenumire(((String)model.getValueAt(t.convertRowIndexToModel(row), 0)));
+						Profesor profesor = ProfesorService.getProfesorByNume(((String)model.getValueAt(t.convertRowIndexToModel(row), 2)));
+						String activitate = ((String)model.getValueAt(t.convertRowIndexToModel(row), 1));
+						String participanti = ((String)model.getValueAt(t.convertRowIndexToModel(row), 4));
+						String interval = (String)model.getValueAt(t.convertRowIndexToModel(row), 3);
+						int intervalInt = -1;
+						switch(interval){
+							case "Saptamanal":
+								intervalInt = 0;
+								break;
+							case "Saptamana impara":
+								intervalInt = 1;
+								break;
+							case "Saptamana para":
+								intervalInt = 2;
+								break;
+						}
+						selectedID = ModulService.getModul(disciplina, profesor, activitate, participanti, intervalInt).getId().intValue();
 						selectedModel = context.getCurrentModelName();
 						sitDidacticaCtrlPanel.setFields((String)model.getValueAt(t.convertRowIndexToModel(row), 0), 
 								(String)model.getValueAt(t.convertRowIndexToModel(row), 1), 
@@ -380,7 +402,13 @@ public class AdminPanel extends JPanel {
 			int interval = sitDidacticaCtrlPanel.getSelectedInterval();
 
 			if (disciplina != null || profesor != null || activitate != null || participanti != null || interval != -1) {
-				ModulService.addModul(disciplina, profesor, activitate, participanti, interval,0);
+				boolean done = ModulService.addModul(disciplina, profesor, activitate, participanti, interval,0);
+				Singleton.getInstance().loadAllModules();
+				if(done){
+					JOptionPane.showMessageDialog(null, "Adaugat cu succes!");	
+				}else{
+					JOptionPane.showMessageDialog(null, "Nu s-a efectuat adaugarea!");
+				}
 				context.resetModulModel();
 			}
 			else
@@ -573,8 +601,22 @@ public class AdminPanel extends JPanel {
 				Subgrupa subgrupa = SubgrupaService.getSubgrupaByNume(numeSubgrupa);
 				
 				if (numeStudent != "" || numeSubgrupa != "" || subgrupa != null) {
-					StudentService.updateStudentByID(selectedID, subgrupa, numeStudent);
-					context.resetStudentModel();
+					boolean done = StudentService.updateStudentByID(selectedID, subgrupa, numeStudent);
+					if(done){
+						for(Student s : Singleton.getInstance().ListOfStudents){
+							if(s.getId().intValue() == selectedID){
+								s.setNume(numeStudent);
+								s.setSubgrupa(subgrupa);
+								break;
+							}
+						}
+						context.resetStudentModel();
+						JOptionPane.showMessageDialog(null, "Modificat cu succes!");
+					}	
+					else{
+						JOptionPane.showMessageDialog(null, "Nu s-a efectuat modificarea!");
+					}
+					
 				}
 				else
 					System.out.println("Could not update student. Found invalid field.");
@@ -586,8 +628,21 @@ public class AdminPanel extends JPanel {
 				String numeProfesor = profesorCtrlPanel.getNumeProfesor();
 				
 				if (numeProfesor != null) {
-					ProfesorService.updateProfesorByID(selectedID, numeProfesor);
-					context.resetProfesorModel();
+					boolean done = ProfesorService.updateProfesorByID(selectedID, numeProfesor);
+					if(done){
+						for(Profesor p : Singleton.getInstance().ListOfTeachers){
+							if(p.getId().intValue() == selectedID){
+								p.setNume(numeProfesor);
+								break;
+							}
+							
+						}
+						context.resetProfesorModel();
+						JOptionPane.showMessageDialog(null, "Modificat cu succes!");	
+					}else{
+						JOptionPane.showMessageDialog(null, "Nu s-a efectuat modificarea!");
+					}
+					
 				}
 				else
 					System.out.println("Could not update profesor. Found invalid field.");
@@ -597,6 +652,7 @@ public class AdminPanel extends JPanel {
 		case "disciplinaModel":
 			if (selectedModel == "disciplinaModel" && selectedID > -1) {
 				String denumire = disciplinaCtrlPanel.getDenumire();
+				Semestru semestru = Singleton.getInstance().ListOfSemesters.get(disciplinaCtrlPanel.getSemestru()-1);
 				int an = disciplinaCtrlPanel.getAn();
 				int oreCurs = disciplinaCtrlPanel.getOreCurs();
 				int oreLab = disciplinaCtrlPanel.getOreLaborator();
@@ -605,8 +661,28 @@ public class AdminPanel extends JPanel {
 				String numeScurt = disciplinaCtrlPanel.getNumeScurt();
 
 				if (denumire != "" || numeScurt != "" || an > 1 || oreCurs >= 0 || oreLab >= 0 || oreSeminar >= 0 || oreProiect >= 0) {
-					//DisciplinaService.updateDisciplinaByID(selectedID, denumire, an, oreCurs, oreLab, oreSeminar, oreProiect, numeScurt);
-					context.resetDisciplinaModel();
+					boolean done = DisciplinaService.updateDisciplinaByID(selectedID,semestru,denumire, an, oreCurs, oreLab, oreSeminar, oreProiect, numeScurt);
+					if(done){
+						for(Disciplina d : Singleton.getInstance().ListOfDisciplines){
+							if(d.getId().intValue() == selectedID){
+								d.setDenumire(denumire);
+								d.setNumeScurt(numeScurt);
+								d.setAn(new BigDecimal(an));
+								d.setOrecurs(new BigDecimal(oreCurs));
+								d.setOrelab(new BigDecimal(oreLab));
+								d.setOreproiect(new BigDecimal(oreProiect));
+								d.setOreseminar(new BigDecimal(oreSeminar));
+								d.setSemestru(semestru);
+								break;
+							}
+							
+						}
+						context.resetDisciplinaModel();
+						JOptionPane.showMessageDialog(null, "Modificat cu succes!");	
+					}else{
+						JOptionPane.showMessageDialog(null, "Nu s-a efectuat modificarea!");
+					}
+
 				}
 				else
 					System.out.println("Could not update disciplina. Found invalid field.");
@@ -623,8 +699,25 @@ public class AdminPanel extends JPanel {
 				int interval = sitDidacticaCtrlPanel.getSelectedInterval();
 
 				if (disciplina != null || profesor != null || activitate != null || participanti != null || interval != -1) {
-					//System.out.println(ModulService.updateModulByID(selectedID, disciplina, profesor, activitate, participanti, interval));
-					context.resetModulModel();
+					Modul temp = ModulService.getModulByID(selectedID);
+					boolean done = ModulService.updateModulByID(selectedID, disciplina, profesor, activitate, participanti, interval,temp.getOperat().intValue());
+					if(done){
+						for(Modul m : Singleton.getInstance().ListOfModules){
+							if(m.getId().intValue() == selectedID){
+								m.setActivitate(activitate);
+								m.setDisciplina(disciplina);
+								m.setInterval(new BigDecimal(interval));
+								m.setParticipanti(participanti);
+								m.setProfesor(profesor);
+								break;
+							}
+							
+						}
+						context.resetModulModel();
+						JOptionPane.showMessageDialog(null, "Modificat cu succes!");	
+					}else{
+						JOptionPane.showMessageDialog(null, "Nu s-a efectuat modificarea!");
+					}
 				}
 				else
 					System.out.println("Could not update modul. Found invalid field.");
@@ -640,8 +733,14 @@ public class AdminPanel extends JPanel {
 	private void actiuneStergere() {
 		if(context.getCurrentModelName().equals("modulModel")) {
 			if (selectedModel == "modulModel" && selectedID > -1) {
-				ModulService.deleteModulByID(selectedID);
+				boolean done = ModulService.deleteModulByID(selectedID);
+				Singleton.getInstance().loadAllModules();
 				context.resetModulModel();
+				if(done){
+					JOptionPane.showMessageDialog(null, "Actualizat cu succes!");	
+				}else{
+					JOptionPane.showMessageDialog(null, "Nu s-a efectuat stergerea!");
+				}
 			}
 		}
 		

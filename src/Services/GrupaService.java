@@ -106,7 +106,7 @@ public final class GrupaService {
 		Session session = null;
 		try{
 			session = Singleton.getInstance().getNewSession();
-			DetachedCriteria dc = DetachedCriteria.forClass(Subgrupa.class);
+			DetachedCriteria dc = DetachedCriteria.forClass(Grupa.class);
 			dc.add(Restrictions.eq("nume", nume));
 			grupa = (Grupa)dc.getExecutableCriteria(session).list().get(0);
 			

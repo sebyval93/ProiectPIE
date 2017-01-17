@@ -89,25 +89,43 @@ public class MainFrame extends JFrame {
 	}
 	
 	public void showLoginPanel() {
-		setTitle("Login");
-		mainPanel.setVisible(false);
-		adminPanel.setVisible(false);
-		loginPanel.resetState();
-		setContentPane(loginPanel);
-		loginPanel.setVisible(true);
-		mnUnelte.setVisible(false);
-		mntmDelogare.setVisible(false);
-		mnGenerareRaport.setVisible(false);
-		setMenuVisible(false);
-		pack();
-		setLocationRelativeTo(null);
+		if(adminPanel == null){
+			loginPanel = new LoginPanel();
+			loginPanel.setParentFrame(this);
+		}
+			setTitle("Login");
+			if(mainPanel != null){
+				mainPanel.setVisible(false);
+			}
+			if(adminPanel != null){
+				adminPanel.setVisible(false);
+			}
+			loginPanel.resetState();
+			setContentPane(loginPanel);
+			loginPanel.setVisible(true);
+			mnUnelte.setVisible(false);
+			mntmDelogare.setVisible(false);
+			mnGenerareRaport.setVisible(false);
+			setMenuVisible(false);
+			pack();
+			setLocationRelativeTo(null);
+		
 	}
 	
 	public void showMainPanel() {
+		if(mainPanel == null){
+			mainPanel = new MainPanel();
+			mainPanel.setParentFrame(this);
+		}
 		setMenuVisible(true);
 		setTitle("Gestiune module pentru profesorul: "+Singleton.getInstance().currentUser.getProfesor().getNume());
-		loginPanel.setVisible(false);
-		adminPanel.setVisible(false);
+		if(loginPanel != null){
+			loginPanel.setVisible(false);
+		}
+		if(adminPanel != null){
+			adminPanel.setVisible(false);
+		}
+		
 		renewDateMnt.setVisible(false);
 		mainPanel.loadFromDB();
 		setContentPane(mainPanel);
@@ -129,6 +147,10 @@ public class MainFrame extends JFrame {
 	}
 	
 	public void showAdminPanel() {
+		if(adminPanel == null){
+			adminPanel = new AdminPanel();
+			adminPanel.setParentFrame(this);
+		}
 		this.getContentPane().setVisible(false);
 		setMenuVisible(true);
 		setTitle("Administrare baza de date");
@@ -137,7 +159,10 @@ public class MainFrame extends JFrame {
 		mnGenerareRaport.setVisible(true);
 		mnUnelte.setVisible(true);
 		renewDateMnt.setVisible(true);
-		mainPanel.setVisible(false);
+		if(mainPanel != null){
+			mainPanel.setVisible(false);
+		}
+		
 		setContentPane(adminPanel);
 		adminPanel.setVisible(true);
 		mntmDelogare.setVisible(true);
@@ -160,15 +185,6 @@ public class MainFrame extends JFrame {
 		
 		setResizable(false);
 		setLocationRelativeTo(null);
-		
-		loginPanel = new LoginPanel();
-		loginPanel.setParentFrame(this);
-		mainPanel = new MainPanel();
-		mainPanel.setParentFrame(this);
-		adminPanel = new AdminPanel();
-		adminPanel.setParentFrame(this);
-		
-		
 		menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
 		
