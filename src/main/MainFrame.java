@@ -51,7 +51,7 @@ public class MainFrame extends JFrame {
 	JMenu mnFile, mnUnelte, mnGenerareRaport,
 	mnRaportStudenti;
 	JMenuItem mntmDelogare, mntmExit, 
-	mntmAdministrare, mntmGestionareModule,
+	mntmAdministrare,
 	mntmRaportGrupe, mntmAn;
 	private JMenu renewDateMnt;
 	private JMenuItem mntmImport_1;
@@ -110,33 +110,6 @@ public class MainFrame extends JFrame {
 			pack();
 			setLocationRelativeTo(null);
 		
-	}
-	
-	public void showMainPanel() {
-		if(mainPanel == null){
-			mainPanel = new MainPanel();
-			mainPanel.setParentFrame(this);
-		}
-		setMenuVisible(true);
-		setTitle("Gestiune module pentru profesorul: "+Singleton.getInstance().currentUser.getProfesor().getNume());
-		if(loginPanel != null){
-			loginPanel.setVisible(false);
-		}
-		if(adminPanel != null){
-			adminPanel.setVisible(false);
-		}
-		
-		renewDateMnt.setVisible(false);
-		mainPanel.loadFromDB();
-		setContentPane(mainPanel);
-		mainPanel.setVisible(true);
-		mnUnelte.setVisible(false);
-		mntmDelogare.setVisible(true);
-		mntmGestionareModule.setVisible(false);
-		mntmAdministrare.setVisible(true);
-		mnGenerareRaport.setVisible(false);
-		pack();
-		setLocationRelativeTo(null);
 	}
 	
 	public void showProgressPanel(){
@@ -227,14 +200,6 @@ public class MainFrame extends JFrame {
 		mntmAdministrare.setMnemonic('A');
 		mnUnelte.add(mntmAdministrare);
 		
-		mntmGestionareModule = new JMenuItem("Gestionare Module");
-		mntmGestionareModule.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				//FIX ME!!!
-				showMainPanel();
-			}
-		});
-		
 		mnGenerareRaport = new JMenu("Generare Raport");
 		mnGenerareRaport.setMnemonic('R');
 		mnUnelte.add(mnGenerareRaport);
@@ -268,7 +233,6 @@ public class MainFrame extends JFrame {
 			}
 		});
 		mnGenerareRaport.add(mntmAn);
-		mnUnelte.add(mntmGestionareModule);
 		
 		renewDateMnt = new JMenu("Re\u00EEnnoire date");
 		mnUnelte.add(renewDateMnt);
@@ -320,7 +284,6 @@ public class MainFrame extends JFrame {
 		
 		mnUnelte.setVisible(false);
 		mntmDelogare.setVisible(false);
-		mntmGestionareModule.setVisible(false);
 		
 	}
 
