@@ -16,6 +16,7 @@ import Services.ModulService;
 import Services.ProfesorService;
 import Services.StudentService;
 import Services.SubgrupaService;
+import Services.UtilizatorService;
 import entity.Disciplina;
 import entity.Grupa;
 import entity.Profesor;
@@ -38,6 +39,8 @@ import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.ActionEvent;
 
 public class AdminPanel extends JPanel {
@@ -49,6 +52,7 @@ public class AdminPanel extends JPanel {
 	private DisciplinaCtrlPanel disciplinaCtrlPanel;
 	private ProfesorCtrlPanel profesorCtrlPanel;
 	private SitDidacticaCtrlPanel sitDidacticaCtrlPanel;
+	private ContCtrlPanel contCtrlPanel;
 	private JPanel ctrlPanel;
 	private CardLayout cardLayout;
 	private JPanel coverPanel;
@@ -204,6 +208,13 @@ public class AdminPanel extends JPanel {
 								(String)model.getValueAt(t.convertRowIndexToModel(row), 4));
 						
 						enableEditButtons(true);
+						
+					}
+					else if (context.getCurrentModelName().equals("contModel")) {
+						selectedID = UtilizatorService.getUtilizatorByUsername((String)model.getValueAt(t.convertRowIndexToModel(row), 1)).getId().intValue();
+						selectedModel = context.getCurrentModelName();
+						contCtrlPanel.enableReset(true);
+						System.out.println(selectedID);
 					}
 				}
 			}
@@ -240,6 +251,11 @@ public class AdminPanel extends JPanel {
 							showSitDidacticaCtrlPanel();
 							showAddAndRemoveButtons(true);
 						}
+						else if (selectedValue == "Cont") {
+							context.switchToContModel();
+							showContCtrlPanel();
+							showAddAndRemoveButtons(false);
+						}
 					} 
 					catch(Exception e) {
 						//mysterious out of bounds error
@@ -249,18 +265,28 @@ public class AdminPanel extends JPanel {
 		});
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 11, 136, 295);
+		scrollPane.setBounds(10, 11, 136, 297);
 		add(scrollPane);
 		
 		scrollPane.setViewportView(selTable);
 		
 		JScrollPane scrollPane_1 = new JScrollPane();
-		scrollPane_1.setBounds(156, 11, 734, 295);
+		scrollPane_1.setBounds(156, 11, 734, 297);
 		add(scrollPane_1);
 		
 		scrollPane_1.setViewportView(mainTable);
 		
+	    this.addComponentListener ( new ComponentAdapter ()
+	    {
+	        public void componentShown ( ComponentEvent e )
+	        {
+	            contCtrlPanel.enableReset(false);
+	        }
+	    });
+		
 	}
+	
+
 	
 	public void addCtrlPanels() {
 		ctrlPanel.add(coverPanel, "");
@@ -280,6 +306,11 @@ public class AdminPanel extends JPanel {
 		sitDidacticaCtrlPanel = new SitDidacticaCtrlPanel();
 		sitDidacticaCtrlPanel.setBounds(156, 320, 584, 119);
 		ctrlPanel.add(sitDidacticaCtrlPanel, "situatie");
+		
+		contCtrlPanel = new ContCtrlPanel();
+		contCtrlPanel.setBounds(156, 320, 584, 119);
+		contCtrlPanel.setParent(this);
+		ctrlPanel.add(contCtrlPanel, "cont");
 	}
 	
 	public void setParentFrame(MainFrame frame) {
@@ -304,6 +335,11 @@ public class AdminPanel extends JPanel {
 	public void showSitDidacticaCtrlPanel() {
 		resetAllFields();
 		cardLayout.show(ctrlPanel, "situatie");
+	}
+	
+	public void showContCtrlPanel() {
+		resetAllFields();
+		cardLayout.show(ctrlPanel, "cont");
 	}
 	
 	public void resetAllFields() {
@@ -611,6 +647,10 @@ public class AdminPanel extends JPanel {
 		
 		selectedID = -1;
 		mainTable.clearSelection();
+	}
+	
+	public void resetPassword() {
+		System.out.println(selectedID);
 	}
 	
 }

@@ -27,7 +27,7 @@ public class Utilizator implements java.io.Serializable {
 	@Column(name = "ID", unique = true, nullable = false, precision = 22, scale = 0)
 	private BigDecimal id;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "PROFESOR", nullable = false)
 	private Profesor profesor;
 	
