@@ -186,6 +186,24 @@ public final class DisciplinaService {
         }
 		return list;
 	}
+	
+	public static List<Disciplina> getDisciplinaOfStudent(Student student) {
+		List<Disciplina> list = null;
+		Session session = null;
+		String subgrupaName = student.getSubgrupa().getNume();
+		try{
+			session = Singleton.getInstance().getNewSession();
+			list = session.createQuery("from Disciplina where id in (select disciplina.id from Modul where participanti = '" + subgrupaName.substring(0, subgrupaName.length() - 1)
+			+ "' OR participanti = '" + subgrupaName + "')").getResultList();
+			session.close();
+		}catch (Exception e) {
+            //e.printStackTrace();
+			System.out.println("Disciplina not found!");
+        }finally{
+        	session.close();
+        }
+		return list;
+	}
 
 	public static boolean deleteAllFromTable(){
 		boolean done = false;
