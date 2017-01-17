@@ -106,7 +106,10 @@ public final class GrupaService {
 		Session session = null;
 		try{
 			session = Singleton.getInstance().getNewSession();
-			grupa = (Grupa) session.createQuery("from Grupa where NUME = '" + nume + "'").getResultList().get(0);
+			DetachedCriteria dc = DetachedCriteria.forClass(Subgrupa.class);
+			dc.add(Restrictions.eq("nume", nume));
+			grupa = (Grupa)dc.getExecutableCriteria(session).list().get(0);
+			
 			session.close();
 		}catch (Exception e) {
             e.printStackTrace();        
