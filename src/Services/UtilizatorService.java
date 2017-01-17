@@ -156,6 +156,20 @@ public final class UtilizatorService {
 		return done;
 	}
 	
+	public static void resetPassword(String username) {
+		Session session = null;
+		try{
+			session = Singleton.getInstance().getNewSession();
+			session.beginTransaction();
+			session.createQuery("update Utilizator set password=NULL where username = '" + username + "'").executeUpdate();
+			session.getTransaction().commit();
+		}catch(Exception e){
+			  e.printStackTrace();   
+		}finally{
+			session.close();
+		}
+	}
+	
 	public static List<Utilizator> getAllFromUtilizator(){
 		List<Utilizator> list = null;
 		Session session = null;

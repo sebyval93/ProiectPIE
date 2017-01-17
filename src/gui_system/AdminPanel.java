@@ -214,7 +214,6 @@ public class AdminPanel extends JPanel {
 						selectedID = UtilizatorService.getUtilizatorByUsername((String)model.getValueAt(t.convertRowIndexToModel(row), 1)).getId().intValue();
 						selectedModel = context.getCurrentModelName();
 						contCtrlPanel.enableReset(true);
-						System.out.println(selectedID);
 					}
 				}
 			}
@@ -650,7 +649,10 @@ public class AdminPanel extends JPanel {
 	}
 	
 	public void resetPassword() {
-		System.out.println(selectedID);
+		if(context.getCurrentModelName().equals("contModel") && selectedID > -1) {
+			UtilizatorService.resetPassword(UtilizatorService.getUtilizatorByID(selectedID).getUsername());
+			System.out.println("A");
+		}
 	}
 	
 }

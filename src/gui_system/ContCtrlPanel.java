@@ -3,6 +3,8 @@ package gui_system;
 import javax.swing.JPanel;
 
 import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class ContCtrlPanel extends JPanel {
 	
@@ -15,6 +17,11 @@ public class ContCtrlPanel extends JPanel {
 		setLayout(null);
 		
 		btnResetPass = new JButton("Resetare parola");
+		btnResetPass.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				doReset();
+			}
+		});
 		btnResetPass.setEnabled(false);
 		btnResetPass.setBounds(220, 48, 293, 23);
 		add(btnResetPass);
