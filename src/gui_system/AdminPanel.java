@@ -255,27 +255,43 @@ public class AdminPanel extends JPanel {
 						if (selectedValue == "Student") {
 							context.switchToStudent();
 							showStudentCtrlPanel();
+							btnCautare.setVisible(true);
+							btnModificare.setVisible(true);
 						}
 						else if (selectedValue == "Profesor") {
 							context.switchToProfesorModel();
 							showProfesorCtrlPanel();
+							btnCautare.setVisible(true);
+							btnModificare.setVisible(true);
 						}
 						else if (selectedValue == "Disciplina") {
 							context.switchToDisciplinaModel();
 							showDisciplinaCtrlPanel();
 							
 							setDisciplinaTableWidth();
+							btnCautare.setVisible(true);
+							btnModificare.setVisible(true);
 							
 						}
 						else if (selectedValue == "Situatie didactica") {
 							context.switchToModulModel();
+							mainTable.getColumnModel().getColumn(0).setMinWidth(120);
+							mainTable.getColumnModel().getColumn(0).setMinWidth(120);
+							mainTable.getTableHeader().setReorderingAllowed(false);
+							mainTable.getTableHeader().setResizingAllowed(false);
 							showSitDidacticaCtrlPanel();
 							showAddAndRemoveButtons(true);
+							btnCautare.setVisible(true);
+							btnModificare.setVisible(true);
 						}
 						else if (selectedValue == "Cont") {
 							context.switchToContModel();
 							showContCtrlPanel();
+							mainTable.getTableHeader().setReorderingAllowed(false);
+							mainTable.getTableHeader().setResizingAllowed(false);
 							showAddAndRemoveButtons(false);
+							btnCautare.setVisible(false);
+							btnModificare.setVisible(false);
 						}
 					} 
 					catch(Exception e) {
@@ -303,6 +319,7 @@ public class AdminPanel extends JPanel {
 	        {
 	            contCtrlPanel.enableReset(false);
 	            mainTable.setModel(new DefaultTableModel());
+	            setBtnsVisible(false);
 	        }
 	    });
 		
@@ -589,6 +606,9 @@ public class AdminPanel extends JPanel {
 				context.loadModulListInTable(ModulService.runSearchQuery(searchString));
 			
 			break;
+			
+			default:
+				break;
 		}
 	}
 	
@@ -746,6 +766,13 @@ public class AdminPanel extends JPanel {
 		
 		selectedID = -1;
 		mainTable.clearSelection();
+	}
+	
+	private void setBtnsVisible(boolean visible) {
+		btnAdaugare.setVisible(visible);
+		btnCautare.setVisible(visible);
+		btnModificare.setVisible(visible);
+		btnStergere.setVisible(visible);
 	}
 	
 	public void resetPassword() {

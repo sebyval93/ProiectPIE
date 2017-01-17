@@ -21,6 +21,8 @@ import entity.Disciplina;
 import entity.Grupa;
 import entity.Student;
 import entity.Subgrupa;
+import rapoarte.RaportStudent;
+import rapoarte.RaportStudentDisciplina;
 
 import java.awt.event.ActionListener;
 import java.util.List;
@@ -46,16 +48,13 @@ public class ReportStudentSelPanel extends JPanel {
 	private RapDiscSearchCtrlPanel disciplinaCtrl;
 	JPanel ctrlPanel;
 	private DefaultTableCellRenderer centerCellRenderer;
-	private int selectedID = -1;
 	private Student selectedStudent = null;
 	private Disciplina selectedDisciplina = null;
 	
 	String studentCols[] = { "Nume", "Grupa", "Subgrupa" };
 	String disciplinaCols[] = { "Denumire", "An", "Semestru" };
 
-	/**
-	 * Create the panel.
-	 */
+
 	public ReportStudentSelPanel(boolean includeDisciplina) {
 		setLayout(null);
 		setPreferredSize(new Dimension(450, 423));
@@ -106,7 +105,21 @@ public class ReportStudentSelPanel extends JPanel {
 					}
 				}
 				
-				else if (me.getButton() == MouseEvent.BUTTON1 && currentModel.equals("disciplinaModel")) {
+				else if (me.getButton() == MouseEvent.BUTTON1 && currentModel.equals(disciplinaModel)) {
+					JTable t = (JTable) me.getSource();
+
+					DefaultTableModel model = (DefaultTableModel) t.getModel();
+
+					Point p = me.getPoint();
+					int row = t.rowAtPoint(p);
+					selectedDisciplina = DisciplinaService.getDisciplinaByDenumire((String)model.getValueAt(t.convertRowIndexToModel(row), 0));
+					
+					if (selectedDisciplina != null) {
+						btnGenerare.setEnabled(true);
+					}
+				}
+				
+				else if (me.getButton() == MouseEvent.BUTTON1 && !includeDisciplina) {
 					JTable t = (JTable) me.getSource();
 
 					DefaultTableModel model = (DefaultTableModel) t.getModel();
@@ -114,6 +127,10 @@ public class ReportStudentSelPanel extends JPanel {
 					Point p = me.getPoint();
 					int row = t.rowAtPoint(p);
 					selectedStudent = StudentService.getStudentByNume((String)model.getValueAt(t.convertRowIndexToModel(row), 0));
+					
+					if (selectedStudent != null) {
+						btnGenerare.setEnabled(true);
+					}
 				}
 			}
 		});
@@ -146,12 +163,11 @@ public class ReportStudentSelPanel extends JPanel {
 				if (btnGenerare.getText().equals("Generare")) {
 					if (currentModel.equals(studentModel)) {
 						//TODO: studentReport
-						System.out.println("Student report all disc");
+						RaportStudent.MakeSingleStudentReport(selectedStudent);
 					}
 					else if (currentModel.equals(disciplinaModel)) {
 						//TODO: disciplinaReport
-
-						System.out.println("Student report one disc");
+						RaportStudentDisciplina.MakeSingleStudentReport(selectedStudent, selectedDisciplina);
 					}
 				}
 				else {
@@ -164,6 +180,7 @@ public class ReportStudentSelPanel extends JPanel {
 					centerTableCells();
 					table.getColumnModel().getColumn(0).setMinWidth(250);
 					table.getColumnModel().getColumn(0).setMaxWidth(250);
+					btnGenerare.setEnabled(false);
 					currentModel = disciplinaModel;
 				}
 			}

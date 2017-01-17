@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import javax.swing.JOptionPane;
+
 import org.hibernate.Query;
 import org.hibernate.Session;
 
@@ -66,14 +68,14 @@ public class RaportStudent {
 		return list;
 	}
 
-	public static void MakeSingleStudentReport() {
+	public static void MakeSingleStudentReport(Student student) {
 
 		Document document = new Document();
 		try {
 			PdfWriter writer = PdfWriter.getInstance(document,
-					new FileOutputStream("Raport_Student.pdf"));
+					new FileOutputStream("Raport_Student"+student.getNume()+".pdf"));
 			document.open();
-
+			
 			Paragraph header = new Paragraph("Situatia scolara");
 			Paragraph footer = new Paragraph(RaportStudent.GenerateTime());
 			
@@ -83,7 +85,7 @@ public class RaportStudent {
 			document.add(header);
 			document.add(new Paragraph(""));
 
-			Student student = StudentService.getStudentByID(380);
+			
 
 			document.add(new Paragraph("Student: " + student.getNume() + "\n"));
 			document.add(new Paragraph("An universitar: " + student.getSubgrupa().getGrupa().getAnUniversitar().getAn() + "\n"));

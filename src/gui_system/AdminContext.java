@@ -1,28 +1,13 @@
 package gui_system;
 
-import java.awt.Color;
-import java.awt.Component;
 import java.math.BigDecimal;
 import java.util.List;
 
-import javax.swing.DefaultListSelectionModel;
-import javax.swing.JComponent;
 import javax.swing.JLabel;
-import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.border.Border;
-import javax.swing.border.CompoundBorder;
-import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
-
 import entity.*;
-import Services.DisciplinaService;
-import Services.GrupaService;
-import Services.ModulService;
-import Services.ProfesorService;
-import Services.StudentService;
 
 public class AdminContext {
 	

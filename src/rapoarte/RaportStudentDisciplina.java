@@ -84,7 +84,7 @@ public class RaportStudentDisciplina {
 		return list;
 	}
 
-	public static void MakeSingleStudentReport() {
+	public static void MakeSingleStudentReport(Student student, Disciplina disc) {
 
 		Document document = new Document();
 		try {
@@ -92,7 +92,7 @@ public class RaportStudentDisciplina {
 					new FileOutputStream(new File("Raport_Student_Disciplina.pdf")));
 			document.open();
 
-			Paragraph header = new Paragraph("Situatia scolara");
+			Paragraph header = new Paragraph("Situatia scolara pentru studentul "+student.getNume()+" la disciplina "+disc.getDenumire());
 			Paragraph footer = new Paragraph(RaportStudent.GenerateTime());
 			
 			header.setSpacingBefore(50);
@@ -101,7 +101,6 @@ public class RaportStudentDisciplina {
 			document.add(header);
 			document.add(new Paragraph(""));
 
-			Student student = StudentService.getStudentByID(380);
 
 			Paragraph namestud = new Paragraph("Student: " + student.getNume() + "\n");
 			Paragraph an = new Paragraph("An universitar: " + student.getSubgrupa().getGrupa().getAnUniversitar().getAn() + "\n");
@@ -113,9 +112,9 @@ public class RaportStudentDisciplina {
 			  
 			  
 			  
-			  Disciplina disciplina = DisciplinaService.getDisciplinaByNumeScurt("LFT");
+			 
 			  
-			  List<Modul> module = RaportStudentDisciplina.getModuleStudent(student.getId().intValue(), disciplina.getId().intValue());
+			  List<Modul> module = RaportStudentDisciplina.getModuleStudent(student.getId().intValue(), disc.getId().intValue());
 			  
 			  for(Modul modul:module){
 				  document.add(new Paragraph(modul.getDisciplina().getDenumire()));
@@ -142,7 +141,6 @@ public class RaportStudentDisciplina {
 				  }
 				  
 				  List<Prezenta> prezente = RaportStudentDisciplina.getPrezentaStudentAndModul(student, modul);
-				  System.out.println(":sddddd******"+prezente.size());
 				  if(prezente.size()==0){
 					  for(int i=0;i<14;i++){
 					  PdfPCell cell1 = new PdfPCell(new Paragraph("0"));
@@ -177,21 +175,7 @@ public class RaportStudentDisciplina {
 					  }
 				  }
 				  
-				 /* PdfPCell cell11 = new PdfPCell(new Paragraph(disciplina));
-				  cell1.setBorderColor(BaseColor.BLUE); 
-				  cell1.setPaddingLeft(10);
-				  cell1.setHorizontalAlignment(Element.ALIGN_CENTER);
-				  cell1.setVerticalAlignment(Element.ALIGN_MIDDLE);
-				  Disciplina disc = DisciplinaService.getDisciplinaByDenumire(materie.toString());
-				  int absente = PrezentaService.getNumberOfAbsencesForAStudentForModule(student,disc);
-				  PdfPCell cell21 = new PdfPCell(new Paragraph(String.valueOf(absente)));
-				  //PdfPCell cell21 = new PdfPCell(new Paragraph("****"));
-				  cell2.setBorderColor(BaseColor.GREEN); 
-				  cell2.setPaddingLeft(10);
-				  cell2.setHorizontalAlignment(Element.ALIGN_CENTER);
-				  cell2.setVerticalAlignment(Element.ALIGN_MIDDLE);
-				  table.addCell(cell11);
-				  table.addCell(cell21);*/
+				 
 				  document.add(table);
 			  }
 			  
