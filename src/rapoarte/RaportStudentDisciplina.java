@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import javax.swing.JOptionPane;
+
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.criterion.DetachedCriteria;
@@ -189,8 +191,13 @@ public class RaportStudentDisciplina {
 			writer.close();
 
 			System.out.println("Raport created");
+			
+			System.out.println("Raport created");
+			JOptionPane.showMessageDialog(null, "Raport creat cu succes", "Succes", JOptionPane.INFORMATION_MESSAGE);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, "Eroare generare raport", "Eroare", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 

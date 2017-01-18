@@ -285,13 +285,11 @@ public class RaportAn {
 			writer.close();
 
 			System.out.println("Raport created");
-			JOptionPane.showMessageDialog(null, "Raport creat cu succes", "Banzai", JOptionPane.INFORMATION_MESSAGE);
-			
-			
+			JOptionPane.showMessageDialog(null, "Raport creat cu succes", "Succes", JOptionPane.INFORMATION_MESSAGE);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
-			JOptionPane.showMessageDialog(null, "Something stink, jimmy.....FIX IT", "Eroare", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, "Eroare generare raport", "Eroare", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 

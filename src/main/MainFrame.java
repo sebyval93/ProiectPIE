@@ -41,18 +41,17 @@ import javax.swing.SwingWorker;
 
 public class MainFrame extends JFrame {
 
-	private gui_system.LoginPanel loginPanel;
-	private gui_system.MainPanel mainPanel;
+	private LoginPanel loginPanel;
+	private MainPanel mainPanel;
 	
 
-	private gui_system.AdminPanel adminPanel;
+	private AdminPanel adminPanel;
 	
 	JMenuBar menuBar;
 	JMenu mnFile, mnUnelte, mnGenerareRaport,
 	mnRaportStudenti;
 	JMenuItem mntmDelogare, mntmExit, 
-	mntmAdministrare, mntmGestionareModule,
-	mntmRaportGrupe, mntmAn;
+	mntmAdministrare, mntmAn;
 	private JMenu renewDateMnt;
 	private JMenuItem mntmImport_1;
 	private JMenuItem mntmDataInceperii;
@@ -112,6 +111,36 @@ public class MainFrame extends JFrame {
 		
 	}
 	
+	public void showProgressPanel(){
+		menuBar.setVisible(false);
+		setTitle("Loading...");
+		adminPanel.setVisible(false);
+		
+	}
+	
+	public void showAdminPanel() {
+		if(adminPanel == null){
+			adminPanel = new AdminPanel();
+			adminPanel.setParentFrame(this);
+		}
+		this.getContentPane().setVisible(false);
+		setMenuVisible(true);
+		setTitle("Administrare baza de date");
+		mntmAdministrare.setVisible(false);
+		mnGenerareRaport.setVisible(true);
+		mnUnelte.setVisible(true);
+		renewDateMnt.setVisible(true);
+		if(mainPanel != null){
+			mainPanel.setVisible(false);
+		}
+		
+		setContentPane(adminPanel);
+		adminPanel.setVisible(true);
+		mntmDelogare.setVisible(true);
+		pack();
+		setLocationRelativeTo(null);
+	}
+	
 	public void showMainPanel() {
 		if(mainPanel == null){
 			mainPanel = new MainPanel();
@@ -132,43 +161,11 @@ public class MainFrame extends JFrame {
 		mainPanel.setVisible(true);
 		mnUnelte.setVisible(false);
 		mntmDelogare.setVisible(true);
-		mntmGestionareModule.setVisible(false);
 		mntmAdministrare.setVisible(true);
 		mnGenerareRaport.setVisible(false);
 		pack();
 		setLocationRelativeTo(null);
-	}
-	
-	public void showProgressPanel(){
-		menuBar.setVisible(false);
-		setTitle("Loading...");
-		adminPanel.setVisible(false);
-		
-	}
-	
-	public void showAdminPanel() {
-		if(adminPanel == null){
-			adminPanel = new AdminPanel();
-			adminPanel.setParentFrame(this);
-		}
-		this.getContentPane().setVisible(false);
-		setMenuVisible(true);
-		setTitle("Administrare baza de date");
-		mntmAdministrare.setVisible(false);
-		mntmGestionareModule.setVisible(true);
-		mnGenerareRaport.setVisible(true);
-		mnUnelte.setVisible(true);
-		renewDateMnt.setVisible(true);
-		if(mainPanel != null){
-			mainPanel.setVisible(false);
-		}
-		
-		setContentPane(adminPanel);
-		adminPanel.setVisible(true);
-		mntmDelogare.setVisible(true);
-		pack();
-		setLocationRelativeTo(null);
-	}
+}
 	
 	public void initFrame(){
 		try {
@@ -227,14 +224,6 @@ public class MainFrame extends JFrame {
 		mntmAdministrare.setMnemonic('A');
 		mnUnelte.add(mntmAdministrare);
 		
-		mntmGestionareModule = new JMenuItem("Gestionare Module");
-		mntmGestionareModule.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				//FIX ME!!!
-				showMainPanel();
-			}
-		});
-		
 		mnGenerareRaport = new JMenu("Generare Raport");
 		mnGenerareRaport.setMnemonic('R');
 		mnUnelte.add(mnGenerareRaport);
@@ -258,9 +247,6 @@ public class MainFrame extends JFrame {
 		});
 		mnRaportStudenti.add(mntmRaportToateDisciplinele);
 		
-		mntmRaportGrupe = new JMenuItem("Grupe");
-		mnGenerareRaport.add(mntmRaportGrupe);
-		
 		mntmAn = new JMenuItem("An");
 		mntmAn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -268,7 +254,6 @@ public class MainFrame extends JFrame {
 			}
 		});
 		mnGenerareRaport.add(mntmAn);
-		mnUnelte.add(mntmGestionareModule);
 		
 		renewDateMnt = new JMenu("Re\u00EEnnoire date");
 		mnUnelte.add(renewDateMnt);
@@ -320,7 +305,6 @@ public class MainFrame extends JFrame {
 		
 		mnUnelte.setVisible(false);
 		mntmDelogare.setVisible(false);
-		mntmGestionareModule.setVisible(false);
 		
 	}
 
@@ -394,11 +378,11 @@ public class MainFrame extends JFrame {
 		mainPanel.updateWeekBrowser();
 	}
 	
-	public gui_system.MainPanel getMainPanel() {
+	public MainPanel getMainPanel() {
 		return mainPanel;
 	}
 
-	public void setMainPanel(gui_system.MainPanel mainPanel) {
+	public void setMainPanel(MainPanel mainPanel) {
 		this.mainPanel = mainPanel;
 	}
 

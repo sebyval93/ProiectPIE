@@ -161,8 +161,13 @@ public class RaportStudent {
 			writer.close();
 
 			System.out.println("Raport created");
+			
+			System.out.println("Raport created");
+			JOptionPane.showMessageDialog(null, "Raport creat cu succes", "Succes", JOptionPane.INFORMATION_MESSAGE);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, "Eroare generare raport", "Eroare", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 
