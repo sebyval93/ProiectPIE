@@ -256,15 +256,29 @@ public final class ModulService {
 	public static List<Modul> getAllModulBySaptamanaAndProfesor(Saptamana week, Profesor prof) {
 		List<Modul> list = null;
 		Session session = null;
+		int aux = week.getId().intValue() % 2;
 		try{
 			session = Singleton.getInstance().getNewSession();
-			list = session.createQuery("from Modul where id = (select modul.id from Prezenta where saptamana.id = " + (week.getId().intValue()) + ")").getResultList();
-			Iterator iter = list.iterator();
-			while (iter.hasNext()) {
-				Modul curr = (Modul) iter.next();
-				if (!curr.getProfesor().getNume().equals(prof.getNume()))
-					iter.remove();
+			DetachedCriteria dc;
+			if(aux == 0){
+				dc = DetachedCriteria.forClass(Modul.class,"mod").createAlias("mod.disciplina", "disc")
+						.add(Restrictions.eq("profesor" , prof))
+						.add(Restrictions.eq("disc.semestru" , week.getSemestru()))
+						.add(Restrictions.disjunction()
+								.add(Restrictions.eq("interval", new BigDecimal(0)))
+								.add(Restrictions.eq("interval", new BigDecimal(2)))
+						);
+			}else{
+				dc = DetachedCriteria.forClass(Modul.class,"mod").createAlias("mod.disciplina", "disc")
+						.add(Restrictions.eq("profesor" , prof))
+						.add(Restrictions.eq("disc.semestru.id" , week.getSemestru().getId()))
+						.add(Restrictions.disjunction()
+								.add(Restrictions.eq("interval", new BigDecimal(0)))
+								.add(Restrictions.eq("interval", new BigDecimal(1)))
+						);
 			}
+			
+			list = dc.getExecutableCriteria(session).list();
 		}catch (Exception e) {
             e.printStackTrace();        
         }finally{
@@ -272,5 +286,6 @@ public final class ModulService {
         }
 		return list;
 	}
-	
 }
+	
+

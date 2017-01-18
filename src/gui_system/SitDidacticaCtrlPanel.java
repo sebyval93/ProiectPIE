@@ -136,15 +136,15 @@ public class SitDidacticaCtrlPanel extends JPanel {
 		//all of them.
 		
 		
-		Iterator profIterator = Singleton.getInstance().ListOfTeachers.iterator();
-		while(profIterator.hasNext()) {
-			Profesor prof = (Profesor)profIterator.next();
-			if (prof.getNume().equals("admin"))
-				profIterator.remove();
+		Profesor prof = null;
+		for(Profesor p : Singleton.getInstance().ListOfTeachers){
+			if(p.getNume().equals("admin")){
+				prof = p;
 				break;
+			}
 		}
 		
-		Singleton.getInstance().ListOfTeachers.remove("admin");
+		Singleton.getInstance().ListOfTeachers.remove(prof);
 		
 		cbDisciplina.removeAllItems();
 		cbDisciplina.addItem("");

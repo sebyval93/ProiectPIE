@@ -35,14 +35,6 @@ public class TestConnection {
 	public static void main(String[] args) throws FileNotFoundException{
 
 		
-		/*
-		Modul modul = ModulService.getModulByID(18);
-		Saptamana sapt = SaptamanaService.getSaptamanaByID(1);
-		
-		List<Prezenta> list = PrezentaService.getRecordsForModuleAndWeek(modul,sapt);	
-		*/
-		
-		
 			
 
 	}

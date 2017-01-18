@@ -23,5 +23,6 @@
   <mapping class="entity.Student"/>
   <mapping class="entity.Subgrupa"/>
   <mapping class="entity.Utilizator"/>
+  <mapping class="entity.StareModul"/>
  </session-factory>
 </hibernate-configuration>

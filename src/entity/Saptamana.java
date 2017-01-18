@@ -49,6 +49,9 @@ public class Saptamana implements java.io.Serializable {
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "saptamana")
 	private Set<Prezenta> prezentas = new HashSet<Prezenta>(0);
+	
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "saptamana")
+	private Set<StareModul> stats = new HashSet<StareModul>(0);
 
 	public Saptamana() {
 	}
@@ -119,6 +122,14 @@ public class Saptamana implements java.io.Serializable {
 
 	public Set<Prezenta> getPrezentas() {
 		return this.prezentas;
+	}
+
+	public void setStats(Set<StareModul> stats) {
+		this.stats = stats;
+	}
+	
+	public Set<StareModul> getStats() {
+		return this.stats;
 	}
 
 	public void setPrezentas(Set<Prezenta> prezentas) {
