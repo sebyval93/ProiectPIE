@@ -15,6 +15,7 @@ import Services.ModulService;
 import Services.ProfesorService;
 import Services.SaptamanaService;
 import Services.SemestruService;
+import Services.StareModulService;
 import Services.StudentService;
 import Services.SubgrupaService;
 import Services.UtilizatorService;
@@ -40,6 +41,7 @@ public class Singleton {
 	public List<Grupa> ListOfGroups;
 	public List<Subgrupa> ListOfSubgroups;
 	public List<Modul> ListOfTeacherModules;
+	public List<StareModul> ListOfModuleStats;
 	
 	// 		End
 	
@@ -67,11 +69,7 @@ public class Singleton {
 	public void initSingleton(){
 		buildSessionFactory();
 	}
-	
-	/*
-	public void getCurrentSaptamana(){
-		currentSaptamana = SaptamanaService.getCurrentWeek();
-	}*/
+
 	
 	public void getCurrentWeek(){
 		currentWeek = new Week(SaptamanaService.getCurrentWeek());
@@ -160,6 +158,13 @@ public class Singleton {
 			Singleton.getInstance().ListOfTeachers = ProfesorService.getAllFromProfesor();
 		}
 		
+		public void loadModulStateForCurrentWeek(){
+			if(!currentUser.getUsername().equals("admin")){
+				List<Modul> modules = ModulService.getAllModulBySaptamanaAndProfesor(currentWeekStatic,currentProfesor);
+				Singleton.getInstance().ListOfModuleStats = StareModulService.getStareModulByModulesAndWeek(modules, currentWeekStatic);
+			}
+		}
+		
 		public void loadListsForNormalUser(Utilizator u){
 			loadListOfYears();
 			loadListOfWeeks();
@@ -167,6 +172,7 @@ public class Singleton {
 			loadListOfSemesters();
 			loadListOfSubgroups();
 			loadListOfModulesForProfesor(u.getProfesor());
+			loadModulStateForCurrentWeek();
 		}
 		
 		public void loadListsForAdminUser(){

@@ -11,12 +11,14 @@ import javax.swing.table.DefaultTableModel;
 
 import Services.ModulService;
 import Services.PrezentaService;
+import Services.StareModulService;
 import Singleton.Singleton;
 import Utils.RecordTableModel;
 import Utils.Week;
 import entity.Modul;
 import entity.Prezenta;
 import entity.Saptamana;
+import entity.StareModul;
 import entity.Student;
 
 public class ModelContext {
@@ -115,11 +117,21 @@ public class ModelContext {
 		
 	}
 	
-	public boolean addRecordsForStudents(){
-		
+	public boolean addRecordsForStudents(){		
 		boolean done = PrezentaService.updateListOfRecords(list);
-		modul.setOperat(new BigDecimal(1));
-		ModulService.updateModul(modul);
+		if(week != Singleton.getInstance().currentWeekStatic){
+			StareModul m = StareModulService.getStareModulByModulAndWeek(modul, week);
+			m.setOperat(new BigDecimal(1));
+			StareModulService.updateStareModul(m);
+		}else{
+			for(StareModul m : Singleton.getInstance().ListOfModuleStats){
+				if(m.getModul().getId().intValue() == modul.getId().intValue()){
+					m.setOperat(new BigDecimal(1));
+					StareModulService.updateStareModul(m);
+					break;
+				}
+			}
+		}
 		return done;
 	}
 	
@@ -166,26 +178,27 @@ public class ModelContext {
 		        });
 			}
 			return;
-		}else{						
+		}else{	
+			System.out.println("currweek");
 			if(week.getSaptamana().getId().intValue() % 2 == 0){	//sapt para
 							
-							Singleton.getInstance().ListOfTeacherModules.stream()
-									.filter(e -> (e.getInterval().intValue()  == 0 || e.getInterval().intValue() == 2) 
-											&& e.getDisciplina().getSemestru().getId().intValue() == week.getSaptamana().getSemestru().getId().intValue()
+							Singleton.getInstance().ListOfModuleStats.stream()
+									.filter(e -> (e.getModul().getInterval().intValue()  == 0 || e.getModul().getInterval().intValue() == 2) 
+											&& e.getModul().getDisciplina().getSemestru().getId().intValue() == week.getSaptamana().getSemestru().getId().intValue()
 											&& e.getOperat().intValue() != 1)
 									.forEach((aux) -> {
-										moduleModel.addRow(new Object[]{aux.getDisciplina().getDenumire(),aux.getActivitate(),aux.getDisciplina().getAn(),
-					            		week.getSaptamanaNumber(),aux.getParticipanti()});
+										moduleModel.addRow(new Object[]{aux.getModul().getDisciplina().getDenumire(),aux.getModul().getActivitate(),aux.getModul().getDisciplina().getAn(),
+					            		week.getSaptamanaNumber(),aux.getModul().getParticipanti()});
 					        });
 							
 						}else{													//sapt impara
-							Singleton.getInstance().ListOfTeacherModules.stream()
-									.filter(e -> (e.getInterval().intValue()  == 0 ||  e.getInterval().intValue() == 1) 
-											&& e.getDisciplina().getSemestru().getId().intValue() == week.getSaptamana().getSemestru().getId().intValue() 
+							Singleton.getInstance().ListOfModuleStats.stream()
+									.filter(e -> (e.getModul().getInterval().intValue()  == 0 ||  e.getModul().getInterval().intValue() == 1) 
+											&& e.getModul().getDisciplina().getSemestru().getId().intValue() == week.getSaptamana().getSemestru().getId().intValue() 
 											&& e.getOperat().intValue() != 1)
 									.forEach((aux) -> {
-										moduleModel.addRow(new Object[]{aux.getDisciplina().getDenumire(),aux.getActivitate(),aux.getDisciplina().getAn(),
-					            		week.getSaptamanaNumber(),aux.getParticipanti()});
+										moduleModel.addRow(new Object[]{aux.getModul().getDisciplina().getDenumire(),aux.getModul().getActivitate(),aux.getModul().getDisciplina().getAn(),
+					            		week.getSaptamanaNumber(),aux.getModul().getParticipanti()});
 					        });
 			
 						}

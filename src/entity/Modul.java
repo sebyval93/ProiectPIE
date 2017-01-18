@@ -50,6 +50,9 @@ public class Modul implements java.io.Serializable {
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "modul")
 	private Set<Prezenta> prezentas = new HashSet<Prezenta>(0);
 
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "modul")
+	private Set<StareModul> stats = new HashSet<StareModul>(0);
+	
 	public Modul() {
 	}
 
@@ -65,7 +68,7 @@ public class Modul implements java.io.Serializable {
 	}
 
 	public Modul(BigDecimal id, Disciplina disciplina, Profesor profesor, String activitate, String participanti,
-			BigDecimal interval, BigDecimal operat, Set<Prezenta> prezentas) {
+			BigDecimal interval, BigDecimal operat, Set<Prezenta> prezentas,Set<StareModul> stats) {
 		this.id = id;
 		this.disciplina = disciplina;
 		this.profesor = profesor;
@@ -74,6 +77,7 @@ public class Modul implements java.io.Serializable {
 		this.interval = interval;
 		this.operat = operat;
 		this.prezentas = prezentas;
+		this.stats = stats;
 	}
 	
 	public Modul(Disciplina disciplina, Profesor profesor, String activitate, String participanti,
@@ -149,6 +153,14 @@ public class Modul implements java.io.Serializable {
 
 	public void setPrezentas(Set<Prezenta> prezentas) {
 		this.prezentas = prezentas;
+	}
+	
+	public Set<StareModul> getStats() {
+		return this.stats;
+	}
+
+	public void setStats(Set<StareModul> stats) {
+		this.stats = stats;
 	}
 	
 	@Override

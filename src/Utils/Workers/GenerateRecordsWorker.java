@@ -8,11 +8,13 @@ import javax.swing.SwingWorker;
 import org.hibernate.StatelessSession;
 
 import Services.PrezentaService;
+import Services.StareModulService;
 import Services.StudentService;
 import Singleton.Singleton;
 import entity.Modul;
 import entity.Prezenta;
 import entity.Saptamana;
+import entity.StareModul;
 import entity.Student;
 
 public class GenerateRecordsWorker extends SwingWorker<String, Void> {
@@ -21,6 +23,8 @@ public class GenerateRecordsWorker extends SwingWorker<String, Void> {
         int listSize = Singleton.getInstance().ListOfModules.size();
         PrezentaService.deleteAllFromTable();
         PrezentaService.resetPrezentaSeq();
+        StareModulService.deleteAllFromTable();
+        StareModulService.resetStareSeq();
 		StatelessSession session = null;
 			try{
 				session = Singleton.getInstance().getStatelessSession();
@@ -67,7 +71,13 @@ public class GenerateRecordsWorker extends SwingWorker<String, Void> {
 									}
 								}
 								System.out.println("Added for module " + modul);
-								
+								StareModul stareModul = new StareModul(modul,saptamana,0);
+								try{
+									session.insert(stareModul);									
+								}catch (Exception e) {
+									e.printStackTrace();    
+								}
+								System.out.println("Added staremodul for module " + modul);
 								continue;							
 							}
 							//Daca modululul este in saptamanile impare
@@ -87,7 +97,13 @@ public class GenerateRecordsWorker extends SwingWorker<String, Void> {
 										}
 									}
 									System.out.println("Added for module " + modul);
-									
+									StareModul stareModul = new StareModul(modul,saptamana,0);
+									try{
+										session.insert(stareModul);									
+									}catch (Exception e) {
+										e.printStackTrace();    
+									}
+									System.out.println("Added staremodul for module " + modul);
 									continue;
 								}
 							}
@@ -108,7 +124,13 @@ public class GenerateRecordsWorker extends SwingWorker<String, Void> {
 										}
 									}
 									System.out.println("Added for module " + modul);
-									
+									StareModul stareModul = new StareModul(modul,saptamana,0);
+									try{
+										session.insert(stareModul);									
+									}catch (Exception e) {
+										e.printStackTrace();    
+									}
+									System.out.println("Added staremodul for module " + modul);
 									continue;
 								}
 							}
